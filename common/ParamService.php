@@ -35,6 +35,18 @@ class ParamService extends Nette\Object
 
 
 	/**
+	 * @param  string
+	 * @return boolean
+	 */
+	public function __isset($name)
+	{
+		if (isset($this->params[$name])) {
+			return TRUE;
+		}
+	}
+
+
+	/**
 	 * @return array|NULL
 	 */
 	public function getActiveModules()

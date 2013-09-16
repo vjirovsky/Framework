@@ -2,6 +2,7 @@
 
 namespace Schmutzka\Models;
 
+
 abstract class BaseJoint extends Base
 {
 	/** @var string */

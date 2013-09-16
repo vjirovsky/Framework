@@ -64,7 +64,7 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public function register($values)
 	{
-		if ($this->userModel->item(array('login' => $values['login']))) {
+		if ($this->userModel->item(['login' => $values['login']])) {
 			throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
 		}
 
@@ -75,8 +75,7 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 		$values['salt'] = Strings::random(22);
 		$values['password'] = self::calculateHash($values['password'], $values['salt']);
 		$values['created'] = new Nette\DateTime;
-		$values['auth'] = TRUE;
-
+		
 		$userId = $this->userModel->insert($values);
 
 		return $this->userModel->item($userId);

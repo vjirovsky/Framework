@@ -3,13 +3,30 @@
 namespace Schmutzka\Application\UI\Module;
 
 use AdminModule;
-use Nette;
 
 
 class Presenter extends AdminModule\BasePresenter
 {
 	/** @persistent @var int */
 	public $id;
+
+
+	public function renderAdd()
+	{
+		if ($this->id) {
+			$this->id = NULL;
+			$this->redirect('this');
+		}
+	}
+
+
+	public function renderDefault()
+	{
+		if ($this->id) {
+			$this->id = NULL;
+			$this->redirect('this');
+		}
+	}
 
 
 	/**

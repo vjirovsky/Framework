@@ -6,10 +6,12 @@ use Nette;
 use Nette\Image;
 use Nette\Utils\Finder;
 use Schmutzka\Utils\Filer;
-use Schmutzka\Application\UI\Module\Control;
+use Schmutzka\Components\BaseUploadControl;
+use Schmutzka\Application\UI\Control;
 use UploadHandler;
 
-class UploadControl extends Control
+
+class UploadControl extends BaseUploadControl
 {
 	/** @inject @var Schmutzka\Models\Gallery */
 	public $galleryModel;
@@ -18,38 +20,20 @@ class UploadControl extends Control
 	public $galleryFileModel;
 
 
-	public function handleUpload()
+	public function processFileUpload($file)
 	{
-		// 0. capture fie upload result
-		ob_start();
-		$upload_handler = new UploadHandler();
-		$jsonData = ob_get_clean();
-
-		// magic here
-		$file = json_decode($jsonData)->files[0];
-
-		/** output data example:
-		stdClass (6)
-			name => 'dnb_typography-1920x1080.jpg' (28)
-			size => 366296
-			url => 'http://local.peloton.cz/files/dnb_typography-1920x1080.jpg' (58)
-			thumbnail_url => 'http://local.peloton.cz/files/thumbnail/dnb_typography-1920x1080.jpg' (68)
-			delete_url => 'http://local.peloton.cz/?file=dnb_typography-1920x1080.jpg' (58)
-			delete_type => 'DELETE' (6)
-		*/
-
 		$image = Nette\Image::fromFile($file->url);
 
 		// 1. save, resize and save
 		$uniqueName = Filer::getUniqueName($this->galleryDir, $file->name);
 
-		if (!is_dir($this->galleryDir)) {
+		if ( ! is_dir($this->galleryDir)) {
 			mkdir($this->galleryDir, 0777);
 		}
 
-		foreach ($this->moduleParams->size_versions as $type => $dimensions) {
-			if ($type === 'natural') {
-				$image->resize($dimensions['width'], $dimensions['height'], Image::SHRINK_ONLY | Image::EXACT);
+		foreach ($this->moduleParams->sizeVersions as $type => $dimensions) {
+			if ($type == 'natural') {
+				$image->resize($dimensions['width'], $dimensions['height'], Image::SHRINK_ONLY);
 				$image->save($this->galleryDir . '/' . $uniqueName);
 
 			} else {
@@ -58,25 +42,22 @@ class UploadControl extends Control
 		}
 
 		// 2. save to db
-		$data = array(
+		$data = [
 			'gallery_id' => $this->id,
 			'name' => $uniqueName,
 			'name_orig' => $file->name,
-		);
-		$this->galleryFileModel->insert($data);
+		];
 
-		// 3. cleanup file
-		unlink(WWW_DIR . '/files/' . $file->name);
-		unlink(WWW_DIR . '/files/thumbnail/' . $file->name);
+		$this->galleryFileModel->insert($data);
 	}
 
 
 	public function handleSort()
 	{
-		$data = explode(',', $_POST['data']); // @todo ask Honza for value data
+		$data = explode(',', $_POST['data']);
 		$i = 1;
 		foreach ($data as $item) {
-			$this->galleryFileModel->update(array('rank' => $i), $item);
+			$this->galleryFileModel->update(['rank' => $i], $item);
 			$i++;
 		}
 	}
@@ -107,15 +88,15 @@ class UploadControl extends Control
 	}
 
 
-	public function render()
+	protected function renderDefault()
 	{
-		parent::useTemplate();
 		$key = array(
 			'gallery_id' => $this->id
 		);
-		$this->template->galleryThumbDir = $this->getGalleryDir(FALSE) . 'w80_h80/';
+		$this->template->galleryThumbDir = $this->getGalleryDir(FALSE) . 'h100/';
 		$this->template->galleryFiles = $this->galleryFileModel->fetchAll($key)->order('rank, id');
-		$this->template->render();
+
+		parent::setupLayoutTemplate();
 	}
 
 
@@ -127,7 +108,7 @@ class UploadControl extends Control
 	 */
 	public function getGalleryDir($absolute = TRUE)
 	{
-		return ($absolute ? WWW_DIR : '') . '/upload/gallery/' . $this->id . '/';
+		return ($absolute ? $this->paramService->wwwDir : '') . '/files/gallery/' . $this->id . '/';
 	}
 
 }

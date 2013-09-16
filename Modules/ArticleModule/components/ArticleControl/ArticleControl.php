@@ -55,7 +55,7 @@ class ArticleControl extends TextControl
 				->setAttribute('class', 'chosen form-control');
 		}
 
-		if ($this->moduleParams->customAuthorName || $this->moduleParams->publishState || $this->moduleParams->accessToRoles) {
+		if ($this->moduleParams->customAuthorName || $this->moduleParams->publishState) {
 			$form->addGroup('Publikování');
 			if ($this->moduleParams->customAuthorName) {
 				$form->addText('custom_author_name', 'Jméno autora:')
@@ -74,14 +74,6 @@ class ArticleControl extends TextControl
 				$publishTypes = (array) $this->moduleParams->publishTypes;
 				$form->addSelect('publish_state', 'Stav publikování:', $publishTypes)
 					->setAttribute('class', 'form-control');
-			}
-
-			if ($this->moduleParams->accessToRoles) {
-				$roles = (array) $this->paramService->cmsSetup->modules->user->roles;
-				$form->addMultiSelect('access_to_roles', 'Zobrazit pouze pro:', $roles)
-					->setAttribute('data-placeholder', 'Zde můžete omezit zobrazení pouze pro určité uživatele')
-					->setAttribute('class', 'chosen form-control');
-
 			}
 		}
 
@@ -119,10 +111,6 @@ class ArticleControl extends TextControl
 				));
 			}
 
-			if ($this->moduleParams->accessToRoles) { // @todo separate table
-				$defaults['access_to_roles'] = unserialize($defaults['access_to_roles']);
-			}
-
 			$this['form']->setDefaults($defaults);
 		}
 	}
@@ -134,10 +122,6 @@ class ArticleControl extends TextControl
 		if ($this->moduleParams->categories) {
 			$this->articleCategories = $values['article_categories'];
 			unset($values['article_categories']);
-		}
-
-		if ($this->moduleParams->accessToRoles) {
-			$values['access_to_roles'] = serialize($values['access_to_roles']);
 		}
 
 		if ($this->moduleParams->qr) {

@@ -289,7 +289,7 @@ class DateTime extends Nette\DateTime
 	 */
 	public function isFuture()
 	{
-		return ! isPast();
+		return ! $this->isPast();
 	}
 
 }

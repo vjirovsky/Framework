@@ -14,6 +14,9 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 	/** @inject @var Schmutzka\Models\EmailLog */
 	public $emailLogModel;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
 	/** @var int */
 	private $customEmailId;
 
@@ -28,6 +31,8 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 
 	/** @var Nette\Session\SessionSection */
 	private $dumpMailSession;
+
+
 
 
 	public function __construct(Schmutzka\ParamService $paramService, Nette\Http\Session $session)
@@ -88,7 +93,7 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 
 		$template = new Nette\Templating\FileTemplate();
 		$template->registerFilter(new Nette\Latte\Engine());
-		$template->setFile(MODULES_DIR . '/EmailModule/templates/@blankEmail.latte');
+		$template->setFile($this->paramService->modulesDir . '/EmailModule/templates/@blankEmail.latte');
 
 		$replaceArray = array();
 		foreach ($values as $key => $value) {

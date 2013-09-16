@@ -56,40 +56,4 @@ abstract class BasePresenter extends Presenter
 		$this->template->modules = $this->paramService->getActiveModules();
 	}
 
-
-	/**
-	 * @return WebLoader\Nette\CssLoader
-	 */
-	protected function createComponentAdminCss()
-	{
-		return new WebLoader\Nette\CssLoader($this->context->{'webloader.cssAdminCompiler'}, $this->template->basePath . '/webtemp/');
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\JavaScriptLoader
-	 */
-	protected function createComponentAdminJs()
-	{
-		return new WebLoader\Nette\JavaScriptLoader($this->context->{'webloader.jsAdminCompiler'}, $this->template->basePath . '/webtemp/');
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\CssLoader
-	 */
-	protected function createComponentAdminLoginCssControl()
-	{
-		return new WebLoader\Nette\CssLoader($this->context->{'webloader.cssAdminLoginCompiler'}, $this->template->basePath . '/webtemp/');
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\JavaScriptLoader
-	 */
-	protected function createComponentAdminLoginJsControl()
-	{
-		return new WebLoader\Nette\JavaScriptLoader($this->context->{'webloader.jsAdminLoginCompiler'}, $this->template->basePath . '/webtemp/');
-	}
-
 }

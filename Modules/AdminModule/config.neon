@@ -28,6 +28,7 @@ webloader:
 				- %assetsDir%/css/unicorn/unicorn.main.css
 				- %assetsDir%/css/unicorn/unicorn.grey.css
 				- %assetsDir%/css/cms/cms.base.css
+				- %assetsDir%/css/datetimepicker.css
 
 			filters:
 				- @lessFilter
@@ -57,13 +58,15 @@ webloader:
 				- %assetsDir%/js/nette/netteForms.js
 				- %assetsDir%/js/nette/nette.rules.js
 				- %assetsDir%/js/nette/nette.ajax.js
-				- %assetsDir%/js/datepicker.js
 				- %assetsDir%/js/cms/base.js
 				- %assetsDir%/js/unicorn/unicorn.js
-				- %assetsDir%/js/DateTimePicker/jquery-ui-sliderAccess.js
-				- %assetsDir%/js/DateTimePicker/jquery-ui-timepicker-addon.js
-				- %assetsDir%/js/DateTimePicker/DateTimePicker.js
-				- %assetsDir%/js/DateTimePicker/localization/jquery-ui-timepicker-cs.js
+				- %assetsDir%/js/unicorn/jquery.jpanelmenu.min.js
+
+				# DatePicker & DateTimePicker
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.js
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.cs.js
+				- %assetsDir%/js/bootstrap/nextras.datetimepicker.init.js
+
 				- %assetsDir%/js/jquery/chosen/chosen.jquery.min.js
 
 		adminLogin:

@@ -31,11 +31,11 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	/** @inject @var Schmutzka\Templates\TemplateService */
 	public $templateService;
 
-	/** @var Nette\localization\ITranslator */
-	protected $translator;
-
 	/** @var array|callable[] */
 	public $helpersCallbacks = array();
+
+	/** @var Nette\localization\ITranslator */
+	protected $translator;
 
 
 	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -112,29 +112,24 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	protected function createComponent($name)
 	{
 		$component = parent::createComponent($name);
+
 		if ($component == NULL) {
-			$component = call_user_func(array($this->context, 'createService' .  ucfirst($name)));
+			if (Strings::endsWith($name, 'CssControl') || Strings::endsWith($name, 'cssControl')) {
+				$part = ucfirst(substr($name, 0, -10)) ?: 'Default';
+				$compiler = $this->context->{'webloader.css' . $part . 'Compiler'};
+				$component = new WebLoader\Nette\CssLoader($compiler, $this->template->basePath . '/webtemp/');
+
+			} elseif (Strings::endsWith($name, 'JsControl') || Strings::endsWith($name, 'jsControl')) {
+				$part = ucfirst(substr($name, 0, -9)) ?: 'Default';
+				$compiler = $this->context->{'webloader.js' . $part . 'Compiler'};
+				$component = new WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp/');
+
+			} else {
+				$component = call_user_func(array($this->context, 'createService' .  ucfirst($name)));
+			}
 		}
 
 		return $component;
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\CssLoader
-	 */
-	protected function createComponentCssControl()
-	{
-		return new WebLoader\Nette\CssLoader($this->context->{'webloader.cssDefaultCompiler'}, $this->template->basePath . '/webtemp/');
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\JavaScriptLoader
-	 */
-	protected function createComponentJsControl()
-	{
-		return new WebLoader\Nette\JavaScriptLoader($this->context->{'webloader.jsDefaultCompiler'}, $this->template->basePath . '/webtemp/');
 	}
 
 

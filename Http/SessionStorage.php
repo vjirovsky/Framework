@@ -50,6 +50,8 @@ class SessionStorage implements ISessionStorage
         $this->database->exec("SELECT RELEASE_LOCK('session_$id')");
         return true;
 		*/
+
+		return TRUE;
 	}
 
 
@@ -76,16 +78,23 @@ class SessionStorage implements ISessionStorage
 	 */
 	public function write($id, $data)
 	{
-		$this->database->session->where('id', $id)
-			->delete();
+		$record = $this->database->session->where('id', $id)
+			->fetch();
 
-		$record = array(
-			'id' => $id,
-			'time' => time(),
-			'data' => $data
-		);
+		if ($record) {
+			$record['time'] = time();
+			$record['data'] = $data;
+			$record->update();
 
-		$this->database->session->insert($record);
+		} else {
+			$record = array(
+				'id' => $id,
+				'time' => time(),
+				'data' => $data
+			);
+
+			$this->database->session->insert($record);
+		}
 	}
 
 

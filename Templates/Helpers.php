@@ -149,22 +149,22 @@ class Helpers extends Nette\Object
 
 		if ($delta < 0) {
 			$delta = abs($delta);
-			if ($delta == 0) return 'ještì dnes';
-			if ($delta == 1) return 'zítra';
-			if ($delta < 30) return 'za ' . $delta . ' ' . self::plural($delta, 'den', 'dny', 'dní');
-			if ($delta < 60) return 'za mìsíc';
-			if ($delta < 365) return 'za ' . round($delta / 30) . ' ' . self::plural(round($delta / 30), 'mìsíc', 'mìsíce', 'mìsícù');
+			if ($delta == 0) return 'jeÅ¡tÄ› dnes';
+			if ($delta == 1) return 'zÃ­tra';
+			if ($delta < 30) return 'za ' . $delta . ' ' . self::plural($delta, 'den', 'dny', 'dnÃ­');
+			if ($delta < 60) return 'za mÄ›sÃ­c';
+			if ($delta < 365) return 'za ' . round($delta / 30) . ' ' . self::plural(round($delta / 30), 'mÄ›sÃ­c', 'mÄ›sÃ­ce', 'mÄ›sÃ­cÃ¹');
 			if ($delta < 730) return 'za rok';
 			return 'za ' . round($delta / 365) . ' ' . self::plural(round($delta / 365), 'rok', 'roky', 'let');
 		}
 
 		if ($delta == 0) return 'dnes';
-		if ($delta == 1) return 'vèera';
-		if ($delta < 30) return 'pøed ' . $delta . ' dny';
-		if ($delta < 60) return 'pøed mìsícem';
-		if ($delta < 365) return 'pøed ' . round($delta / 30) . ' mìsíci';
-		if ($delta < 730) return 'pøed rokem';
-		return 'pøed ' . round($delta / 365) . ' lety';
+		if ($delta == 1) return 'vÄera';
+		if ($delta < 30) return 'pÅ™ed ' . $delta . ' dny';
+		if ($delta < 60) return 'pÅ™ed mÄ›sÃ­cem';
+		if ($delta < 365) return 'pÅ™ed ' . round($delta / 30) . ' mÄ›sÃ­ci';
+		if ($delta < 730) return 'pÅ™ed rokem';
+		return 'pÅ™ed ' . round($delta / 365) . ' lety';
 	}
 
 
@@ -193,31 +193,32 @@ class Helpers extends Nette\Object
 
 		if ($delta < 0) {
 			$delta = round(abs($delta) / 60);
-			if ($delta == 0) return 'za okamžik';
+			if ($delta == 0) return 'za okamÅ¾ik';
 			if ($delta == 1) return 'za minutu';
 			if ($delta < 45) return 'za ' . $delta . ' ' . self::plural($delta, 'minuta', 'minuty', 'minut');
 			if ($delta < 90) return 'za hodinu';
 			if ($delta < 1440) return 'za ' . round($delta / 60) . ' ' . self::plural(round($delta / 60), 'hodina', 'hodiny', 'hodin');
-			if ($delta < 2880) return 'zítra';
-			if ($delta < 43200) return 'za ' . round($delta / 1440) . ' ' . self::plural(round($delta / 1440), 'den', 'dny', 'dní');
-			if ($delta < 86400) return 'za mìsíc';
-			if ($delta < 525960) return 'za ' . round($delta / 43200) . ' ' . self::plural(round($delta / 43200), 'mìsíc', 'mìsíce', 'mìsícù');
+			if ($delta < 2880) return 'zÃ­tra';
+			if ($delta < 43200) return 'za ' . round($delta / 1440) . ' ' . self::plural(round($delta / 1440), 'den', 'dny', 'dnÃ­');
+			if ($delta < 86400) return 'za mÄ›sÃ­c';
+			if ($delta < 525960) return 'za ' . round($delta / 43200) . ' ' . self::plural(round($delta / 43200), 'mÄ›sÃ­c', 'mÄ›sÃ­ce', 'mÄ›sÃ­cÃ¹');
 			if ($delta < 1051920) return 'za rok';
 			return 'za ' . round($delta / 525960) . ' ' . self::plural(round($delta / 525960), 'rok', 'roky', 'let');
 		}
 
 		$delta = round($delta / 60);
-		if ($delta == 0) return 'pøed okamžikem';
-		if ($delta == 1) return 'pøed minutou';
-		if ($delta < 45) return 'pøed $delta minutami';
-		if ($delta < 90) return 'pøed hodinou';
-		if ($delta < 1440) return 'pøed ' . round($delta / 60) . ' hodinami';
-		if ($delta < 2880) return 'vèera';
-		if ($delta < 43200) return 'pøed ' . round($delta / 1440) . ' dny';
-		if ($delta < 86400) return 'pøed mìsícem';
-		if ($delta < 525960) return 'pøed ' . round($delta / 43200) . ' mìsíci';
-		if ($delta < 1051920) return 'pøed rokem';
-		return 'pøed ' . round($delta / 525960) . ' lety';
+		if ($delta == 0) return 'pÅ™ed okamÅ¾ikem';
+		if ($delta == 1) return 'pÅ™ed minutou';
+		if ($delta < 45) return 'pÅ™ed $delta minutami';
+		if ($delta < 90) return 'pÅ™ed hodinou';
+		if ($delta < 1440) return 'pÅ™ed ' . round($delta / 60) . ' hodinami';
+		if ($delta < 2880) return 'vÄera';
+		if ($delta < 43200) return 'pÅ™ed ' . round($delta / 1440) . ' dny';
+		if ($delta < 86400) return 'pÅ™ed mÄ›sÃ­cem';
+		if ($delta < 525960) return 'peÄd ' . round($delta / 43200) . ' mÄ›sÃ­ci';
+		if ($delta < 1051920) return 'pÅ™ed rokem';
+
+		return 'pÅ™ed ' . round($delta / 525960) . ' lety';
 	}
 
 

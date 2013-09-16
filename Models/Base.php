@@ -76,6 +76,17 @@ abstract class Base extends Nette\Object
 
 
 	/**
+	 * @param  string
+	 * @param  array
+	 * @return NotORM_Row
+	 */
+	public function fetchLast($orderBy, $key = array())
+	{
+		return $this->table($key)->order($orderBy . ' DESC')->limit(1)->fetch();
+	}
+
+
+	/**
 	 * @param array|int
 	 * @return array|NULL
 	 * @deprecatded

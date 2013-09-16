@@ -58,7 +58,7 @@ class Macros extends MacroSet
 		);
 		$node = strtr($node->args, $replace);
 
-		return $writer->write('echo \' src="\' . %escape($basePath) . "/images/" . "'.$node.'" . \'"\'');
+		return $writer->write('echo \' src="\' . %escape($basePath) . \'/images/' . $node . '"\'');
 	}
 
 

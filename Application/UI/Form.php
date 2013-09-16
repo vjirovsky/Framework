@@ -219,6 +219,17 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
+	 * @param bool
+	 * @return this
+	 */
+	public function setAjax($ajax)
+	{
+		$this->elementPrototype->ajax = $ajax;
+		return $this;
+	}
+
+
+	/**
 	 * @param string
 	 * @return this
 	 */
@@ -253,29 +264,6 @@ class Form extends Nette\Application\UI\Form
 	public function addSuggest($name, $label = NULL, $suggestList)
 	{
 		return $this[$name] = new Controls\SuggestControl($label, $suggestList);
-	}
-
-
-	/**
-	 * @param  string
-	 * @param  string|NULL
-	 * @param  int|NULL
-	 * @return Controls\DatePicker
-	 */
-	public function addDatePicker($name, $label = NULL, $cols = NULL)
-	{
-		return $this[$name] = new Controls\DatePicker($label, $cols, NULL);
-	}
-
-
-	/**
-	 * @param string
-	 * @param string|NULL
-	 * @return Controls\DateTimePicker
-	 */
-	public function addDateTimePicker($name, $label = NULL)
-	{
-		return $this[$name] = new Controls\DateTimePicker($label);
 	}
 
 

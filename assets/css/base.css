@@ -82,7 +82,7 @@ sub {top: .5ex;}
 
 /* ico functions */
 .ico(@image, @x: 0px, @y: 50%, @l: 20px) {
-	background:url("../../images/ico/@{image}.png") @x @y no-repeat;padding-left:@l;
+	background:url("../images/ico/@{image}.png") @x @y no-repeat;padding-left:@l;
 }
 
 

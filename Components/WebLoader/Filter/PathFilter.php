@@ -17,6 +17,7 @@ class PathFilter extends Nette\Object
 	public function __invoke($code, WebLoader\Compiler $loader)
 	{
 		$code = strtr($code, array(
+			'url("../img' => 'url("../../images',
 			'url(../' => 'url(../../',
 			"url('../" => "url('../../",
 			'url("../' => 'url("../../'

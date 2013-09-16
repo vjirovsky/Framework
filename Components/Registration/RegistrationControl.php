@@ -90,7 +90,8 @@ class RegistrationControl extends Control
 		}
 
 		if ($this->loginAfter) {
-			$this->user->login($values['email'], $rawValues['password']);
+			$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
+			$this->user->login($values[$loginColumn], $rawValues['password']);
 			$this->presenter->flashMessage($this->paramService->registration->onSuccessAndLogin, 'success');
 
 		} else {

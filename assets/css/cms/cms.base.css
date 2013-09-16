@@ -104,14 +104,18 @@ textarea.wider {
 #content {
 	table {
 		th, td {
-			.btn {
+			.btn:not(.btn-filter) {
 				margin: -5px 0;
+			}
+
+			.btn.btn-filter {
+				margin-top: -8px;
 			}
 		}
 	}
 
 	.newButton {
-		margin: -61px 0 40px 0;
+		margin: -75px 0 50px 0;
 		.clearfix;
 		float: right;
 	}
@@ -120,6 +124,10 @@ textarea.wider {
 #content-header {
 	border-bottom: 6px solid #DDD;
 	margin-bottom: 15px;
+
+	&.custom {
+		margin: 0px 0 0 -15px;
+	}
 }
 
 #article {
@@ -139,18 +147,18 @@ textarea.wider {
 }
 
 #galleryFileList {
-	.clearfix;
+	padding: 10px 10px 0px 10px;
 
 	ul {
 		list-style-type: none;
+		padding-left: 0;
 
 		li {
-			float: left;
+			display: inline-block;
 			text-align: center;
-			border:1px solid #DDD;
 			padding: 3px;
 			margin: 3px;
-			background: #FFF;
+			background: darken(#FFF, 5%);
 
 			img { /* bug fix */
 				margin-left: 4px;
@@ -234,19 +242,6 @@ th.time, .time {
 /*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-#ui-datepicker-div {
-	float: left;
-	z-index: 20;
-	display: none;
-	font-size: 1em;
-}
-
-
-#ui-helper-clearfix {
-	margin-left: 18em;
-}
 
 
 legend {

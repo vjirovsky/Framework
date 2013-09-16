@@ -32,14 +32,11 @@
 
 {define body-cell-public_state}
 	<td width="100px">
-		{if $value == 2}
-			v přípravě
+		{ifset $publicStateList[$value]}
+			{$publicStateList[$value]}
 
-		{elseif $value == 1}
-			zveřejněno
-
-		{elseif $value == 0}
-			skryto
+		{else}
+			{$value}
 		{/}
 	</td>
 {/}
