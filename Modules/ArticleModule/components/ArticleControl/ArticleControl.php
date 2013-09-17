@@ -78,8 +78,7 @@ class ArticleControl extends TextControl
 		}
 
  		$form->addGroup('Obsah');
-		$this->addFormPerexShort($form);
-		$this->addFormPerexLong($form);
+		$this->addFormPerex($form);
 		$this->addFormContent($form);
 
 		$this->addFormAttachments($form);

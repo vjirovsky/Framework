@@ -6,9 +6,9 @@
 		</a>
 		%ul
 			{foreach $items as $item}
-				{var $link = ":" . $module . ":" . $item->link}
+				{var $link = ":" . $module . ":" . $item->link . ", id => NULL"}
 				<li n:class="topmenu, $presenter->isLinkCurrent($link) ? 'active'">
-					<a href="{plink $link}">
+					<a n:phref=":$module:$item->link, id => NULL">
 						{$item->label}
 					</a>
 				</li>
@@ -16,8 +16,7 @@
 
 {else}
 	<li n:class="topmenu, $presenter->module == $module ? 'active'">
-		{var $link = ":" . $module . ":Homepage:default"}
-		<a href="{plink $link}">
+		<a n:phref=":$module:Homepage:default, id => NULL">
 			<i n:class="$icon"></i>
 			{$title}
 		</a>

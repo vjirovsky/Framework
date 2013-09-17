@@ -23,7 +23,6 @@ webloader:
 			files:
 				- %assetsDir%/css/bootstrap.min.css
 				- %assetsDir%/css/font-awesome.min.css
-				- %assetsDir%/css/jquery/jquery-ui.css
 				- %assetsDir%/css/jquery/chosen/chosen.css
 				- %assetsDir%/css/unicorn/unicorn.main.css
 				- %assetsDir%/css/unicorn/unicorn.grey.css
@@ -52,7 +51,6 @@ webloader:
 		admin:
 			files:
 				- %assetsDir%/js/jquery/%jQuery%
-				- %assetsDir%/js/jquery/jquery-ui-1.10.0.min.js
 				- %assetsDir%/js/jquery/jquery.nestable.js
 				- %assetsDir%/js/bootstrap.min.js
 				- %assetsDir%/js/nette/netteForms.js

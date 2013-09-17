@@ -67,3 +67,4 @@ jQuery(window).load(function () {
 	jQuery.nette.ext('init').formSelector = 'form.ajax';
 	jQuery.nette.init();
 });
+

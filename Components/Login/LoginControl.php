@@ -75,7 +75,7 @@ class LoginControl extends Control
 	{
 		try {
 			$values = $form->values;
-			// $this->user->setExpiration('+ 14 days', FALSE); // @todo: hotfix
+			$this->user->setExpiration('+ 14 days', FALSE);
 			$this->user->login($values['login'], $values['password']);
 
 			if ($this->onLoginSuccess) {

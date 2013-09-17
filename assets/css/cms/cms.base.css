@@ -258,8 +258,13 @@ legend {
 	padding-left: @l;
 }
 
+fieldset {
+	margin-top: 10px;
+}
 
-.icoCms(@image, @x: 0px, @y: 50%, @l: 20px) {
-	background: url("../../images/cms/ico/@{image}.png") @x @y no-repeat;
-	padding-left: @l;
+fieldset legend {
+	font-size: 1.2em;
+	font-weight: bold;
+	border-top: 1px solid #DDD;
+	margin-bottom: 5px;
 }
