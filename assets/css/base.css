@@ -1,100 +1,12 @@
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ icos @see: .ico move to assets? rename: icoEmailMe... to prevent mix names
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-table tr td.manage {
-	a {text-decoration:none}
-
-}
-
-.showCombo {
-	.showBox {text-decoration:underline;cursor: pointer;
-		&:hover {text-decoration:none;}
-	}
-	.btn.cancel {color:#888;background:lighten(#EEE, 5%);
-		&:hover {color:#BBB;;background:lighten(#EEE, 7%)}
-	}
-}
-
-.addIco {.ico(add)}
-.stop {.ico(stop)}
-
-.del {.ico(del, 50%, 50%);}
-a.del {text-decoration:none;}
-
-.edit {.ico(edit, 50%, 50%)}
-.duplicate {.ico(duplicate, 50%, 50%)}
-
-
-
-.emailMe {.ico(emailMe)}
-.run {.ico(run)}
-.runDim {.ico(runDim)}
-
-.copy {.ico(copy, 50%, 50%)}
-
-.work {.ico(work, 0%, 50%, 30px)}
-.user {.ico(user, 0%, 50%, 30px)}
-
-th.time, .time {.ico(time, 0%, 50%, 30px)}
-
-
-.logout {.ico(logout, 50%, 65%)}
-
-.link {.ico(link, 10px, 50%, 33px);}
-
-.email {.ico(email, 10px, 50%, 33px);}
-
-// .name {.ico(user, 0, 50%, 33px);}
-.password {.ico(password, 0, 50%, 33px);}
-
-.help {.ico(help, 0, 50%, 33px);}
-.activity {.ico(activity, 0, 50%, 33px);}
-.preview {.ico(preview, 50%, 50%);}
-
-
-.w60, input.w60 {width:60px}
-.w100, input.w100 {width:100px}
-.w120, input.w120 {width:120px}
-
-.noFat {font-weight:normal}
-
-.resultDetailLink {background:url(../../images/ico/preview.png) 100% 100% no-repeat;padding-right:20px;width:120px;text-decoration:none;}
-
-.helpCursor {cursor: help}
-
-
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ formulas
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+/********************* formulas *********************/
 
 sup, sub {height: 0; line-height: 1; vertical-align: baseline; _vertical-align: bottom; position: relative;}
 sup {bottom: 1ex;}
 sub {top: .5ex;}
 
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-/* ico functions */
-.ico(@image, @x: 0px, @y: 50%, @l: 20px) {
-	background:url("../images/ico/@{image}.png") @x @y no-repeat;padding-left:@l;
-}
-
+/********************* functions & shortucts (required to be at the same file, unless doesn't inherit functions) *********************/
 
 .btn {cursor: piointer}
-
-.fleft {
-	float:left;
-}
-
-.fright {
-	float:right;
-}
 
 .left {
 	text-align: left;
@@ -105,25 +17,26 @@ sub {top: .5ex;}
 }
 
 
-/* rotujeme */
 .rotate(@deg: 135deg) {
 	-webkit-transform: rotate(@deg);
     -moz-transform: rotate(@deg);
     -o-transform: rotate(@deg);
 }
 
-
-
 table td.center, td.center, .center {
-	text-align:center;
+	text-align: center;
 }
-table.manage {.pm0;margin:auto;
-	td {.pm0;border:none;
-		.pm0;
-		> .btn {background:#FFF;.pm0}
-	}
 
-	.results {.ico('results');}
+table.manage {
+	margin:auto;
+
+	td {
+		border:none;
+
+		> .btn {
+			background:#FFF;
+		}
+	}
 }
 
 .gradient(@from, @to) {
@@ -148,9 +61,6 @@ table.manage {.pm0;margin:auto;
 }
 
 
-.td {text-decoration:underline;}
-.tdn {text-decoration:none;}
-
 /* shadows */
 .sh(@x: 0, @y: 0, @blur: 15px, @color: #CCC) {
 	box-shadow: @x @y @blur @color;
@@ -166,48 +76,12 @@ table.manage {.pm0;margin:auto;
 	text-shadow: @color @x @y @blur ;
 }
 
-/* round corners */
-.rc (@radius: 5px) {
-	-webkit-border-radius: @radius;
-	-moz-border-radius: @radius;
-	-khtml-border-radius: @radius;
-	border-radius: @radius;
-		-webkit-background-clip: padding-box;
-}
-.rc-spec (@a: 5px, @b: 5px, @c: 5px, @d: 5px) {
-	-webkit-border-radius: @a @b @c @d;
-	-moz-border-radius: @a @b @c @d;
-	-khtml-border-radius: @a @b @c @d;
-	border-radius: @a @b @c @d;
-		-webkit-background-clip: padding-box;
-}
-
-.pm0 {padding:0;margin:0}
 
 .clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
 .clearfix {display: inline-block;}
 html[xmlns] .clearfix {display: block;}
  * html .clearfix {height: 1%;}
 
-
-textarea, select, input {
-	&.w100 {width:100px}
-	&.w150 {width:150px}
-	&.w200 {width:200px}
-	&.w300 {width:300px}
-	&.w400 {width:400px}
-	&.w600 {width:600px}
-	&.w622 {width:622px}
-	&.w100p {width:100%}
-	&.w985 {width:985px}
-
-	&.height30 {height:40px}
-}
-
-
-form {
-	.description {color:#999;padding-left:5px}
-}
 
 .responsiveBackground(@url) {
 	background: url(@url)  no-repeat center center fixed;
@@ -225,11 +99,22 @@ form {
 	background-size: cover;
 }
 
+.ac(@normal, @hover) {
+	a {
+		color: @normal;
 
-.aun {
-	text-decoration: underline;
+		&:hover {
+			color: @hover;
+		}
+	}
+}
 
-	&:hover {
-		text-decoration: none;
+.ad(@normal, @hover) {
+	a {
+		text-decoration: @normal;
+
+		&:hover {
+			text-decoration: @hover;
+		}
 	}
 }

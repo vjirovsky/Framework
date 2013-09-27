@@ -13,6 +13,9 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	/** @inject @var Schmutzka\Models\User */
 	public $userModel;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
 
 	/**
 	 * Performs an authentication
@@ -22,17 +25,20 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	public function authenticate(array $credentials)
 	{
 		list($login, $password) = $credentials;
-		$key[strpos($login, '@') ? 'email' : 'login'] = $login;
-		$row = $this->userModel->item($key);
+
+		if (isset($this->paramService->loginColumn)) {
+			$loginColumn = $this->paramService->loginColumn;
+
+		} else {
+			$loginColumn = strpos($login, '@') ? 'email' : 'login';
+		}
+
+		$row = $this->userModel->fetch([$loginColumn => $login]);
 
 		if (!$row) {
 			throw new AE("Uživatel '$login' neexistuje.", self::IDENTITY_NOT_FOUND);
 		}
-
-		if (isset($row['auth']) && $row['auth'] != 1) {
-			throw new AE('Tento účet ještě nebyl autorizován. Zkontrolujte Vaši emailovou schránku.');
-		}
-
+		
 		if ($row['password'] !== $this->calculateHash($password, $row['salt'])) {
 			throw new AE('Chybné heslo.', self::INVALID_CREDENTIAL);
 		}
@@ -64,18 +70,20 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public function register($values)
 	{
-		if ($this->userModel->item(['login' => $values['login']])) {
-			throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
+		if (isset($values['login'])) {
+			if ($this->userModel->item(['login' => $values['login']])) {
+				throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
+			}
 		}
 
-		if ($this->userModel->item(array('email' => $values['email']))) {
+		if ($this->userModel->item(['email' => $values['email']])) {
 			throw new \Exception('Tento email je již registrován, zadejte jiný.');
 		}
 
 		$values['salt'] = Strings::random(22);
 		$values['password'] = self::calculateHash($values['password'], $values['salt']);
 		$values['created'] = new Nette\DateTime;
-		
+
 		$userId = $this->userModel->insert($values);
 
 		return $this->userModel->item($userId);

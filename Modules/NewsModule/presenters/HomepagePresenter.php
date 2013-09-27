@@ -1,12 +1,13 @@
 <?php
 
-namespace FileModule;
+namespace NewsModule;
 
 use Schmutzka\Application\UI\Module\Presenter;
 
+
 class HomepagePresenter extends Presenter
 {
-	/** @inject @var Schmutzka\Models\File */
-	public $fileModel;
+	/** @inject @var Schmutzka\Models\News */
+	public $newsModel;
 
 }

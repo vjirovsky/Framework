@@ -3,7 +3,7 @@
 namespace Schmutzka\Models;
 
 
-class CustomEmail extends Base
+class Email extends Base
 {
 
 }

@@ -103,7 +103,7 @@ class ArticleControl extends TextControl
 	{
 		parent::attached($presenter);
 		if ($this->id = $presenter->id) {
-			$defaults = $this->articleModel->item($this->id);
+			$defaults = $this->articleModel->fetch($this->id);
 			if ($this->moduleParams->qr) {
 				$defaults['qr'] = $this->qrModel->fetchSingle('id', array(
 					'article_id' => $this->id

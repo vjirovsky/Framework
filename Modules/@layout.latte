@@ -23,6 +23,18 @@
 		#user-nav
 			%ul.btn-group
 				{if $user->loggedIn}
+					{ifset $adminLangs}
+						{foreach $adminLangs as $key => $value}
+							{if $lang != $key}
+								%li.btn
+									<a n:href="this, lang => $key">
+										%i.icon-globe
+										%span {$value}
+									</a>
+							{/}
+						{/}
+					{/}
+
 					%li.btn
 						<a n:href=":Front:Homepage:">
 							%i.icon-home

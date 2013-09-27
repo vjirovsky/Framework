@@ -13,7 +13,7 @@ class EmailLogGrid extends Grid
 
 	public function build()
 	{
-		$this->addColumn('custom_email_id', 'Předmět');
+		$this->addColumn('email_id', 'Předmět');
 		$this->addColumn('to_email', 'Komu');
 		$this->addColumn('datetime', 'Odesláno');
 		$this->addColumn('type', 'Typ');

@@ -38,12 +38,8 @@ class Configurator extends Nette\Configurator
 		// configs
 		$this->addConfig($this->parameters['libsDir'] . '/Schmutzka/configs/default.neon');
 		if ($autoloadConfig) {
-			if ($this->parameters['environment'] == 'development') {
-				$this->addConfig($this->parameters['appDir'] . '/config/config.local.neon', FALSE);
-
-			} else {
-				$this->addConfig($this->parameters['appDir'] . '/config/config.prod.neon', FALSE);
-			}
+			$name = $this->parameters['environment'] == 'development' ? 'local' : 'prod';
+			$this->loadConfigByName($name);
 		}
 	}
 
@@ -63,12 +59,9 @@ class Configurator extends Nette\Configurator
 		}
 
 		if ($configLoaded == FALSE) {
-			$this->addConfig($this->parameters['appDir'] . '/config/config.local.neon', FALSE);
+			$this->loadConfigByName('local');
 		}
 	}
-
-
-	/********************** helpers **********************/
 
 
 	/**
@@ -109,6 +102,21 @@ class Configurator extends Nette\Configurator
 					$this->addConfig($config);
 				}
 			}
+		}
+	}
+
+
+	/**
+	 * @param  string
+	 */
+	private function loadConfigByName($name)
+	{
+		$file = $this->parameters['appDir'] . '/config/config.' . $name . '.neon';
+		if (file_exists($file)) {
+			$this->addConfig($file, FALSE);
+
+		} else {
+			$this->addConfig($this->parameters['appDir'] . '/config/config.neon', FALSE);
 		}
 	}
 

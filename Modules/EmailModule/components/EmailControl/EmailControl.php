@@ -7,10 +7,10 @@ use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Module\Control;
 
 
-class CustomEmailControl extends Control
+class EmailControl extends Control
 {
-	/** @inject @var Schmutzka\Models\CustomEmail */
-	public $customEmailModel;
+	/** @inject @var Schmutzka\Models\Email */
+	public $emailModel;
 
 
 	protected function createComponentForm()

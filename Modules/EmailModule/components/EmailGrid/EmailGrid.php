@@ -5,10 +5,10 @@ namespace EmailModule\Components;
 use Schmutzka\Application\UI\Module\Grid;
 
 
-class CustomEmailGrid extends Grid
+class EmailGrid extends Grid
 {
-	/** @inject @var Schmutzka\Models\CustomEmail */
-	public $customEmailModel;
+	/** @inject @var Schmutzka\Models\Email */
+	public $emailModel;
 
 
 	public function build()

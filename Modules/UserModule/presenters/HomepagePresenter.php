@@ -4,6 +4,7 @@ namespace UserModule;
 
 use Schmutzka\Application\UI\Module\Presenter;
 
+
 class HomepagePresenter extends Presenter
 {
 	/** @inject @var Schmutzka\Models\User */
@@ -15,7 +16,7 @@ class HomepagePresenter extends Presenter
 	 */
 	public function handleDelete($id)
 	{
-		if ($user = $this->userModel->item($id)) {
+		if ($user = $this->userModel->fetch($id)) {
 			if ($user['role'] == 'admin') {
 				$this->flashMessage('Administrátorský účet nelze smazat.', 'error');
 

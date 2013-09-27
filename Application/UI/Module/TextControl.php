@@ -37,22 +37,10 @@ abstract class TextControl extends Control
 	/**
 	 * @param Nette\Application\UI\Form
 	 */
-	protected function addFormPerexShort(Form $form)
+	protected function addFormPerex(Form $form)
 	{
-		if ($this->moduleParams->perexShort) {
-			$form->addTextarea('perex_short', 'Perex (kratší):')
-				->setAttribute('class', 'ckeditor');
-		}
-	}
-
-
-	/**
-	 * @param Nette\Application\UI\Form
-	 */
-	protected function addFormPerexLong(Form $form)
-	{
-		if ($this->moduleParams->perexLong) {
-			$form->addTextarea('perex_short', 'Perex (delší):')
+		if ($this->moduleParams->perex) {
+			$form->addTextarea('perex', 'Perex:')
 				->setAttribute('class', 'ckeditor');
 		}
 	}

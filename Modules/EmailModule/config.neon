@@ -11,7 +11,7 @@ parameters:
 			items:
 				1:
 					label: Šablony emailů
-					link: CustomEmail:default
+					link: Homepage:default
 				2:
 					cond: newsletter
 					label: Newsletter
@@ -19,14 +19,14 @@ parameters:
 				3:
 					cond: useLogger
 					label: Log
-					link: Newsletter:log
+					link: Logger:default
 
 services:
-	- Schmutzka\Models\CustomEmail
+	- Schmutzka\Models\Email
 	- Schmutzka\Models\EmailLog
 
 factories:
-	customEmailGrid: EmailModule\Components\CustomEmailGrid
-	customEmailControl: EmailModule\Components\CustomEmailControl
+	emailGrid: EmailModule\Components\EmailGrid
+	emailControl: EmailModule\Components\EmailControl
 	emailLogGrid: EmailModule\Components\EmailLogGrid
 	newsletterControl: EmailModule\Components\NewsletterControl

@@ -40,20 +40,22 @@ class ModuleRouterFactory
 		$router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
 		$router[] = new Route('index.php', 'Admin:Homepage:default', Route::ONE_WAY);
 
-		$modules = (array) $this->paramService->modules;
+		if (isset($this->paramService->modules)) {
+			$modules = (array) $this->paramService->modules;
 
-		$router[] = new Route('<module admin|' . Name::upperToDashedLower(implode($modules, '|')) . '>/<presenter>/<action>[/<id>]', 'Homepage:default');
+			$router[] = new Route('<module admin|' . Name::upperToDashedLower(implode($modules, '|')) . '>/<presenter>/<action>[/<id>]', 'Homepage:default');
 
-		$modules = array_flip($modules);
-		if (isset($modules['page'])) {
-			$frontRouter = $router[] = new RouteList('Front');
-			$frontRouter[] = new PairsRoute('<id>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = array('id', 'url'));
-		}
+			$modules = array_flip($modules);
+			if (isset($modules['page'])) {
+				$frontRouter = $router[] = new RouteList('Front');
+				$frontRouter[] = new PairsRoute('<id>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = array('id', 'url'));
+			}
 
-		if (isset($modules['article'])) {
-			$frontRouter = $router[] = new RouteList('Front');
-			$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', NULL, $this->articleModel, $this->cache, $columns = array('id', 'url'
-			));
+			if (isset($modules['article'])) {
+				$frontRouter = $router[] = new RouteList('Front');
+				$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', NULL, $this->articleModel, $this->cache, $columns = array('id', 'url'
+				));
+			}
 		}
 
 		return $router;

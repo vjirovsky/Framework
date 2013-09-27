@@ -3,33 +3,24 @@
 namespace AdminModule;
 
 use FrontModule;
+use Nette;
+use Schmutzka\Application\UI\Presenter; // fix hack
 
 
-abstract class BasePresenter extends FrontModule\BasePresenter
+
+abstract class BasePresenter extends /*FrontModule\BasePresenter*/Presenter
 {
 	/** @var array */
 	public $moduleParams;
 
-	/** @inject @var Schmutzka\Models\User */
-	public $userModel;
-
-	/** @var Schmutzka\Models\Page */
-	// public $pageModel;
-
-	/** @var Schmutzka\Models\Gallery */
-	// public $galleryModel;
-
-	/** @var string */
-	protected $unloggedRedirect = 'Homepage:default';
+	/** @var Nette\Security\Permission */
+	private $acl;
 
 
-	/*
-	public function injectModels(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Gallery $galleryModel = NULL)
+	public function injectAcl(Nette\Security\IAuthorizator $acl = NULL)
 	{
-		$this->pageModel = $pageModel;
-		$this->galleryModel = $galleryModel;
+		$this->acl = $acl;
 	}
-	*/
 
 
 	public function startup()
@@ -39,17 +30,23 @@ abstract class BasePresenter extends FrontModule\BasePresenter
 		if ( ! $this->user->loggedIn) {
 			$this->layout = 'layoutLogin';
 
-			if ($this->presenter->isLinkCurrent($this->unloggedRedirect) == FALSE) {
+			if ($this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
 				$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
 				$this->redirect(':Admin:Homepage:default');
 			}
 
-		} elseif ($this->context->hasService('Nette\Security\IAuthorizator') && ! $this->user->isAllowed($this->name, $this->action)) {
-			$this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
-			$this->redirect(':Front:Homepage:default');
+		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
+			// $this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
+			$this->flashMessage('Byli jste úspěšně přihlášeni.', 'success');
+			$this->redirect(':Front:Homepage:logged'); // custom manage
 		}
 
 		$this->template->modules = $this->paramService->getActiveModules();
+
+		if ($this->translator) {
+			$this->template->adminLangs = $this->paramService->adminLangs;
+			$this->template->lang = $this->lang;
+		}
 	}
 
 }

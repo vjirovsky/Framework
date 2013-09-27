@@ -1,8 +1,7 @@
 parameters:
 	pageModule:
 		title: Stránky
-		perexShort: FALSE
-		perexLong: FALSE
+		perex: FALSE
 		attachmentGallery: FALSE
 		attachmentFiles: FALSE
 		adminNote: FALSE

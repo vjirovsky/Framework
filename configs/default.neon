@@ -99,7 +99,6 @@ factories:
 
 extensions:
 	- Kdyby\BootstrapFormRenderer\DI\RendererExtension
-	- Kdyby\Replicator\DI\ReplicatorExtension
 	- Schmutzka\DI\Extensions\SchmutzkaExtension
 	webloader: WebLoader\Nette\Extension
 
