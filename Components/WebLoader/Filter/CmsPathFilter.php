@@ -5,6 +5,7 @@ namespace Schmutzka\Components\WebLoader\Filter;
 use Nette;
 use WebLoader;
 
+
 class CmsPathFilter extends Nette\Object
 {
 
@@ -16,9 +17,10 @@ class CmsPathFilter extends Nette\Object
 	public function __invoke($code, WebLoader\Compiler $loader)
 	{
 		$code = strtr($code, array(
-			"url('../img" => "url('../../images/cms",
 			'url("../img' => 'url("../../images/cms',
-			"url(../img" => "url(../../images/cms",
+			"url('../img" => "url('../../images/cms",
+			'url(../img' => 'url(../../images/cms',
+			"url('../" => "url('../../",
 			"url('chosen" => "url('../../images/cms/chosen/chosen"
 		));
 

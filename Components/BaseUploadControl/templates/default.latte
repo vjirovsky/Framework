@@ -1,0 +1,47 @@
+{include #js}
+
+.panel
+	.panel-heading
+		.panel-title Vyberte soubory
+	.panel-body
+		<input id='fileupload' type='file' name='files[]' data-url='{link upload!}' multiple>
+		#progress
+			.bar [style => 'width: 0%']
+
+<style>
+	\.bar {
+		height: 18px;
+		background: green;
+	}
+</style>
+
+
+{define #js}
+	{control uploadJsControl}
+
+	<script type='text/javascript'>
+		$(function () {
+			$('#fileupload').fileupload({
+				dataType: 'json',
+
+				done: function (e, data) {
+					$.each(data.result.files, function (index, file) {
+						$('<p/>').text(file.name).appendTo(document.body);
+					});
+				},
+
+				progressall: function (e, data) {
+					var progress = parseInt(data.loaded / data.total * 100, 10);
+					$('#progress .bar').css(
+						'width',
+						progress + '%'
+					);
+				},
+
+				stop: function() {
+					location.reload();
+				}
+			});
+		});
+	</script>
+{/}

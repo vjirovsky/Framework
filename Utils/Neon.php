@@ -4,6 +4,7 @@ namespace Schmutzka\Utils;
 
 use Nette;
 
+
 class Neon extends Nette\Utils\Neon
 {
 
@@ -11,36 +12,22 @@ class Neon extends Nette\Utils\Neon
 	 * Load a config file or it's part
 	 * @param file
 	 * @param string
+	 * @return  Nette\ArrayHash
 	 */
-	public static function fromFile($file, $part = NULL)
+	public static function fromFile($file, $section = NULL)
 	{
-		$file = self::loadFile($file);
-		$fileDecoded = Nette\Utils\Neon::decode($file);
-
-		if ($part) {
-			if (!isset($fileDecoded[$part])) {
-				return $fileDecoded[$part];	
-			}
-
-			throw new \Exception("Key '$part' does not exits.");
+		if ( ! file_exists($file)) {
+			throw new \Exception('File does not exists');
 		}
 
-		return $fileDecoded;
-	}
+		$file = file_get_contents($file);
+		$config = Nette\Utils\Neon::decode($file);
 
-
-	/**
-	 * Load config file
-	 * @param string
-	 */
-	private static function loadFile($file)
-	{	
-		$filePath = APP_DIR . "/config/" . $file;
-		if (!file_exists($filePath)) {
-			throw new \Exception("Missing 'config/$file'.");
+		if ($section && isset($config[$section])) {
+			return $config[$section];
 		}
 
-		return file_get_contents($filePath);
+		return $config;
 	}
 
 }

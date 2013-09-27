@@ -10,8 +10,6 @@ use Schmutzka\Application\UI\Control;
 /**
  * @method setForgotLink(string)
  * @method getForgotLink()
- * @method setLoginColumn(string)
- * @method getLoginColumn()
  */
 class LoginControl extends Control
 {
@@ -37,7 +35,7 @@ class LoginControl extends Control
 	private $forgotLink = NULL;
 
 	/** @var string */
-	private $loginColumn = 'email';
+	public $loginColumn = 'email';
 
 
 	public function attached($presenter)
@@ -52,15 +50,10 @@ class LoginControl extends Control
 		$form = new Form;
 
 		$formLabels = $this->paramService->form;
-		$customLabels = $formLabels->{$this->loginColumn};
+		$customLabels = $formLabels->email;
 
-		$form->addText('login', $customLabels->label)
-			->addRule(Form::FILLED, $customLabels->ruleFilled);
-
-		if ($this->loginColumn == 'email') {
-			$form['login']->addRule(Form::EMAIL, $customLabels->ruleFormat);
-		}
-
+		$form->addText('email', $customLabels->label)
+			->addRule(Form::EMAIL, $customLabels->ruleFormat);
 		$form->addPassword('password', $formLabels->password->label)
 			->addRule(Form::FILLED, $formLabels->password->ruleFilled);
 
@@ -76,7 +69,7 @@ class LoginControl extends Control
 		try {
 			$values = $form->values;
 			$this->user->setExpiration('+ 14 days', FALSE);
-			$this->user->login($values['login'], $values['password']);
+			$this->user->login($values[$this->loginColumn], $values['password'], $this->loginColumn);
 
 			if ($this->onLoginSuccess) {
 				$this->onLoginSuccess($this->user);
@@ -94,16 +87,28 @@ class LoginControl extends Control
 				$this->onLoginError($values);
 			}
 
-			$this->presenter->flashMessage($e->getMessage(), 'error');
+			$this->presenter->flashMessage($e->getMessage(), 'danger');
 		}
 	}
 
 
-	public function renderDefault()
+	protected function renderDefault()
 	{
 		if ($this->forgotLink) {
 			$this->template->forgotLink = $this->forgotLink;
 		}
+	}
+
+
+	protected function renderAdmin()
+	{
+		$form = $this['form'];
+		$form->id = 'loginform';
+		$form['email']->setAttribute('class', 'form-control')
+			->setAttribute('placeholder', 'Email');
+		$form['password']->setAttribute('class', 'form-control')
+			->setAttribute('placeholder', 'Password');
+		$form['send']->setAttribute('class', 'btn btn-success');
 	}
 
 }

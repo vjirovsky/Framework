@@ -2,65 +2,34 @@
 
 namespace Schmutzka\Models;
 
+
 class Gallery extends Base
 {
-	/** @inject @var Schmutzka\Models\GalleryFile */
-	public $galleryFileModel;
-
 
 	/**
 	 * @param int
+	 * @return  NotORM_Result
 	 */
-	public function getItem($id)
+	public function fetch($id)
 	{
-		$item = parent::item($id);
-		$item["files"] = $this->galleryFileModel->fetchAll("gallery_id", $id);
-		$firstImage = $item["files"]->fetchRow();
-		$item["first_image"] = $firstImage["name"];
+		$item = parent::fetch($id);
+		$item['files'] = $item->gallery_file();
 
 		return $item;
 	}
 
 
 	/**
-	 * Get all items
-	 */
-	public function getAll()
-	{
-		$result = parent::all();
-		foreach ($result as $id => $row) {
-			$row["files"] = $this->db->gallery_file("gallery_id", $id);
-			$firstImage = $row["files"]->fetchRow();
-			$row["first_image"] = $firstImage["name"];
-		}
-
-		return $result;
-	}
-
-
-	/********************** helpers **********************/
-
-
-	/**
-	 * @return  array
-	 */
-	public function getModuleParams()
-	{
-		return $this->paramService->getModuleParams("gallery");
-	}
-
-
-	/**
 	 * @param  array
-	 * @return  array
+	 * @return  NotORM_Result
 	 */
-	private function completeItem($item)
+	public function fetchAll($key = array())
 	{
-		$item =
+		$result = parent::fetchAll($key);
 
-		$item["files"] = $this->db->gallery_file("gallery_id", $id);
-		$firstImage = $item["files"]->fetchRow();
-		$item["first_image"] = $firstImage["name"];
+		foreach ($result as $id => $row) {
+			$row['files'] = $row->gallery_file();
+		}
 
 		return $result;
 	}

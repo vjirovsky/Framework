@@ -29,8 +29,9 @@ class VisualPaginator extends Control
 	}
 
 
-	public function renderDefault()
+	public function render()
 	{
+		$template = $this->createTemplate()->setFile(__DIR__ . '/templates/default.latte');
 		$paginator = $this->getPaginator();
 		$page = $paginator->page;
 		if ($paginator->pageCount < 2) {
@@ -49,8 +50,9 @@ class VisualPaginator extends Control
 			$steps = array_values(array_unique($arr));
 		}
 
-		$this->template->steps = $steps;
-		$this->template->paginator = $paginator;
+		$template->steps = $steps;
+		$template->paginator = $paginator;
+		$template->render();
 	}
 
 

@@ -1,52 +1,52 @@
 php:
 	date.timezone: Europe/Prague
-	session.save_path: %tempDir%/sessions
+	# session.save_path: %tempDir%/sessions
 	zlib.output_compression: yes
 
 
 parameters:
 	libsDir: %appDir%/../libs
-	assetsDir: %libsDir%/Schmutzka/assets
-	jQuery: "jquery-1.10.1.min.js"
+	jQuery: 'jquery-1.10.1.min.js'
+	gaLink:
+	logUserActivity: FALSE
 
 	flashes:
 		onLogin: Byli jste úspěšně přihlášeni
 		onLogout: Byli jste úspěšně odhlášeni
-		onDeleteSuccess: "Záznam byl úspěšně smazán."
-		onDeleteError: "Tento záznam neexistuje."
+		onDeleteSuccess: 'Záznam byl úspěšně smazán.'
+		onDeleteError: 'Tento záznam neexistuje.'
 
 	form:
 		login:
-			label: "Přihlašovací jméno:"
-			ruleFilled: "Zadejte přihlašovací jméno"
-			ruleFormat: "Login nemá správný formát"
-			alreadyExists: "Zadaný login již existuje."
+			label: 'Přihlašovací jméno:'
+			ruleFilled: 'Zadejte přihlašovací jméno'
+			ruleFormat: 'Login nemá správný formát'
+			alreadyExists: 'Zadaný login již existuje.'
 		email:
-			label: "Přihlašovací email:"
-			ruleFilled: "Zadejte přihlašovací email"
-			ruleFormat: "Email nemá správný formát"
-			alreadyExists: "Zadaný email již existuje."
+			label: 'Přihlašovací email:'
+			ruleFilled: 'Zadejte přihlašovací email'
+			ruleFormat: 'Email nemá správný formát'
+			alreadyExists: 'Zadaný email již existuje.'
 		password:
-			label: "Heslo:"
-			ruleFilled: "Zadejte heslo"
-			length: "Heslo musí mít aspoň %d znaků."
+			label: 'Heslo:'
+			ruleFilled: 'Zadejte heslo'
+			length: 'Heslo musí mít aspoň %d znaků.'
 		permalogin:
-			label: "Zapamatovat"
+			label: 'Zapamatovat'
 		send:
-			login: "Přihlásit se"
-			register: "Registrovat"
+			login: 'Přihlásit se'
+			register: 'Registrovat'
 
 	registration:
-		onSuccess: "Registrace proběhla úspěšně."
-		onSuccessAndLogin: "Byli jste úspěšně registrováni a přihlášeni."
-		onAuthSuccess: "Váš účet byl aktivován. Nyní se můžete přihlásit."
-		onAuthError: "Tento odkaz již není platný."
+		onSuccess: 'Registrace proběhla úspěšně.'
+		onSuccessAndLogin: 'Byli jste úspěšně registrováni a přihlášeni.'
+		onAuthSuccess: 'Váš účet byl aktivován. Nyní se můžete přihlásit.'
+		onAuthError: 'Tento odkaz již není platný.'
 
 
 nette:
 	session:
 		autoStart: smart
-		expiration: 14 days
 		debugger: TRUE
 
 	container:
@@ -56,9 +56,8 @@ nette:
 		email: tomas.vot@gmail.com
 		strictMode: TRUE
 		showLocation: TRUE
-		strLen: 4000
 		bar:
-			- @callbackPanel
+			- @cleanerPanel
 			- @dumpMailPanel
 
 	security:
@@ -70,36 +69,37 @@ nette:
 
 
 services:
-	cache: Schmutzka\Caching\Cache(@cacheStorage, "dataCache")
+	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
 	lessFilter: Schmutzka\Components\WebLoader\Filter\LessFilter
 	pathFilter: Schmutzka\Components\WebLoader\Filter\PathFilter
 	routerFactory: RouterFactory
 	router: @routerFactory::createRouter
+	session:
+		setup:
+	#		- setStorage(@sessionStorage)
+			- setExpiration('+ 14 days')
+	# sessionStorage: Schmutzka\Http\SessionStorage
 	template:
 		class: Schmutzka\Templates\TemplateService
 		setup:
 			- setLatte(@nette.latte)
-
 	- lessc
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templates\Helpers
-	#- Services\SessionStorage
 
 
 factories:
-	callbackPanel: Schmutzka\Diagnostics\Panels\CallbackPanel
+	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
 	dumpMailPanel: Schmutzka\Diagnostics\Panels\DumpMail
 	flashMessageControl: Components\FlashMessageControl
 	gaControl: Components\GaControl
 	rssControl: Components\RssControl
-	systemSession: Nette\Http\Session::getSection('system')
 	titleControl: Components\TitleControl
 
 
 extensions:
-	bootstrapRenderer: Kdyby\BootstrapFormRenderer\DI\RendererExtension
-	gpspicker: VojtechDobes\NetteForms\GpsPickerExtension
-	replicator: Kdyby\Replicator\DI\ReplicatorExtension
+	- Kdyby\BootstrapFormRenderer\DI\RendererExtension
+	- Schmutzka\DI\Extensions\SchmutzkaExtension
 	webloader: WebLoader\Nette\Extension
 
 
@@ -109,3 +109,10 @@ webloader:
 			filters:
 				- @lessFilter
 				- @pathFilter
+
+	js:
+		upload:
+			files:
+				- %assetsDir%/js/jquery/fileupload/jquery.ui.widget.js
+				- %assetsDir%/js/jquery/fileupload/jquery.iframe-transport.js
+				- %assetsDir%/js/jquery/fileupload/jquery.fileupload.js

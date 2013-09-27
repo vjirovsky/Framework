@@ -22,35 +22,50 @@ class AdminMenuControl extends Control
 
 	/**
 	 * @param string
-	 * @param string
 	 */
-	public function renderDefault($module, $title)
+	protected function renderDefault($module)
 	{
-		$this->template->menu = $menu = $this->getMenu($module);
-		if (isset($menu->primaryAdminOnly) && $this->user->id != 1) {
-			return;
+		$moduleParams = $this->paramService->getModuleParams($module);
+
+		$items = array();
+		if (isset($moduleParams->menu->items)) {
+			foreach ($moduleParams->menu->items as $item) {
+				if ( ! isset($item->cond)) {
+					$items[] = $item;
+
+				} elseif ($moduleParams->{$item->cond}) {
+					$items[] = $item;
+				}
+			}
 		}
 
-		$this->template->moduleParams = $this->paramService->getModuleParams($module);
+		$this->template->icon = $moduleParams->menu->icon;
+		$this->template->items = $items;
 		$this->template->module = $module;
-		$this->template->title = $title;
+		$this->template->title = $moduleParams->title;
 	}
 
 
-	public function renderTitle()
+	protected function renderTitle()
 	{
 		$module = $this->presenter->module;
+		$moduleParams = $this->paramService->getModuleParams($module);
 
 		$view = $this->presenter->view;
-		$title = NULL;
-		$menu = $this->getMenu($module);
+		$title = '';
 
 		if ($view == 'add') {
-			$path = substr($this->presenter->name, strlen($module) + 1);
-			foreach ($menu->items as $key => $row) {
-				if (Strings::contains($row->path, $path)) {
-					$title = $key;
+			$link = substr($this->presenter->name, strlen($module) + 1);
+
+			if (isset($moduleParams->menu->items)) {
+				foreach ($moduleParams->menu->items as $item) {
+					if (Strings::contains($item->link, $link)) {
+						$title = $item->label;
+					}
 				}
+
+			} else {
+				$title = $moduleParams->title;
 			}
 
 			$title .= ' - nová položka';
@@ -63,41 +78,19 @@ class AdminMenuControl extends Control
 						(isset($item['login']) ? ': ' . $item['login'] :
 					NULL)));
 
-		} elseif (isset($menu->items)) {
-			$path = substr($this->presenter->name . ':' . $view, strlen($module) + 1);
-			foreach ($menu->items as $key => $row) {
-				if ($row->path == $path) {
-					$title = $key;
+		} elseif (isset($moduleParams->menu->items)) {
+			$link = substr($this->presenter->name . ':' . $view, strlen($module) + 1);
+			foreach ($moduleParams->menu->items as $item) {
+				if ($item->link == $link) {
+					$title = $item->label;
 				}
 			}
 
 		} else {
-			$moduleParams = $this->paramService->getModuleParams($module);
 			$title = $moduleParams->title;
 		}
 
 		$this->template->title = $title;
-	}
-
-
-	/********************** helpers **********************/
-
-
-	/**
-	 * Get  by module name
-	 * @param  string
-	 * @return Nette\ArrayHash
-	 */
-	public function getMenu($module)
-	{
-		if (file_exists($config = MODULES_DIR . '/' . ucfirst($module) . 'Module/config/menu.neon')) {
-			$config = Nette\Utils\Neon::decode(file_get_contents($config));
-
-		} elseif(file_exists($config = APP_DIR . '/' . ucfirst($module) . 'Module/config/menu.neon')) {
-			$config = Nette\Utils\Neon::decode(file_get_contents($config));
-		}
-
-		return Nette\ArrayHash::from((array) $config);
 	}
 
 }

@@ -1,0 +1,27 @@
+parameters:
+	eventModule:
+		title: Akce
+		categories: FALSE
+		perex: FALSE
+		calendar: FALSE
+		expiration: FALSE
+		galleryLink: FALSE
+		news: FALSE
+		link: FALSE
+		menu:
+			icon: icon-user
+			items:
+				1:
+					label: Přehled akcí
+					link: Homepage:default
+				2:
+					label: Kategorie
+					link: Category:default
+
+services:
+	- Schmutzka\Models\Event
+	- Schmutzka\Models\EventCategory
+
+factories:
+	eventControl: EventModule\Components\EventControl
+	eventGrid: EventModule\Components\EventGrid

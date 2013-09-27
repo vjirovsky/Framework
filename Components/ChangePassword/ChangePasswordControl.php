@@ -2,9 +2,10 @@
 
 namespace Components;
 
-use Schmutzka\Security\UserManager;
 use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Control;
+use Schmutzka\Security\UserManager;
+
 
 class ChangePasswordControl extends Control
 {
@@ -49,6 +50,15 @@ class ChangePasswordControl extends Control
 		}
 
 		$this->presenter->redirect('this');
+	}
+
+
+	protected function renderAdmin()
+	{
+		$form = $this['form'];
+		$form['oldPassword']->setAttribute('class', 'form-control');
+		$form['password']->setAttribute('class', 'form-control');
+		$form['passwordCheck']->setAttribute('class', 'form-control');
 	}
 
 }

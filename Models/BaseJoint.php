@@ -2,6 +2,7 @@
 
 namespace Schmutzka\Models;
 
+
 abstract class BaseJoint extends Base
 {
 	/** @var string */
@@ -60,14 +61,14 @@ abstract class BaseJoint extends Base
 	public function modifyArrayData($id, $data)
 	{
 		$oldItemsIds = $this->table($this->mainKeyName, $id)
-			->fetchPairs("id", "id");
+			->fetchPairs('id', 'id');
 
 		$checkKey[$this->mainKeyName] = $id;
 
 		foreach ($data as $key => $value) {
 			$checkKey[$this->otherKeyName] = $key;
 
-			if ($idToRemove = $this->table($checkKey)->fetchSingle("id")) {
+			if ($idToRemove = $this->table($checkKey)->fetchSingle('id')) {
 				unset($oldItemsIds[$idToRemove]);
 				$this->update($value, $idToRemove);
 

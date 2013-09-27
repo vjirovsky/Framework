@@ -6,6 +6,7 @@ use Schmutzka\Utils\Name;
 use Nette;
 use NotORM;
 
+
 abstract class Base extends Nette\Object
 {
 	/** @inject @var NotORM */
@@ -21,12 +22,12 @@ abstract class Base extends Nette\Object
 
 		$args = func_get_args();
 		if (count($args) == 1 && is_numeric($args[0])) {
-			array_unshift($args, "id");
+			array_unshift($args, 'id');
 		}
 
 		foreach ($args as $key => $value) {
-			if ($key === "id") {
-				$args[$tableName . ".id"] = $value;
+			if ($key === 'id') {
+				$args[$tableName . '.id'] = $value;
 				unset($args[$key]);
 			}
 		}
@@ -65,17 +66,42 @@ abstract class Base extends Nette\Object
 
 
 	/**
+	 * @param  int|array
+	 * @return NotORM_Row|NULL
+	 */
+	public function fetch($key)
+	{
+		return $this->table($key)->fetch();
+	}
+
+
+	/**
+	 * @param  string
+	 * @param  array
+	 * @return NotORM_Row
+	 */
+	public function fetchLast($orderBy, $key = array())
+	{
+		return $this->table($key)->order($orderBy . ' DESC')->limit(1)->fetch();
+	}
+
+
+	/**
 	 * @param array|int
 	 * @return array|NULL
+	 * @deprecatded
 	 */
 	public function item($key)
 	{
+		return $this->fetch($key);
+		/*
 		try {
 			return $this->table($key)->fetchRow();
 
 		} catch (\Exception $e) {
 			return FALSE;
 		}
+		*/
 	}
 
 
@@ -89,7 +115,7 @@ abstract class Base extends Nette\Object
 			$this->table($key)->update($array);
 
 		} else {
-			$this->table("id", $key)->update($array);
+			$this->table('id', $key)->update($array);
 		}
 
 		return $this->item($key);
@@ -107,12 +133,12 @@ abstract class Base extends Nette\Object
 
 		} else {
 			$row = $this->item($key);
-			unset($row["id"]);
+			unset($row['id']);
 			return $this->insert($row);
 		}
 
 		foreach ($result as $row) {
-			unset($row["id"]);
+			unset($row['id']);
 			if ($change) {
 				foreach ($change as $keyChange => $valueChange) {
 					if (isset($row[$keyChange])) {
@@ -136,7 +162,7 @@ abstract class Base extends Nette\Object
 			return $this->table($key)->delete();
 
 		} else {
-			return $this->table("id", $key)->delete();
+			return $this->table('id', $key)->delete();
 		}
 	}
 
@@ -147,7 +173,7 @@ abstract class Base extends Nette\Object
 	 */
 	public function count($key = array())
 	{
-		return $this->table($key)->count("*");
+		return $this->table($key)->count('*');
 	}
 
 
@@ -159,7 +185,7 @@ abstract class Base extends Nette\Object
 	 * @param string $column
 	 * @return array
 	 */
-	public function fetchPairs($id = "id", $column = NULL, $key = array())
+	public function fetchPairs($id = 'id', $column = NULL, $key = array())
 	{
 		return $this->table($key)->fetchPairs($id, $column);
 	}
@@ -172,7 +198,7 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetchList($key = array())
 	{
-		return $this->fetchPairs("id", "name", $key);
+		return $this->fetchPairs('id', 'name', $key);
 	}
 
 
@@ -183,8 +209,8 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetchListByUser($userId)
 	{
-		return $this->table(array("user_id" => $userId))
-			->fetchPairs("id", "name");
+		return $this->table(array('user_id' => $userId))
+			->fetchPairs('id', 'name');
 	}
 
 
@@ -194,7 +220,7 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetchRandom()
 	{
-		return $this->table()->order("RAND()")->limit(1)->fetchRow();
+		return $this->table()->order('RAND()')->limit(1)->fetchRow();
 	}
 
 
@@ -210,7 +236,7 @@ abstract class Base extends Nette\Object
 			return $this->table($key)->fetchSingle($column);
 
 		} else {
-			return $this->table("id", $key)->fetchSingle($column);
+			return $this->table('id', $key)->fetchSingle($column);
 		}
 	}
 
@@ -221,17 +247,20 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetchByUid($uid)
 	{
-		return $this->table("uid", $uid)->fetchRow();
+		return $this->table('uid', $uid)->fetchRow();
 	}
 
 
 	/**
 	 * Get last id
 	 * @param string
+	 * @return  int
 	 */
-	public function getLastId($column = "id")
+	public function getLastId($column = 'id')
 	{
-		return $this->table()->order("$column DESC")->fetchSingle($column);
+		return $this->table()
+			->order("$column DESC")
+			->fetchSingle($column);
 	}
 
 
@@ -247,7 +276,7 @@ abstract class Base extends Nette\Object
 				return $this->table()->insert($data);
 			}
 
-			$unique = array("id" => $unique);
+			$unique = array('id' => $unique);
 		}
 
 		return $this->table()->insert_update($unique, $data, $data);

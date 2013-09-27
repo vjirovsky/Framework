@@ -4,8 +4,8 @@ namespace Schmutzka;
 
 use Nette;
 use Nette\Utils\Strings;
-use Schmutzka\Utils\Arrays;
 use Schmutzka\Utils\Name;
+
 
 class ParamService extends Nette\Object
 {
@@ -28,29 +28,34 @@ class ParamService extends Nette\Object
 	 */
 	public function &__get($name)
 	{
-		if ($name != "params" && isset($this->params->{$name})) {
+		if ($name != 'params' && isset($this->params->{$name})) {
 			return $this->params->{$name};
 		}
 	}
 
 
 	/**
-	 * @return array
+	 * @param  string
+	 * @return boolean
+	 */
+	public function __isset($name)
+	{
+		if (isset($this->params[$name])) {
+			return TRUE;
+		}
+	}
+
+
+	/**
+	 * @return array|NULL
 	 */
 	public function getActiveModules()
 	{
-		$modules = $this->params->cmsSetup->modules;
-		$array = array();
-
-		Arrays::sortBySubkey($modules, "rank");
-
-		foreach ($modules as $key => $row) {
-			if ($row->active) {
-				$array[$key] = $row->title;
-			}
+		if (isset($this->params->modules)) {
+			return $this->params->modules;
 		}
 
-		return $array;
+		return NULL;
 	}
 
 
@@ -60,13 +65,13 @@ class ParamService extends Nette\Object
 	 */
 	public function getModuleParams($key)
 	{
-		if (Strings::contains($key, "\\")) {
-			$key = Name::moduleFromNamespace($key, "module");
+		if (Strings::contains($key, '\\')) {
+			$key = Name::moduleFromNamespace($key, 'module');
 		}
 
-		$modules = $this->params->cmsSetup->modules;
-		if (isset($modules[$key])) {
-			return $modules[$key];
+		$moduleName = $key . 'Module';
+		if (isset($this->params->$moduleName)) {
+			return $this->params->$moduleName;
 		}
 
 		return array();

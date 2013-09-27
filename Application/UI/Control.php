@@ -6,25 +6,36 @@ use Nette;
 use Nette\Utils\Strings;
 use Schmutzka;
 
+
 abstract class Control extends Nette\Application\UI\Control
 {
-	/** @inject @var Nette\Localization\ITranslator */
-	public $translator;
-
 	/** @inject @var Schmutzka\Templates\TemplateService */
 	public $templateService;
+
+	/** @var Nette\Localization\ITranslator */
+	protected $translator;
+
+
+	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL)
+	{
+		$this->translator = $translator;
+	}
 
 
 	/**
 	 * Rendering view
 	 * @param  string
 	 * @param  array
-	 * @todo simulate as presenter render!
 	 */
 	public function __call($name, $args)
 	{
 		if (Strings::startsWith($name, 'render')) {
-			$view = $this->getViewFromMethod($name);
+			if ($name == 'render') {
+				$view = 'default';
+
+			} else {
+				$view = lcfirst(substr($name, 6));
+			}
 
 			// setup template file
 			$class = $this->getReflection();
@@ -32,7 +43,10 @@ abstract class Control extends Nette\Application\UI\Control
 			$this->template->setFile($dir . '/templates/' . $view . '.latte');
 
 			// calls $this->render<View>()
-			$this->tryCall($this->formatRenderMethod($view), $args);
+			$renderMethod = 'render' . ucfirst($view);
+			if (method_exists($this, $renderMethod)) {
+				call_user_func_array(array($this, $renderMethod), $args);
+			}
 
 			$this->template->render();
 		}
@@ -50,6 +64,10 @@ abstract class Control extends Nette\Application\UI\Control
 		$template = parent::createTemplate($class);
 		$this->templateService->configure($template);
 
+		foreach ($this->presenter->helpersCallbacks as $helpersCallback) {
+			$template->registerHelperLoader($helpersCallback);
+		}
+
 		return $template;
 	}
 
@@ -62,39 +80,12 @@ abstract class Control extends Nette\Application\UI\Control
 	{
 		$component = parent::createComponent($name);
 		if ($component == NULL) {
-			$component = $this->presenter->createComponent($name);
+			if ($name != 'form') { // @hotfix
+				$component = $this->presenter->createComponent($name);
+			}
 		}
 
 		return $component;
-	}
-
-
-	/********************** render helpers **********************/
-
-
-	/**
-	 * @param  string
-	 * @return string
-	 */
-	private function getViewFromMethod($method)
-	{
-		if (strlen($method) == 6) {
-			return 'default';
-
-		} else {
-			return lcfirst(substr($method, 6));
-		}
-	}
-
-
-	/**
-	 * Formats render view method name.
-	 * @param  string
-	 * @return string
-	 */
-	private function formatRenderMethod($view)
-	{
-		return 'render' . $view;
 	}
 
 }

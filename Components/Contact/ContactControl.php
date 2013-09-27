@@ -15,8 +15,6 @@ use Schmutzka\Application\UI\Control;
  * @method getIncludeParams()
  * @method setShowEmail(bool)
  * @method getShowEmail()
- * @method setMailTo(string|array)
- * @method getMailTo()
  * @method setMailFrom(string)
  * @method getMailFrom()
  * @method setLogSender(bool|array)
@@ -33,11 +31,11 @@ class ContactControl extends Control
 	/** @inject @var Nette\Mail\IMailer */
 	public $mailer;
 
-	/** @var array */
-	private $logSender = array('login');
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
 
-	/** @var string|array */
-	private $mailTo;
+	/** @var array */
+	private $logSender = [];
 
 	/** @var string */
 	private $mailFrom;
@@ -113,7 +111,7 @@ class ContactControl extends Control
 				}
 
 				$message->setFrom($this->user->email, trim($name));
-				$from = 'Od: ' . trim($name) . ', '. $this->user->email . '\n\n';
+				$from = 'Od: ' . trim($name) . ', '. $this->user->email . "\n\n";
 
 			} else {
 				$key = array_shift($this->logSender);
@@ -130,13 +128,15 @@ class ContactControl extends Control
 			}
 		}
 
-		if (is_array($this->mailTo)) {
-			foreach ($this->mailTo as $value) {
+		$mailTo = $this->paramService->contactControl->mailTo;
+
+		if (is_array($mailTo)) {
+			foreach ($mailTo as $value) {
 				$message->addTo($value);
 			}
 
 		} else {
-			$message->addTo($this->mailTo);
+			$message->addTo($mailTo);
 		}
 
 		$message->setBody($from . $text);

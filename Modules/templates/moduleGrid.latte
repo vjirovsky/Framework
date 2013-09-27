@@ -1,0 +1,56 @@
+{extends $defaultTemplate}
+
+
+{define body-cell-datetime}
+	<td style="width:16%">
+		{$value|date: "j. n. Y"} -
+		<strong>{$value|date: "H:i"}</strong>
+	</td>
+{/}
+
+
+{define body-cell-edited}
+	<td style="width:12%">
+		{$value|date: "j. n. Y"}
+	</td>
+{/}
+
+
+{define body-cell-user_id}
+	<td style="width:12%">
+		{$value['login']}
+	</td>
+{/}
+
+
+{define body-cell-rank}
+	<td style="width:60px">
+		{$value}
+	</td>
+{/}
+
+
+{define body-cell-public_state}
+	<td width="100px">
+		{ifset $publicStateList[$value]}
+			{$publicStateList[$value]}
+
+		{else}
+			{$value}
+		{/}
+	</td>
+{/}
+
+
+{define row-action-edit}
+	<a href="{$link}" class="btn btn-primary btn-xs">
+		{$action->label}
+	</a>
+{/}
+
+
+{define row-action-delete}
+	<a href="{$link}" class="btn btn-danger btn-xs tw-ajax confirm">
+		{$action->label}
+	</a>
+{/}

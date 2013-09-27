@@ -2,61 +2,51 @@
 
 namespace AdminModule;
 
-use Schmutzka;
-use WebLoader;
+use FrontModule;
+use Nette;
+use Schmutzka\Application\UI\Presenter; // fix hack
 
-abstract class BasePresenter extends Schmutzka\Application\UI\AdminPresenter
+
+
+abstract class BasePresenter extends /*FrontModule\BasePresenter*/Presenter
 {
 	/** @var array */
 	public $moduleParams;
 
-	/** @inject @var Schmutzka\Models\Page */
-	public $pageModel;
+	/** @var Nette\Security\Permission */
+	private $acl;
 
-	/** @inject @var Schmutzka\Models\User */
-	public $userModel;
 
-	/** @inject @var Schmutzka\Models\Gallery */
-	public $galleryModel;
+	public function injectAcl(Nette\Security\IAuthorizator $acl = NULL)
+	{
+		$this->acl = $acl;
+	}
 
 
 	public function startup()
 	{
 		parent::startup();
 
-		$this->lang = NULL;
+		if ( ! $this->user->loggedIn) {
+			$this->layout = 'layoutLogin';
 
-		if ($this->paramService->cms == TRUE) {
-			$this->template->adminTitle = $this->paramService->cmsSetup->title;
-			$this->template->activeModules = $activeModules = $this->paramService->getActiveModules();
-			$this->template->cmsParams = $this->paramService->cmsSetup;
-
-			if (isset($this->paramService->cmsSetup->modules->{$this->module})) {
-				$this->template->moduleParams = $this->moduleParams = $this->paramService->cmsSetup->modules->{$this->module};
+			if ($this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
+				$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
+				$this->redirect(':Admin:Homepage:default');
 			}
+
+		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
+			// $this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
+			$this->flashMessage('Byli jste úspěšně přihlášeni.', 'success');
+			$this->redirect(':Front:Homepage:logged'); // custom manage
 		}
 
-		if (!$this->user->loggedIn) {
-			$this->layout = "layoutLogin";
+		$this->template->modules = $this->paramService->getActiveModules();
+
+		if ($this->translator) {
+			$this->template->adminLangs = $this->paramService->adminLangs;
+			$this->template->lang = $this->lang;
 		}
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\CssLoader
-	 */
-	protected function createComponentAdminLoginCss()
-	{
-		return new WebLoader\Nette\CssLoader($this->context->{"webloader.cssAdminLoginCompiler"}, $this->template->basePath . "/webtemp/");
-	}
-
-
-	/**
-	 * @return WebLoader\Nette\JavaScriptLoader
-	 */
-	protected function createComponentAdminLoginJs()
-	{
-		return new WebLoader\Nette\JavaScriptLoader($this->context->{"webloader.jsAdminLoginCompiler"}, $this->template->basePath . "/webtemp/");
 	}
 
 }

@@ -3,6 +3,8 @@
 namespace Schmutzka\Models;
 
 use Nette;
+use Schmutzka;
+
 
 class Article extends Base
 {
@@ -12,11 +14,14 @@ class Article extends Base
 	/** @inject @var Schmutzka\Models\ArticleInCategory */
 	public $articleInCategoryModel;
 
-	/** @inject @var Schmutzka\Models\GalleryFile */
-	public $galleryFileModel;
+	/** @var Schmutzka\Models\GalleryFile */
+	private $galleryFileModel;
 
-	/** @var string item select */
-	private $select = "article.*, gallery_file.name titlePhoto, user.name authorName";
+
+	public function injectModels(Schmutzka\Models\GalleryFile $galleryFileModel = NULL)
+	{
+		$this->galleryFileModel = $galleryFileModel;
+	}
 
 
 	/**
@@ -26,32 +31,28 @@ class Article extends Base
 	public function fetchAll($cond = array())
 	{
 		$result = parent::fetchAll();
-		$result = $this->completeResult($result);
+		$this->addOrder($result);
 
 		return $result;
 	}
 
 
 	/**
-	 * Fetch front
 	 * @param  array
-	 * @param int|NULL
+	 * @param int
 	 * @return  NotORM_Result
 	 */
 	public function fetchFront($cond = array(), $limit = NULL)
 	{
-		$result = $this->table()
-			->select($this->select);
+		$result = $this->fetchAll($cond);
 
-		if ($cond) {
-			$result->where($cond);
+		if ($this->moduleParams->publishState) {
+			$result->where('publish_state', 'public');
 		}
 
 		if ($limit) {
 			$result->limit($limit);
 		}
-
-		$result = $this->completeResult($result);
 
 		return $result;
 	}
@@ -64,16 +65,12 @@ class Article extends Base
 	 */
 	public function fetchFrontByCategory($categoryId)
 	{
-		$result = $this->articleInCategoryModel->fetchAll()
-			->select($this->select);
+		$result = $this->articleInCategoryModel->fetchAll();
 
 		if ($this->moduleParams->categories) {
-			$result->where("article_in_category.article_category_id", $categoryId)
-				->join("gallery_file", "LEFT JOIN gallery_file ON article.gallery_file_id = gallery_file.id")
-				->join("user", "LEFT JOIN user ON article.user_id = user.id");
+			$result->where('article_in_category.article_category_id', $categoryId)
+				->join('gallery_file', 'LEFT JOIN gallery_file ON article.gallery_file_id = gallery_file.id');
 		}
-
-		$result = $this->completeResult($result);
 
 		return $result;
 	}
@@ -86,17 +83,17 @@ class Article extends Base
 	 */
 	public function fetchItemFront($id)
 	{
-		$result = $this->table("article.id", $id)
+		$result = $this->table('article.id', $id)
 			->select($this->select);
 
 		if ($this->moduleParams->publishState) {
-			$result->where("publish_state", "public");
+			$result->where('publish_state', 'public');
 		}
 
 		if ($result) {
 			$item = $result->fetchRow();
-			if ($this->moduleParams->attachmentGallery && $item["gallery_id"]) {
-				$item["gallery_files"] = $this->galleryFileModel->fetchOrderedListByGallery($page["gallery_id"]);
+			if ($this->moduleParams->attachmentGallery && $item['gallery_id']) {
+				$item['gallery_files'] = $this->galleryFileModel->fetchOrderedListByGallery($page['gallery_id']);
 			}
 
 			return $item;
@@ -108,15 +105,19 @@ class Article extends Base
 
 
 	/**
-	 * @param  id
-	 * @return  array
+	 * @param  int|array
+	 * @return  NotORM_Row
 	 */
-	public function item($id)
+	public function fetch($key)
 	{
-		$item = parent::item($id);
-		$item = $this->completeItem($item);
+		$row = parent::fetch($key);
 
-		return $item;
+		if ($this->moduleParams->categories) {
+			$row['article_categories'] = $row->article_in_category()
+				->fetchPairs('article_category_id', 'article_category_id');
+		}
+
+		return $row;
 	}
 
 
@@ -128,37 +129,7 @@ class Article extends Base
 	 */
 	public function getModuleParams()
 	{
-		return $this->paramService->getModuleParams("article");
-	}
-
-
-	/**
-	 * Complete result
-	 * @param  NotORM_Result
-	 * @return  NotORM_Result
-	 */
-	private function completeResult($result)
-	{
-		$result = $this->addPublicState($result);
-		$result = $this->addOrder($result);
-		$result = $this->addCategories($result);
-
-		return $result;
-	}
-
-
-	/**
-	 * Public state helper
- 	 * @param  NotORM_Result
-	 * @return  NotORM_Result
-	 */
-	private function addPublicState($result)
-	{
-		if ($this->moduleParams->publishState) {
-			$result->where("publish_state", "public");
-		}
-
-		return $result;
+		return $this->paramService->getModuleParams('article');
 	}
 
 
@@ -170,28 +141,11 @@ class Article extends Base
 	private function addOrder($result)
 	{
 		if ($this->moduleParams->publishDatetime) {
-			$result->where("publish_datetime <= ? OR publish_datetime IS NULL", new Nette\DateTime)
-				->order("publish_datetime DESC");
+			$result->where('publish_datetime <= ? OR publish_datetime IS NULL', new Nette\DateTime)
+				->order('publish_datetime DESC');
 
 		} else {
-			$result->order("id DESC");
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 * Add category list to result
-	 * @param NotORM_Result
-	 * @return NotORM_Result
-	 */
-	private function addCategories($result)
-	{
-		if ($this->moduleParams->categories) {
-			foreach ($result as $key => $row) {
-				$result[$key] = $this->completeItem($row);
-			}
+			$result->order('id DESC');
 		}
 
 		return $result;
@@ -204,8 +158,10 @@ class Article extends Base
 	 */
 	private function completeItem($item)
 	{
-		$item["article_categories"] = $this->articleInCategoryModel->fetchByMain($item["id"]);
-		$item["article_categories_name"] = $this->articleInCategoryModel->fetchByMain($item["id"], "article_category.name");
+		dd($item);
+
+		$item['article_categories'] = $this->articleInCategoryModel->fetchByMain($item['id']);
+		$item['article_categories_name'] = $this->articleInCategoryModel->fetchByMain($item['id'], 'article_category.name');
 
 		return $item;
 	}

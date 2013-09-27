@@ -1,0 +1,22 @@
+{extends $moduleGridTemplate}
+
+
+{define body-cell-created}
+	<td class="center">
+		{$value|date: "j. n. Y"}
+	</td>
+{/}
+
+
+{define body-cell-last_active}
+	<td class="center">
+		{$value|date: "j. n. Y"}
+	</td>
+{/}
+
+
+{define body-cell-role}
+	<td class="center">
+		{$roles[$value]}
+	</td>
+{/}
