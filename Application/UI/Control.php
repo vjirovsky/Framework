@@ -79,10 +79,11 @@ abstract class Control extends Nette\Application\UI\Control
 	protected function createComponent($name)
 	{
 		$component = parent::createComponent($name);
-		if ($component == NULL) {
-			if ($name != 'form') { // @hotfix
-				$component = $this->presenter->createComponent($name);
-			}
+		if (property_exists($this, $name)) {
+			$component = $this->{$name}->create();
+
+		} elseif ($name !== 'form') {
+			$component = $this->presenter->createComponent($name);
 		}
 
 		return $component;

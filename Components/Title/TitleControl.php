@@ -2,68 +2,55 @@
 
 namespace Components;
 
-use Schmutzka;
+use Schmutzka\Application\UI\Control;
 
 
-/**
- * @method setSep(string)
- * @method getSep()
- * @method setMainTitle(string)
- * @method getMainTitle()
- * @method setMainTitleSep(string)
- * @method getMainTitleSep()
- * @method setAlwaysShowMainTitle(bool)
- * @method getAlwaysShowMainTitle()
- */
-class TitleControl extends Schmutzka\Application\UI\Control
+class TitleControl extends Control
 {
 	/** @var string */
 	private $sep = ' | ';
 
-	/** @var string */
-	private $mainTitleSep = ' | ';
+	/** @var bool */
+	private $reversed = FALSE;
 
-	/** @var string */
-	private $alwaysShowMainTitle = FALSE;
-
-	/** @var string */
-	private $mainTitle;
-
-	/** @var array */
-	private $titles = array();
+	/** @var [] */
+	private $titles = [];
 
 
 	protected function renderDefault()
 	{
-		$title = implode($this->sep, $this->titles);
-		if ($this->alwaysShowMainTitle) {
-			$title .= ($title ? $this->mainTitleSep : NULL) . $this->mainTitle;
+		if ($this->reversed) {
+			rsort($this->titles);
 		}
 
-		$this->template->title = $title;
+		$this->template->title = implode($this->sep, $this->titles);
 	}
 
 
 	/**
 	 * @param string
-	 * @return this
 	 */
 	public function addTitle($title)
 	{
 		$this->titles[] = $title;
-		return $this;
 	}
 
 
 	/**
-	 * @return bool
+	 * @param string
 	 */
-	public function isHomepage()
+	public function setSep($sep)
 	{
-		$name = $this->presenter->name;
-		$action = $this->presenter->action;
+		$this->sep = $sep;
+	}
 
-		return ($action == 'default' && in_array($name, array('Front:Homepage', 'Homepage')));
+
+	/**
+	 * @param bool
+	 */
+	public function setReversed($reversed)
+	{
+		$this->reversed = $reversed;
 	}
 
 }

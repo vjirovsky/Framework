@@ -3,16 +3,16 @@
 namespace Schmutzka\Application\UI;
 
 use Nette;
-use Nette\Utils\Strings;
 use Schmutzka;
 use Schmutzka\Http\Browser;
-use Schmutzka\Utils\Filer;
 use Schmutzka\Utils\Name;
-use WebLoader;
 
 
 abstract class Presenter extends Nette\Application\UI\Presenter
 {
+	use CreateComponentTrait;
+	use Schmutzka\Diagnostics\Panels\CleanerPanelTrait;
+
 	/** @persistent @var string */
 	public $lang;
 
@@ -72,9 +72,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	}
 
 
-	/********************** templates **********************/
-
-
 	/**
 	 * @param string
 	 */
@@ -98,38 +95,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		$layoutTemplateFiles[] = $this->paramService->appDir . '/FrontModule/templates/@' . ($this->layout ?: 'layout') . '.latte';
 
 		return $layoutTemplateFiles;
-	}
-
-
-	/********************** components **********************/
-
-
-	/**
-	 * Handles requests to create component
-	 * @param string
-	 * @return Nette\ComponentModel\IComponent
-	 */
-	protected function createComponent($name)
-	{
-		$component = parent::createComponent($name);
-
-		if ($component == NULL) {
-			if (Strings::endsWith($name, 'CssControl') || Strings::endsWith($name, 'cssControl')) {
-				$part = ucfirst(substr($name, 0, -10)) ?: 'Default';
-				$compiler = $this->context->{'webloader.css' . $part . 'Compiler'};
-				$component = new WebLoader\Nette\CssLoader($compiler, $this->template->basePath . '/webtemp/');
-
-			} elseif (Strings::endsWith($name, 'JsControl') || Strings::endsWith($name, 'jsControl')) {
-				$part = ucfirst(substr($name, 0, -9)) ?: 'Default';
-				$compiler = $this->context->{'webloader.js' . $part . 'Compiler'};
-				$component = new WebLoader\Nette\JavaScriptLoader($compiler, $this->template->basePath . '/webtemp/');
-
-			} else {
-				$component = call_user_func(array($this->context, 'createService' .  ucfirst($name)));
-			}
-		}
-
-		return $component;
 	}
 
 
@@ -183,31 +148,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 				'id' => NULL
 			));
 		}
-	}
-
-
-	/**
-	 * Helper method for clear panel (@intentionally here - presenter logic)
-	 * @param  string
-	 */
-	public function handleRunCleaner($type)
-	{
-		if ($this->paramService->debugMode) {
-			if ($type == 'cache') {
-				$this->cache->clean(array(
-					Nette\Caching\Cache::ALL => TRUE
-				));
-
-			} elseif ($type == 'webtemp') {
-				Filer::emptyFolder($this->paramService->wwwDir . '/webtemp/');
-
-			} elseif ($type == 'session') {
-				$this->session->destroy();
-            	$this->session->start();
-			}
-		}
-
-		$this->redirect('this');
 	}
 
 }

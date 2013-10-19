@@ -128,10 +128,10 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 		$salt = Strings::random(22);
 		$password = self::calculateHash($password, $salt);
 
-		$user = array(
+		$user = [
 			'salt' => $salt,
 			'password' => $password
-		);
+		];
 
 		$this->userModel->update($user, $cond);
 	}

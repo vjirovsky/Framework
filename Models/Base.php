@@ -225,23 +225,6 @@ abstract class Base extends Nette\Object
 
 
 	/**
-	 * Fetch single
-	 * @param array
-	 * @param mixed
-	 * @return mixed
-	 */
-	public function fetchSingle($column, $key)
-	{
-		if (is_array($key)) {
-			return $this->table($key)->fetchSingle($column);
-
-		} else {
-			return $this->table('id', $key)->fetchSingle($column);
-		}
-	}
-
-
-	/**
 	 * @param  string
 	 * @return array
 	 */
@@ -260,7 +243,8 @@ abstract class Base extends Nette\Object
 	{
 		return $this->table()
 			->order("$column DESC")
-			->fetchSingle($column);
+			->fetch()
+			->fetch('id');
 	}
 
 

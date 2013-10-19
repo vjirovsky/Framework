@@ -2,7 +2,6 @@
 
 namespace Schmutzka\Models;
 
-
 abstract class BaseJoint extends Base
 {
 	/** @var string */
@@ -68,7 +67,7 @@ abstract class BaseJoint extends Base
 		foreach ($data as $key => $value) {
 			$checkKey[$this->otherKeyName] = $key;
 
-			if ($idToRemove = $this->table($checkKey)->fetchSingle('id')) {
+			if ($idToRemove = $this->table($checkKey)->fetch('id')) {
 				unset($oldItemsIds[$idToRemove]);
 				$this->update($value, $idToRemove);
 

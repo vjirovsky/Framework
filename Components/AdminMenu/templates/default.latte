@@ -2,14 +2,15 @@
 	<li n:class="submenu, $presenter->module == $module ? 'active open'">
 		<a href="#">
 			<i n:class="$icon"></i>
-			{$title}
+			%span {$title}
+			%i.arrow.icon-chevron-right
 		</a>
 		%ul
 			{foreach $items as $item}
-				{var $link = ":" . $module . ":" . $item->link . ", id => NULL"}
+				{var $link = ":" . ucfirst($module) . ":" . $item->link}
 				<li n:class="topmenu, $presenter->isLinkCurrent($link) ? 'active'">
 					<a n:phref=":$module:$item->link, id => NULL">
-						{$item->label}
+						%span {$item->label}
 					</a>
 				</li>
 			{/}

@@ -1,6 +1,6 @@
 php:
 	date.timezone: Europe/Prague
-	# session.save_path: %tempDir%/sessions
+	session.save_path: %tempDir%/sessions
 	zlib.output_compression: yes
 
 
@@ -58,7 +58,6 @@ nette:
 		showLocation: TRUE
 		bar:
 			- @cleanerPanel
-			- @dumpMailPanel
 
 	security:
 		debugger: TRUE
@@ -76,9 +75,8 @@ services:
 	router: @routerFactory::createRouter
 	session:
 		setup:
-	#		- setStorage(@sessionStorage)
-			- setExpiration('+ 14 days')
-	# sessionStorage: Schmutzka\Http\SessionStorage
+			- setExpiration(+ 14 days)
+	
 	template:
 		class: Schmutzka\Templates\TemplateService
 		setup:
@@ -90,15 +88,22 @@ services:
 
 factories:
 	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
-	dumpMailPanel: Schmutzka\Diagnostics\Panels\DumpMail
+	# contactControl: Components\ContactControl
 	flashMessageControl: Components\FlashMessageControl
 	gaControl: Components\GaControl
 	rssControl: Components\RssControl
-	titleControl: Components\TitleControl
 
+	message:
+		class: Schmutzka\Mail\Message
+		implement: Schmutzka\Mail\IMessage
+
+	titleControl:
+		class: Components\TitleControl
+		implement: Components\ITitleControl
 
 extensions:
 	- Kdyby\BootstrapFormRenderer\DI\RendererExtension
+	- Kdyby\Replicator\DI\ReplicatorExtension
 	- Schmutzka\DI\Extensions\SchmutzkaExtension
 	webloader: WebLoader\Nette\Extension
 
@@ -109,7 +114,6 @@ webloader:
 			filters:
 				- @lessFilter
 				- @pathFilter
-
 	js:
 		upload:
 			files:

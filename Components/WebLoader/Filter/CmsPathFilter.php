@@ -5,7 +5,6 @@ namespace Schmutzka\Components\WebLoader\Filter;
 use Nette;
 use WebLoader;
 
-
 class CmsPathFilter extends Nette\Object
 {
 
@@ -21,7 +20,7 @@ class CmsPathFilter extends Nette\Object
 			"url('../img" => "url('../../images/cms",
 			'url(../img' => 'url(../../images/cms',
 			"url('../" => "url('../../",
-			"url('chosen" => "url('../../images/cms/chosen/chosen"
+			'url("chosen' => 'url("../../images/cms/chosen/chosen'
 		));
 
 		return $code;

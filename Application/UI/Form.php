@@ -219,6 +219,17 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
+	 * @param string
+	 * @return this
+	 */
+	public function setClass($name)
+	{
+		$this->elementPrototype->class = $name;
+		return $this;
+	}
+
+
+	/**
 	 * @param bool
 	 * @return this
 	 */

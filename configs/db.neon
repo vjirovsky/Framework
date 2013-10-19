@@ -7,10 +7,21 @@ services:
 	userModel: Schmutzka\Models\User
 
 factories:
-	changePasswordControl: Components\ChangePasswordControl
-	loginControl: Components\LoginControl
-	registrationControl: Components\RegistrationControl
-	remindPasswordControl: Components\RemindPasswordControl
+	changePasswordControl:
+		class: Components\ChangePasswordControl
+		implement: Components\IChangePasswordControl
+
+	loginControl:
+		class: Components\LoginControl
+		implement: Components\ILoginControl
+
+	registrationControl:
+		class: Components\RegistrationControl
+		implement: Components\IRegistrationControl
+
+	remindPasswordControl:
+		class: Components\RemindPasswordControl
+		implement: Components\IRemindPasswordControl
 
 extensions:
 	notorm: NotORMExtension\DI\Extension
