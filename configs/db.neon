@@ -5,6 +5,7 @@ services:
 	user: Schmutzka\Security\User
 	userManager: Schmutzka\Security\UserManager
 	userModel: Schmutzka\Models\User
+	- Models\File
 
 factories:
 	changePasswordControl:

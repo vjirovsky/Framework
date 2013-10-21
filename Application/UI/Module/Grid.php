@@ -59,9 +59,7 @@ abstract class Grid extends DataGrid
 	 */
 	public function dataLoader($grid, array $columns, array $filters, array $order)
 	{
-		$result = $this->model->fetchAll()
-			->select(implode(', ', $columns));
-
+		$result = $this->model->fetchAll();
 		return $result;
 	}
 

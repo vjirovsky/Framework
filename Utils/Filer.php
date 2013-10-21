@@ -13,24 +13,33 @@ use Nette\Image;
 
 class Filer extends Nette\Object
 {
-	/** @var array */
-	private static $convertExtension = array(
-		'jpeg' => 'jpg'
-	);
-
 
 	/**
-	 * Get file extension
-	 * @param string
+	 * @param  string
+	 * @return  string
 	 */
 	public static function extension($name)
 	{
+		$convert = [
+			'jpeg' => 'jpg'
+		];
+
 		$extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-		if (isset(self::$convertExtension[$extension])) {
-			$extension = self::$convertExtension[$extension];
+		if (isset($convert[$extension])) {
+			$extension = $convert[$extension];
 		}
 
 		return $extension;
+	}
+
+
+	/**
+	 * @param string
+	 * @return  string
+	 */
+	public static function filename($name)
+	{
+		return pathinfo($name, PATHINFO_FILENAME);
 	}
 
 
@@ -79,99 +88,6 @@ class Filer extends Nette\Object
 
 
 	/**
-	 * @param Nette\Http\FileUpload
-	 * @param array
-	 */
-	public static function checkFile(Nette\Http\FileUpload $file, $allowed, $image = FALSE)
-	{
-		if ($image && ! $file->isImage()) {
-			return FALSE;
-		}
-
-		$ext = self::extension($file->name);
-
-		if ($file->isOk() && in_array($ext, $allowed)) {
-			return $ext;
-		}
-
-		return FALSE;
-	}
-
-
-	/**
-	 * Check file if image
-	 * @param Nette\Http\FileUpload
-	 * @param array
-	 */
-	public static function checkImage(Nette\Http\FileUpload $file, $allowed = array('jpg', 'png'))
-	{
-		return self::checkFile($file, $allowed, TRUE);
-	}
-
-
-	/**
-	 * Simple file move to location
-	 * @param Nette\Http\FileUpload
-	 * @param string
-	 * @param bool
-	 * @param string
-	 * @param array
-	 * @param bool
-	 */
-	public static function moveFile(Nette\Http\FileUpload $file, $dir, $keepUnique = TRUE, $oldFile = NULL, $alterImage = array(), $encryptName = FALSE)
-	{
-		// @todo fix
-		$hostDir = WWW_DIR . '/' . $dir;
-
-		if ($oldFile) {
-			if (file_exists($hostDir . $oldFile)) {
-				unlink($hostDir . $oldFile);
-			}
-		}
-
-		// alter image
-		$alterWidth = isset($alterImage['width']) ? $alterImage['width'] : NULL;
-		$alterHeight = isset($alterImage['height']) ? $alterImage['height'] : NULL;
-		$alterName = ($alterWidth ? $alterWidth . '_' : NULL) . ($alterHeight ? $alterHeight .'_' : NULL);
-
-		$name = $origName = Strings::webalize($alterName . $file->getName(), '.');
-		$i = 1;
-
-		// alter image
-		if ($alterImage && $file->isImage()) {
-			$image = $file->toImage();
-			$image->resize($alterWidth, $alterHeight);
-		}
-
-		if ($encryptName) {
-			$name = Strings::random(12);
-		}
-
-		while ($keepUnique && file_exists($hostDir . $name)) {
-			if ($encryptName) {
-				$name = Strings::random(12);
-
-			} else {
-				$filename = pathinfo($name, PATHINFO_FILENAME);
-				$extension = self::extension($name);
-				$name = $filename . '_' . $i++ . '.' . $extension;
-			}
-		}
-
-		if ($alterImage && $image->save($hostDir . $name)) {
-			return $dir . $name;
-
-		} else {
-			if ($file->move($hostDir . $name)) {
-				return $dir . $name;
-			}
-		}
-
-		return FALSE;
-	}
-
-
-	/**
 	 * Resize to subfolder
 	 * @param Nette\Http\FileUpload|Nette\Image
 	 * @param string
@@ -202,30 +118,6 @@ class Filer extends Nette\Object
 
 		$image->save($dir . $filename);
 	}
-
-
-	/**
-	 * Get unique name
-	 * @param string $dir
-	 * @param string $file
-	 * @return string filename encoded in sha1
-	 */
-	public static function getUniqueName($dir, $file)
-	{
-		$ext = self::extension($file);
-		$name = sha1($file) . '.' . $ext;
-
-		if (is_dir($dir)) {
-			while (file_exists($dir . '/' . $name)) {
-				$name = sha1($file . Strings::random()) . '.' . $ext;
-			}
-		}
-
-		return $name;
-	}
-
-
-	/********************** helpers **********************/
 
 
 	/**

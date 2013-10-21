@@ -16,6 +16,9 @@ parameters:
 		onDeleteSuccess: 'Záznam byl úspěšně smazán.'
 		onDeleteError: 'Tento záznam neexistuje.'
 
+	login:
+		wrongPassword: Chybné heslo.
+		notExistingAccount: Tento účet neexistuje.
 	form:
 		login:
 			label: 'Přihlašovací jméno:'
@@ -46,7 +49,7 @@ parameters:
 
 nette:
 	session:
-		autoStart: smart
+		autoStart: TRUE
 		debugger: TRUE
 
 	container:
@@ -88,7 +91,6 @@ services:
 
 factories:
 	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
-	# contactControl: Components\ContactControl
 	flashMessageControl: Components\FlashMessageControl
 	gaControl: Components\GaControl
 	rssControl: Components\RssControl

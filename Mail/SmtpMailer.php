@@ -6,6 +6,7 @@ use Nette;
 use Schmutzka;
 use Schmutzka\Models;
 
+
 class SmtpMailer extends Nette\Mail\SmtpMailer
 {
 	/** @inject @var Schmutzka\Models\CustomEmail */
@@ -18,32 +19,13 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 	public $paramService;
 
 	/** @var int */
-	private $customEmailId;
-
-	/** @var int */
 	private $debugMode;
 
-	/** @var bool */
-	private $useLogger = FALSE;
-
-	/** @var array */
-	private $loggerData = array();
-
-	/** @var Nette\Session\SessionSection */
-	private $dumpMailSession;
 
 
-
-
-	public function __construct(Schmutzka\ParamService $paramService, Nette\Http\Session $session)
+	public function __construct(Schmutzka\ParamService $paramService)
 	{
 		parent::__construct((array) $paramService->mailer);
-
-		if ($this->debugMode = $paramService->debugMode) {
-			$this->dumpMailSession = $session->getSection('dumpMail');
-		}
-
-		$this->useLogger = isset($paramService->params['mailer']['useLogger']) ? TRUE : FALSE;
 	}
 
 
@@ -54,84 +36,14 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 	public function send(Nette\Mail\Message $message)
 	{
 		// default headers prevents error
-		if (!$message->getHeader('From')) {
+		if ( ! $message->getHeader('From')) {
 			$message->setFrom('example@gmail.com'); // replaced by login email
-		}
-
-		// dump bar
-		if ($this->debugMode) {
-			$i = rand(1,1000);
-			$this->dumpMailSession->{$i} = $this->getData($message);
-			$this->dumpMailSession->setExpiration('+10 seconds', $i);
-		}
-
-		if ($this->useLogger) {
-			$this->emailLogModel->insert($this->getData($message, TRUE));
 		}
 
 		parent::send($message);
 	}
 
-
-	/**
-	 * Use custom template from database
-	 * @param string
-	 * @param array
-	 * @param bool
-	 * @return string|array
-	 */
-	public function getCustomTemplate($uid, array $values = array(), $includeSubject = FALSE)
-	{
-		$customEmail = $this->customEmailModel->item(array(
-			'uid' => $uid
-		));
-
-		if (!$customEmail) {
-			throw new \Exception("Record with uid $uid doesn't exist.");
-		}
-		$this->customEmailId = $customEmail['id'];
-
-		$template = new Nette\Templating\FileTemplate();
-		$template->registerFilter(new Nette\Latte\Engine());
-		$template->setFile($this->paramService->modulesDir . '/EmailModule/templates/@blankEmail.latte');
-
-		$replaceArray = array();
-		foreach ($values as $key => $value) {
-			$key = '%' . strtoupper($key) . '%';
-			$replaceArray[$key] = $value;
-		}
-
-		$body = strtr($customEmail['body'], $replaceArray);
-		if (!$includeSubject) {
-			return $body;
-		}
-
-		$subject = strtr($customEmail['subject'], $replaceArray);
-		return array(
-			'body' => $body,
-			'subject' => $subject
-		);
-	}
-
-
-	/********************** setters **********************/
-
-
-	/**
-	 * Turn on logger
-	 * @param array
-	 */
-	public function log($data = array())
-	{
-		$this->loggerData = $data;
-		$this->useLogger = TRUE;
-		return $this;
-	}
-
-
-	/********************** helpers **********************/
-
-
+	
 	/**
 	 * Get mail data
 	 * @param Nette\Mail\Message
@@ -143,7 +55,7 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 		$to = $message->getHeader('To');
 		$from = $message->getHeader('From');
 
-		$array = array(
+		$array = [
 			'custom_email_id' => $this->customEmailId,
 			'datetime' => new Nette\DateTime,
 			'to_email' => key($to),
@@ -151,9 +63,9 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 			'subject' => $message->getHeader('Subject'),
 			 'html' => $message->getHtmlBody(),
 			 'body' => $message->getBody(),
-		);
+		];
 
-		if (!$db) {
+		if ( ! $db) {
 			$array['to'] = $message->getHeader('To');
 			$array['from'] =  $message->getHeader('From');
 		}

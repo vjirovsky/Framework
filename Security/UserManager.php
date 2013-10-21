@@ -5,7 +5,6 @@ namespace Schmutzka\Security;
 use Nette;
 use Nette\Security\AuthenticationException as AE;
 use Nette\Utils\Strings;
-use NotORM;
 
 
 class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
@@ -25,22 +24,17 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	public function authenticate(array $credentials)
 	{
 		list($login, $password) = $credentials;
+		$key[strpos($login, '@') ? 'email' : 'login'] = $login;
+		$row = $this->userModel->fetch($key);
 
-		if (isset($this->paramService->loginColumn)) {
-			$loginColumn = $this->paramService->loginColumn;
+		$params = $this->paramService->login;
 
-		} else {
-			$loginColumn = strpos($login, '@') ? 'email' : 'login';
+		if ( ! $row) {
+			throw new AE($params->notExistingAccount, self::IDENTITY_NOT_FOUND);
 		}
 
-		$row = $this->userModel->fetch([$loginColumn => $login]);
-
-		if (!$row) {
-			throw new AE("Uživatel '$login' neexistuje.", self::IDENTITY_NOT_FOUND);
-		}
-		
 		if ($row['password'] !== $this->calculateHash($password, $row['salt'])) {
-			throw new AE('Chybné heslo.', self::INVALID_CREDENTIAL);
+			throw new AE($params->wrongPassword, self::INVALID_CREDENTIAL);
 		}
 
 		unset($row['password']);
@@ -64,19 +58,19 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 
 	/**
 	 * Register user
-	 * @param array $values user data
-	 * @return  array
+	 * @param array
+	 * @return  int
 	 * @throws \Exception
 	 */
 	public function register($values)
 	{
 		if (isset($values['login'])) {
-			if ($this->userModel->item(['login' => $values['login']])) {
+			if ($this->userModel->fetch(['login' => $values['login']])) {
 				throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
 			}
 		}
 
-		if ($this->userModel->item(['email' => $values['email']])) {
+		if ($this->userModel->fetch(['email' => $values['email']])) {
 			throw new \Exception('Tento email je již registrován, zadejte jiný.');
 		}
 
@@ -84,9 +78,7 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 		$values['password'] = self::calculateHash($values['password'], $values['salt']);
 		$values['created'] = new Nette\DateTime;
 
-		$userId = $this->userModel->insert($values);
-
-		return $this->userModel->item($userId);
+		return $this->userModel->insert($values);
 	}
 
 
@@ -98,11 +90,11 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public function update($values, $id)
 	{
-		if ($this->userModel->item(array('login' => $values['login'], 'id != %i' => $id))) {
+		if ($this->userModel->fetch(['login' => $values['login'], 'id != %i' => $id])) {
 			throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
 		}
 
-		if ($this->userModel->item(array('email' => $values['email'], 'id != %i' => $id))) {
+		if ($this->userModel->fetch(['email' => $values['email'], 'id != %i' => $id])) {
 			throw new \Exception('Tento email je již registrován, zadejte jiný.');
 		}
 

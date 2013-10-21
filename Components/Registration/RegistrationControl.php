@@ -19,17 +19,25 @@ use Schmutzka\Security\UserManager;
  * @method getLoginAfter()
  * @method setSendSuccessEmail(bool)
  * @method getSendSuccessEmail()
+ * @method setRole(bool)
+ * @method getRole()
  */
 class RegistrationControl extends Control
 {
 	/** @inject @var Nette\Mail\IMailer */
 	public $mailer;
 
+	/** @inject @var Schmutzka\Mail\IMessage  */
+	public $message;
+
 	/** @inject @var Schmutzka\Models\User  */
 	public $userModel;
 
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
+
+	/** @inject @var Schmutzka\Security\UserManager */
+	public $userManager;
 
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
@@ -43,6 +51,9 @@ class RegistrationControl extends Control
 	/** @var bool */
 	private $sendSuccessEmail = FALSE;
 
+	/** @var string */
+	private $role = 'visitor';
+
 
 	protected function createComponentForm()
 	{
@@ -52,14 +63,14 @@ class RegistrationControl extends Control
 		$form->addText('login', $this->paramService->form->login->label)
 			->addRule(Form::FILLED, $this->paramService->form->login->ruleFilled)
 			->addRule(function ($input) use ($userModel) {
-				return ! $userModel->item(array('login' => $input->value));
+				return ! $userModel->fetch(['login' => $input->value]);
 			}, $this->paramService->form->login->alreadyExists);
 
 		$form->addText('email', $this->paramService->form->email->label)
 			->addRule(Form::FILLED, $this->paramService->form->email->ruleFilled)
 			->addRule(Form::EMAIL, $this->paramService->form->email->ruleFormat)
 			->addRule(function ($input) use ($userModel) {
-				return ! $userModel->item(array('email' => $input->value));
+				return ! $userModel->fetch(['email' => $input->value]);
 			}, $this->paramService->form->email->alreadyExists);
 
 		$form->addPassword('password', $this->paramService->form->password->label)
@@ -75,15 +86,15 @@ class RegistrationControl extends Control
 
 	public function processForm($form)
 	{
-		$rawValues = $values = $form->getValues();
+		$rawValues = $values = $form->values;
 		unset($values['conditions']);
 
-		$values['salt'] = Strings::random(22);
-		$values['password'] = UserManager::calculateHash($values['password'], $values['salt']);
-		$values['created'] = new DateTime;
+		if ($this->role) {
+			$values['role'] = $this->role;
+		}
 
-		$this->userModel->insert($values);
-		$values = $rawValues + $values;
+		$this->userManager->register($values);
+
 
 		if ($this->sendSuccessEmail) {
 			$this->sendSuccessEmail($values);
@@ -107,14 +118,11 @@ class RegistrationControl extends Control
 	 */
 	private function sendSuccessEmail($values)
 	{
-		$message = new Message;
+		$message = $this->messsage->create();
 		$message->setFrom($this->from);
 		$message->addTo($values['email']);
-
-		$template = $this->mailer->getCustomTemplate('REGISTRATION_SUCESSFULL', $values, TRUE);
-		$message->setSubject($template['subject']);
-		$message->setHtmlBody($template['body']);
-
+		$message->addCustomTemplate('registration', $values);
+		
 		$this->mailer->send($message);
 	}
 

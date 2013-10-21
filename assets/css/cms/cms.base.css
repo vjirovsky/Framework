@@ -244,17 +244,6 @@ th.time, .time {
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ui-datepicker-div {
-	float: left;
-	z-index: 20;
-	display: none;
-	font-size: 1em;
-}
-
-
-#ui-helper-clearfix {
-	margin-left: 18em;
-}
 legend {
 	line-height: 2em;
 	border-top: 1px solid #FFF;

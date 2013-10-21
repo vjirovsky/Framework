@@ -37,7 +37,7 @@ class ChangePasswordControl extends Control
 	public function processForm($form)
 	{
 		$values = $form->values;
-		$userData = $this->userModel->item($this->user->id);
+		$userData = $this->userModel->fetch($this->user->id);
 		$oldPass = UserManager::calculateHash($values['oldPassword'], $userData['salt']);
 
 		if ($oldPass != $userData['password']) {

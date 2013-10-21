@@ -53,7 +53,7 @@ class RemindPasswordControl extends Control
 			], $password);
 
 			$message->addCustomTemplate('remind_password', $values);
-			$message->setHtmlBody($template['body']);
+			
 			$this->mailer->send($message);
 
 			$this->presenter->flashMessage('Nové heslo bylo nastaveno. Zkontrolujte Vaši emailovou schránku.', 'success');

@@ -24,6 +24,7 @@ class Macros extends MacroSet
 		$set->addMacro('confirm', NULL, NULL, array($set, 'macroConfirm'));
 		$set->addMacro('tooltip', NULL, NULL, array($set, 'macroTooltip'));
 		$set->addMacro('id', NULL, NULL, array($set, 'macroId'));
+		$set->addMacro('description', '$__desc = $form[%node.word]->getOption("description"); echo %escape($__desc);');
 	}
 
 

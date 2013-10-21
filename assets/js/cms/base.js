@@ -4,11 +4,7 @@ $(document).ready(function() {
 	$("[rel=tooltip]").tooltip();
 
 
-	// 2. confirm alert
-	// usa data- one!
-
-
-	// 3. hide flashes
+	// hide flashes
 	window.setTimeout(function() {
 		$(".flash.error").fadeTo(500, 0).slideUp(500, function(){
 			$(this).remove();
@@ -18,10 +14,12 @@ $(document).ready(function() {
 		});
 	}, 2000);
 
-	// 4. chosen
-	$(".chosen").chosen();
 
-	// 5. sortable rows
+	// chosen
+	$('.chosen').chosen();
+
+
+	// sortable rows
 	$("#sortable").sortable({
 		delay: 200,
 		distance: 15,
@@ -33,7 +31,8 @@ $(document).ready(function() {
 		}
 	});
 
-	// 6. sortable rows for grid table
+
+	// sortable rows for grid table
 	$(".tbodySortable table tbody").sortable({
 		delay: 200,
 		distance: 15,
@@ -45,7 +44,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// 7. sortable nested menu
+	// sortable nested menu
 	$('.frontMenu').nestable({
 		'maxDepth': 2
 
@@ -65,8 +64,8 @@ $(document).ready(function() {
 
 
 // ajax
-$(window).load(function () {
-	$.nette.ext('init').linkSelector = 'a.ajax';
-	$.nette.ext('init').formSelector = 'form.ajax';
-	$.nette.init();
+jQuery(window).load(function () {
+	jQuery.nette.ext('init').linkSelector = 'a.ajax';
+	jQuery.nette.ext('init').formSelector = 'form.ajax';
+	jQuery.nette.init();
 });

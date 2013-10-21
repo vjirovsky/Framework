@@ -74,7 +74,7 @@ class User extends Nette\Security\User
 	public function autologin($user)
 	{
 		if ( ! ($user instanceof User)) {
-			$user = $this->userModel->item($user);
+			$user = $this->userModel->fetch($user);
 		}
 
 		unset($user['password']);

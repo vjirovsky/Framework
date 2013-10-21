@@ -8,6 +8,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 use Nette\Utils\Validators;
 use Schmutzka\Forms\Controls;
+use Schmutzka\Forms\FileUploadTrait;
 
 
 /**
@@ -15,11 +16,9 @@ use Schmutzka\Forms\Controls;
  */
 class Form extends Nette\Application\UI\Form
 {
+	use FileUploadTrait;
+
 	/** validators */
-	const RC = 'Schmutzka\Forms\Rules::validateRC';
-	const IC = 'Schmutzka\Forms\Rules::validateIC';
-	const PHONE = 'Schmutzka\Forms\Rules::validatePhone';
-	const ZIP = 'Schmutzka\Forms\Rules::validateZip';
 	const DATE = 'Schmutzka\Forms\Rules::validateDate';
 	const TIME = 'Schmutzka\Forms\Rules::validateTime';
 	const EXTENSION = 'Schmutzka\Forms\Rules::extension';
@@ -33,17 +32,18 @@ class Form extends Nette\Application\UI\Form
 	/** @inject @var Nette\Localization\ITranslator */
 	public $translator;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
+	/** @inject @var Schmutzka\Models\File */
+	public $fileModel;
+
 	/** @var callable */
 	protected $processor;
 
 	/** @var bool */
 	private $isBuilt = FALSE;
 
-	/** @var string */
-	private $id;
-
-	/** @var string */
-	private $target;
 
 
 	/**
@@ -55,14 +55,6 @@ class Form extends Nette\Application\UI\Form
 
 		if ($this->csrfProtection) {
 			$this->addProtection($this->csrfProtection);
-		}
-
-		if ($this->id) {
-			$this->setId($this->id);
-		}
-
-		if ($this->target) {
-			$this->setTarget($this->target);
 		}
 	}
 
@@ -149,9 +141,14 @@ class Form extends Nette\Application\UI\Form
 
 		if ($presenter instanceof Nette\Application\IPresenter) {
 			$this->attachHandlers($presenter);
+			$this->paramService = $presenter->paramService;
+
+			if (property_exists($presenter, 'fileModel')) {
+				$this->fileModel = $presenter->fileModel;
+			}
 		}
 
-		if ($presenter->module != 'front' && $this->useBootstrap) {
+		if (($presenter->module != 'front' && $this->useBootstrap) || isset($this->presenter->paramService->forms->useBootstrap)) {
 			$this->setRenderer(new BootstrapRenderer($presenter->template));
 		}
 	}
@@ -163,26 +160,17 @@ class Form extends Nette\Application\UI\Form
 	 */
 	protected function attachHandlers($presenter)
 	{
-		$formNameSent = 'process' . lcfirst($this->getName());
+		$processMethodName = 'process' . lcfirst($this->getName());
 
-		$possibleMethods = array(
-			array($presenter, $formNameSent),
-			array($this->parent, $formNameSent),
-			array($this, 'process'),
-			array($this->parent, 'process')
-		);
-
-		foreach ($possibleMethods as $method) {
-			if (method_exists($method[0], $method[1])) {
-				$this->onSuccess[] = callback($method[0], $method[1]);
-			}
+		if (method_exists($this->parent, $processMethodName)) {
+			$this->onSuccess[] = callback($this->parent, $processMethodName);
 		}
 	}
 
 
 	/**
 	 * @param  bool
-	 * @return  array|ArrayHash
+	 * @return  []|ArrayHash
 	 */
 	public function getValues($asArray = TRUE)
 	{
@@ -193,6 +181,8 @@ class Form extends Nette\Application\UI\Form
 		} elseif (method_exists($this->parent, lcfirst($this->getName()) . 'Processor') && is_callable($this->processor)) {
 			$values = call_user_func($this->processor, $values);
 		}
+
+		$this->processFileUploads($values);
 
 		return $values;
 	}
@@ -208,50 +198,15 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * @param string
-	 * @return this
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @return  Controls\UploadControl
 	 */
-	public function setId($name)
+	public function addUpload($name, $label = NULL, $multiple = FALSE)
 	{
-		$this->elementPrototype->id = $name;
-		return $this;
+		return $this[$name] = new Controls\UploadControl($label, $multiple);
 	}
-
-
-	/**
-	 * @param string
-	 * @return this
-	 */
-	public function setClass($name)
-	{
-		$this->elementPrototype->class = $name;
-		return $this;
-	}
-
-
-	/**
-	 * @param bool
-	 * @return this
-	 */
-	public function setAjax($ajax)
-	{
-		$this->elementPrototype->ajax = $ajax;
-		return $this;
-	}
-
-
-	/**
-	 * @param string
-	 * @return this
-	 */
-	public function setTarget($name)
-	{
-		$this->elementPrototype->target = $name;
-		return $this;
-	}
-
-
-	/* ****************************** controls ****************************** */
 
 
 	/**
@@ -287,11 +242,9 @@ class Form extends Nette\Application\UI\Form
 	{
 		$control = $this[$name] = new TextInput($label);
 		$control->addFilter(function ($value) {
-				return Validators::isUrl($value) ? $value : 'http://$value';
-			})
-			->addCondition(Form::FILLED)
-			->addCondition(~Form::EQUAL, 'http://')
-				->addRule(Form::URL, 'Opravte adresu odkazu');
+			return (Validators::isUrl($value) || $value == NULL) ? $value : 'http://' . $value;
+		})->addCondition(Form::FILLED)
+			->addRule(Form::URL, 'Opravte adresu odkazu');
 
 		return $control;
 	}

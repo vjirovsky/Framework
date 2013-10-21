@@ -19,12 +19,10 @@ class GaControl extends Control
 
 	/**
 	 * @param string
-	 * @param string
 	 */
-	protected function renderDefault($code, $domain)
+	protected function renderDefault($code)
 	{
 		$this->template->code = $code;
-		$this->template->domain = $domain;
 	}
 
 }

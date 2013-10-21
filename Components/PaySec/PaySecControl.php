@@ -7,6 +7,7 @@ use Schmutzka;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Forms\Form;
 
+
 class PaySecControl extends Control
 {
 	/** @var string */
@@ -115,7 +116,7 @@ class PaySecControl extends Control
 			'result' => $result
 		), $id);
 
-		if ($orderRow = $this->orderModel->item($id)) { // hm?
+		if ($orderRow = $this->orderModel->fetch($id)) {
 			$paysecMapi = new SoapClient($this->settings['soap']);
 			$resultCode = $paysecMapi->VerifyTransactionIsPaid($this->settings['userName'], $this->settings['password'], $id, $orderRow['price']);
 
