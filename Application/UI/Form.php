@@ -45,7 +45,6 @@ class Form extends Nette\Application\UI\Form
 	private $isBuilt = FALSE;
 
 
-
 	/**
 	 * BeforeRender build function
 	 */
