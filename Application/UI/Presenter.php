@@ -31,6 +31,9 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	/** @inject @var Schmutzka\Templates\TemplateService */
 	public $templateService;
 
+	/** @inject @var Components\ITitleControl */
+	public $titleControl;
+
 	/** @var array|callable[] */
 	public $helpersCallbacks = array();
 
