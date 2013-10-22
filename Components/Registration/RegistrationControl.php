@@ -4,11 +4,11 @@ namespace Components;
 
 use Nette;
 use Nette\DateTime;
-use Nette\Mail\Message;
 use Nette\Utils\Strings;
 use Schmutzka;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Application\UI\Form;
+use Schmutzka\Mail\Message;
 use Schmutzka\Security\UserManager;
 
 
@@ -27,7 +27,7 @@ class RegistrationControl extends Control
 	/** @inject @var Nette\Mail\IMailer */
 	public $mailer;
 
-	/** @inject @var Schmutzka\Mail\IMessage  */
+	/** @inject @var Schmutzka\Mail\IMessage */
 	public $message;
 
 	/** @inject @var Schmutzka\Models\User  */
@@ -43,13 +43,13 @@ class RegistrationControl extends Control
 	public $paramService;
 
 	/** @var string */
-	private $from;
+	public $from;
 
 	/** @var bool */
 	private $loginAfter = TRUE;
 
 	/** @var bool */
-	private $sendSuccessEmail = FALSE;
+	private $sendSuccessEmail = TRUE;
 
 	/** @var string */
 	private $role = 'visitor';
@@ -95,7 +95,6 @@ class RegistrationControl extends Control
 
 		$this->userManager->register($values);
 
-
 		if ($this->sendSuccessEmail) {
 			$this->sendSuccessEmail($values);
 		}
@@ -118,11 +117,15 @@ class RegistrationControl extends Control
 	 */
 	private function sendSuccessEmail($values)
 	{
-		$message = $this->messsage->create();
+		if ($this->from == NULL) {
+			throw new \Exception("Missing $from value");
+		}
+
+		$message = $this->message->create();
 		$message->setFrom($this->from);
 		$message->addTo($values['email']);
 		$message->addCustomTemplate('registration', $values);
-		
+
 		$this->mailer->send($message);
 	}
 
