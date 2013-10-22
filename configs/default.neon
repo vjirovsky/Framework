@@ -19,6 +19,7 @@ parameters:
 	login:
 		wrongPassword: Chybné heslo.
 		notExistingAccount: Tento účet neexistuje.
+
 	form:
 		login:
 			label: 'Přihlašovací jméno:'

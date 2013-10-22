@@ -24,13 +24,13 @@ class RemindPasswordControl extends Control
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-
 	protected function createComponentForm()
 	{
 		$form = new Form;
 		$form->addText('email', 'Váš email:')
 			->addRule(Form::FILLED, 'Zadejte email')
 			->addRule(Form::EMAIL, 'Opravte formát emailu');
+
 		$form->addSubmit('send', 'Zaslat nové heslo')
 			->setAttribute('class', 'btn btn-primary');
 
@@ -43,26 +43,23 @@ class RemindPasswordControl extends Control
 		$values = $form->values;
 
 		if ($record = $this->userModel->fetch(['email' => $values['email']])) {
-			$message = $his->message->create();
-			$message//->setFrom($this->from)
+			$message = $this->message->create();
+			$message->setFrom($this->from)
 				->addTo($values['email']);
 
-			$values['new_password'] = Strings::random(10);
-			$this->userManager->updatePasswordForUser([
-				'email' => $values['email']
-			], $password);
+			$values['new_password'] = $password = Strings::random(10);
+			$this->userManager->updatePasswordForUser(['email' => $values['email']], $password);
 
-			$message->addCustomTemplate('remind_password', $values);
-			
+			$message->addCustomTemplate('remindPassword', $values);
 			$this->mailer->send($message);
 
 			$this->presenter->flashMessage('Nové heslo bylo nastaveno. Zkontrolujte Vaši emailovou schránku.', 'success');
 
 		} else {
-			$this->presenter->flashMessage('Tento email u nás neexistuje.', 'error');
+			$this->presenter->flashMessage('Tento uživatel neexistuje.', 'error');
 		}
 
-		$this->presenter->redirect('this');
+		$this->redirect('this');
 	}
 
 
