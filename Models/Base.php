@@ -195,7 +195,7 @@ abstract class Base extends Nette\Object
 	/**
 	 * Fetch random table row
 	 * @param  array
-	 * @return array
+	 * @return NotORM_Row
 	 */
 	public function fetchRandom($key = [])
 	{
