@@ -64,12 +64,12 @@ class Macros extends MacroSet
 
 
 	/**
-	 * n:confirm="..." => onclick='confirm("...")';
+	 * n:confirm="..." => data-confirm='confirm("...")';
 	 */
 	public function macroConfirm(MacroNode $node, PhpWriter $writer)
 	{
 		$node = $node->args;
-		return $writer->write('echo " onclick=\"return confirm(\'" . %escape($template->translate("' . $node . '")) . "\')\""');
+		return $writer->write('echo "  data-confirm=\'" . %escape($template->translate("' . $node . '")) . "\'"');
 	}
 
 
