@@ -75,6 +75,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 		}
 
 		$keyParam = $appRequest->parameters[$this->primaryKey];
+
 		if (!empty($keyParam)) {
 			$id = $this->getByValue($keyParam);
 			if ($id === NULL) {
@@ -130,7 +131,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 	/**
 	 * Get cached list
 	 * @return array
- 	 */
+	 */
 	private function getPairList()
 	{
 		$pairList = $this->cache->load($this->cacheTag);

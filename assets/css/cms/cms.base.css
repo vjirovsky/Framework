@@ -170,76 +170,6 @@ textarea.wider {
 
 
 /*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ icos @see: .ico
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-.addIco {
-	.ico(add)
-}
-
-.del {
-	.icoCms(del, 50%, 50%);
-}
-.delLeft {
-	.ico(del, 0%, 0%);
-}
-
-a.del {
-	text-decoration:none;
-}
-
-.edit {
-	.icoCms(edit, 50%, 50%)
-}
-
-.emailMe {
-	.ico(emailMe)
-}
-
-.copy {
-	.ico(copy, 50%, 50%)
-}
-
-.work {
-	.ico(work, 0%, 50%, 30px)
-}
-.user {
-	.ico(user, 0%, 50%, 30px)
-}
-
-th.time, .time {
-	.ico(time, 0%, 50%, 30px)
-}
-
-.logout {
-	.ico(logout, 50%, 65%)
-}
-
-.link {
-	.ico(link, 10px, 50%, 33px);
-}
-
-.email {
-	.ico(email, 10px, 50%, 33px);
-}
-
-.name {
-	.ico(user, 0, 50%, 33px);
-}
-.password {
-	.ico(password, 0, 50%, 33px);
-}
-
-.help {
-	.ico(help, 0, 50%, 33px);
-}
-
-.activity {
-	.ico(activity, 0, 50%, 33px);
-}
-
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -250,12 +180,6 @@ legend {
 	padding-left: 20px;
 	background: #FFF;
 	font-size: 1.5em;
-}
-
-
-.ico(@image, @x: 0px, @y: 50%, @l: 20px) {
-	background: url("../../images/ico/@{image}.png") @x @y no-repeat;
-	padding-left: @l;
 }
 
 fieldset {

@@ -3,9 +3,9 @@
 namespace Components;
 
 
-interface ITitleControl
+interface IGaControl
 {
-	/** @return TitleControl */
+	/** @return GaControl */
 	public function create();
 
 }

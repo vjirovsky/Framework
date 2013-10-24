@@ -3,9 +3,9 @@
 namespace Components;
 
 
-interface ITitleControl
+interface IRssControl
 {
-	/** @return TitleControl */
+	/** @return RssControl */
 	public function create();
 
 }

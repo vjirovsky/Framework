@@ -19,8 +19,7 @@ class PathFilter extends Nette\Object
 		$code = strtr($code, array(
 			'url(../' => 'url(../../',
 			"url('../" => "url('../../",
-			'url("../' => 'url("../../',
-			"url('chosen-sprite" => "url('../../images/chosen/chosen-sprite"
+			'url("../' => 'url("../../'
 		));
 
 		return $code;

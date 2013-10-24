@@ -1,12 +1,6 @@
-/********************* formulas *********************/
-
-sup, sub {height: 0; line-height: 1; vertical-align: baseline; _vertical-align: bottom; position: relative;}
-sup {bottom: 1ex;}
-sub {top: .5ex;}
-
-/********************* functions & shortucts (required to be at the same file, unless doesn't inherit functions) *********************/
-
-.btn {cursor: piointer}
+/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 .left {
 	text-align: left;
@@ -17,48 +11,8 @@ sub {top: .5ex;}
 }
 
 
-.rotate(@deg: 135deg) {
-	-webkit-transform: rotate(@deg);
-    -moz-transform: rotate(@deg);
-    -o-transform: rotate(@deg);
-}
-
 table td.center, td.center, .center {
-	text-align: center;
-}
-
-table.manage {
-	margin:auto;
-
-	td {
-		border:none;
-
-		> .btn {
-			background:#FFF;
-		}
-	}
-}
-
-.gradient(@from, @to) {
-   .vertical(@from, @to);
-//  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  border-color: @to @to darken(@to, 15%);
-  border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
-}
-
-
-
-
-
-/* shadows */
-.sh(@x: 0, @y: 0, @blur: 15px, @color: #CCC) {
-	box-shadow: @x @y @blur @color;
-	-moz-box-shadow: @x @y @blur @color;
-	-webkit-box-shadow: @x @y @blur @color;
-}
-
-.ts(@x: 1px, @y: 1px, @blur: 2px, @color: #CCC) {
-	text-shadow: @color @x @y @blur ;
+	text-align:center;
 }
 
 
@@ -76,12 +30,46 @@ html[xmlns] .clearfix {display: block;}
 	background-size: cover;
 }
 
+
 .responsiveBackgroundNotfixed(@url) {
 	background: url(@url)  no-repeat center center;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+}
+
+
+.transition(@duration) {
+	transition: all @duration ease-in-out 0s;
+	-moz-transition: all @duration ease-in-out 0s;
+	-webkit-transition: all @duration ease-in-out 0s;
+	-o-transition: all @duration ease-in-out 0s;
+}
+
+
+.aun {
+	text-decoration: underline;
+
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+.a(@normal, @hover) {
+	text-decoration: @normal;
+
+	&:hover {
+		text-decoration: @hover;
+	}
+}
+
+.ann {
+	text-decoration: underline;
+
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .ac(@normal, @hover) {

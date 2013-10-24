@@ -3,9 +3,9 @@
 namespace Components;
 
 
-interface ITitleControl
+interface IAdminMenuControl
 {
-	/** @return TitleControl */
+	/** @return AdminMenuControl */
 	public function create();
 
 }

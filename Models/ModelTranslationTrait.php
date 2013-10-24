@@ -1,6 +1,6 @@
 <?php
 
-namespace Schmutzka\Models;
+namespace Schmutzka\Localization;
 
 use NotORM_Row_Lang;
 use Schmutzka\Utils\Name;

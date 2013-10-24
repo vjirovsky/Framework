@@ -92,13 +92,21 @@ services:
 
 factories:
 	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
-	flashMessageControl: Components\FlashMessageControl
-	gaControl: Components\GaControl
-	rssControl: Components\RssControl
 
 	message:
 		class: Schmutzka\Mail\Message
 		implement: Schmutzka\Mail\IMessage
+	flashMessageControl:
+		class: Components\FlashMessageControl
+		implement: Components\IFlashMessageControl
+
+	gaControl:
+		class: Components\GaControl
+		implement: Components\IGaControl
+
+	rssControl:
+		class: Components\RssControl
+		implement: Components\IRssControl
 
 	titleControl:
 		class: Components\TitleControl
