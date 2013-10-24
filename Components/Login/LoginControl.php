@@ -16,12 +16,6 @@ class LoginControl extends Control
 	/** @persistent @var string */
 	public $backlink;
 
-	/** @var array */
-	public $onLoginSuccess = array();
-
-	/** @var array */
-	public $onLoginError = array();
-
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
 
@@ -71,10 +65,6 @@ class LoginControl extends Control
 			$this->user->setExpiration('+ 14 days', FALSE);
 			$this->user->login($values[$this->loginColumn], $values['password'], $this->loginColumn);
 
-			if ($this->onLoginSuccess) {
-				$this->onLoginSuccess($this->user);
-			}
-
 			if ($this->paramService->flashes->onLogin) {
 				$this->presenter->flashMessage($this->paramService->flashes->onLogin, 'success');
 			}
@@ -83,10 +73,6 @@ class LoginControl extends Control
 			$this->presenter->redirect('Homepage:default');
 
 		} catch (Nette\Security\AuthenticationException $e) {
-			if ($this->onLoginError) {
-				$this->onLoginError($values);
-			}
-
 			$this->presenter->flashMessage($e->getMessage(), 'danger');
 		}
 	}

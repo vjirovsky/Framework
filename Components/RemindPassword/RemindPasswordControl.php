@@ -44,7 +44,9 @@ class RemindPasswordControl extends Control
 
 		if ($record = $this->userModel->fetch(['email' => $values['email']])) {
 			$message = $this->message->create();
-			$message->setFrom($this->from)
+
+			$from = $this->paramService->emailModule->noReplyEmail;
+			$message->setFrom($from)
 				->addTo($values['email']);
 
 			$values['new_password'] = $password = Strings::random(10);

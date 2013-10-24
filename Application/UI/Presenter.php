@@ -137,19 +137,17 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	 */
 	protected function loadItemHelper($model, $id, $redirect = 'default')
 	{
-		if (!$id) {
+		if ( ! $id) {
 			return FALSE;
 		}
 
-		if ($item = $model->item($id)) {
+		if ($item = $model->fetch($id)) {
 			$this->template->item = $item;
 			return $item;
 
 		} else {
 			$this->flashMessage('Tento záznam neexistuje.', 'error');
-			$this->redirect($redirect, array(
-				'id' => NULL
-			));
+			$this->redirect($redirect, ['id' => NULL]);
 		}
 	}
 

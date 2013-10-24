@@ -54,8 +54,6 @@ trait MailLoggerTrait
 			$data['from'] =  $message->getHeader('From');
 		}
 
-		$data = array_merge($data, $this->loggerData);
-
 		return $data;
 	}
 

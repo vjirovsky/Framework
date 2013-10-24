@@ -96,6 +96,7 @@ factories:
 	message:
 		class: Schmutzka\Mail\Message
 		implement: Schmutzka\Mail\IMessage
+
 	flashMessageControl:
 		class: Components\FlashMessageControl
 		implement: Components\IFlashMessageControl

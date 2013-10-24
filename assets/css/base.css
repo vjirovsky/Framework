@@ -1,7 +1,4 @@
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+/* positions */
 .left {
 	text-align: left;
 }
@@ -10,17 +7,15 @@
 	text-align:right;
 }
 
-
-table td.center, td.center, .center {
-	text-align:center;
+.center, table td.center, td.center {
+	text-align: center;
 }
 
-
-.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
-.clearfix {display: inline-block;}
-html[xmlns] .clearfix {display: block;}
- * html .clearfix {height: 1%;}
-
+.rotate(@deg: 135deg) {
+	-webkit-transform: rotate(@deg);
+    -moz-transform: rotate(@deg);
+    -o-transform: rotate(@deg);
+}
 
 .responsiveBackground(@url) {
 	background: url(@url)  no-repeat center center fixed;
@@ -30,64 +25,17 @@ html[xmlns] .clearfix {display: block;}
 	background-size: cover;
 }
 
-
-.responsiveBackgroundNotfixed(@url) {
-	background: url(@url)  no-repeat center center;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-}
-
-
-.transition(@duration) {
-	transition: all @duration ease-in-out 0s;
-	-moz-transition: all @duration ease-in-out 0s;
-	-webkit-transition: all @duration ease-in-out 0s;
-	-o-transition: all @duration ease-in-out 0s;
-}
-
-
-.aun {
-	text-decoration: underline;
+.a(@color, @colorHover, @decoration: none, @decorationUnderline: hover) {
+	color: @color;
+	text-decoration: @decoration;
 
 	&:hover {
-		text-decoration: none;
+		color: @colorHover;
+		text-decoration: @decorationHover;
 	}
 }
 
-.a(@normal, @hover) {
-	text-decoration: @normal;
-
-	&:hover {
-		text-decoration: @hover;
-	}
-}
-
-.ann {
-	text-decoration: underline;
-
-	&:hover {
-		text-decoration: none;
-	}
-}
-
-.ac(@normal, @hover) {
-	a {
-		color: @normal;
-
-		&:hover {
-			color: @hover;
-		}
-	}
-}
-
-.ad(@normal, @hover) {
-	a {
-		text-decoration: @normal;
-
-		&:hover {
-			text-decoration: @hover;
-		}
-	}
-}
+.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
+.clearfix {display: inline-block;}
+html[xmlns] .clearfix {display: block;}
+ * html .clearfix {height: 1%;}

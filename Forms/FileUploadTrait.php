@@ -31,7 +31,6 @@ trait FileUploadTrait
 						'size' => $value->getSize(),
 					];
 
-
 					if ($value->isImage()) {
 						$control = $this->form[$key];
 						$resize = $control->getResize();
@@ -79,8 +78,8 @@ trait FileUploadTrait
 						$value->move($this->paramService->wwwDir . $data['path']. $data['name']);
 					}
 
-					$fileId = $this->fileModel->insert($data);
-					$this->files[$key] = $fileId;
+					$file = $this->fileModel->insert($data);
+					$this->files[$key] = $file['id'];
 				}
 
 				unset($values[$key]);

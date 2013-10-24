@@ -46,6 +46,18 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
+	 * @param string
+	 * @param int
+	 */
+	public function __set($name, $value)
+	{
+		if (in_array($name, ['id', 'class', 'target', 'ajax'])) {
+			$this->elementPrototype->$name = $value;
+		}
+	}
+
+
+	/**
 	 * BeforeRender build function
 	 */
 	public function build()
@@ -126,7 +138,7 @@ class Form extends Nette\Application\UI\Form
 	{
 		parent::attached($presenter);
 
-		if (!$this->isBuilt) {
+		if ( ! $this->isBuilt) {
 			$this->build();
 		}
 
@@ -147,7 +159,9 @@ class Form extends Nette\Application\UI\Form
 			}
 		}
 
-		if (($presenter->module != 'front' && $this->useBootstrap) || isset($this->presenter->paramService->forms->useBootstrap)) {
+		if (($presenter->module != 'front' && $this->useBootstrap) ||
+				isset($this->presenter->paramService->useBootstrap
+			)) {
 			$this->setRenderer(new BootstrapRenderer($presenter->template));
 		}
 	}
