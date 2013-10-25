@@ -16,62 +16,53 @@ class ModuleRouterFactory
 	/** @inject @var Nette\Caching\Cache */
 	public $cache;
 
-	/** @var array */
-	protected $customModules = array();
-
 	/** @var Schmutzka\Models\Page */
 	private $pageModel;
 
 	/** @var Schmutzka\Models\Article */
 	private $articleModel;
 
+	/** @var Schmutzka\Models\News */
+	private $newsModel;
 
-	public function injectModels(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Article $articleModel = NULL)
+
+	public function injectModels(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Article $articleModel = NULL, Schmutzka\Models\News $newsModel = NULL)
 	{
 		$this->pageModel = $pageModel;
 		$this->articleModel = $articleModel;
+		$this->newsModel = $newsModel;
 	}
 
 
-	public function createRouter()
+	/**
+	 * @return RouteList
+	 */
+	protected function createModuleRouter(RouteList $router)
 	{
-		$router = new RouteList();
-
-		$router[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
-		$router[] = new Route('index.php', 'Admin:Homepage:default', Route::ONE_WAY);
-
-		if (isset($this->paramService->modules)) {
-			$modules = (array) $this->paramService->modules;
-
-			$router[] = new Route('<module admin|' . Name::upperToDashedLower(implode($modules, '|')) . '>/<presenter>/<action>[/<id>]', 'Homepage:default');
-
-			$modules = array_flip($modules);
-			if (isset($modules['page'])) {
-				$frontRouter = $router[] = new RouteList('Front');
-				$frontRouter[] = new PairsRoute('<id>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = array('id', 'url'));
-			}
-
-			if (isset($modules['article'])) {
-				$frontRouter = $router[] = new RouteList('Front');
-				$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', NULL, $this->articleModel, $this->cache, $columns = array('id', 'url'
-				));
-			}
-		}
+		$modules = (array) $this->paramService->modules;
+		$router[] = new Route('<module admin|' . Name::upperToDashedLower(implode($modules, '|')) . '>/<presenter>/<action>[/<id>]', 'Homepage:default');
 
 		return $router;
 	}
 
 
-	/**
-	 * @param  self
-	 * @return self
-	 */
-	public function createFrontRouter($router)
+	protected function addPageRouter(RouteList &$frontRouter)
 	{
-		$frontRouter = $router[] = new RouteList('Front');
-		$frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
-
-		return $frontRouter;
+		$frontRouter[] = new PairsRoute('<uid [A-z-]+>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = ['uid', 'title']);
+		$frontRouter[] = new PairsRoute('<id [1-9]+>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = ['id', 'title']);
 	}
+
+
+	protected function addArticleRouter(RouteList &$frontRouter)
+	{
+		$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', NULL, $this->articleModel, $this->cache, $columns = ['id', 'url']);
+	}
+
+
+	protected function addNewsRouter(RouteList &$frontRouter)
+	{
+		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', NULL, $this->newsModel, $this->cache, $columns = ['id', 'title']);
+	}
+
 
 }
