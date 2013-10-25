@@ -4,7 +4,6 @@ namespace Schmutzka\Application\UI\Module;
 
 use Nette;
 use Nette\Utils\Strings;
-use Schmutzka;
 use Schmutzka\Application\UI\Module\Control;
 use Schmutzka\Application\UI\Form;
 
@@ -13,17 +12,6 @@ abstract class TextControl extends Control
 {
 	/** @var string (article|page) */
 	protected $type;
-
-	/** @var Schmutzka\Models\Gallery */
-	protected $galleryModel;
-
-
-	public function injectModels(Schmutzka\Models\Gallery $galleryModel = NULL) {
-		$this->galleryModel = $galleryModel;
-	}
-
-
-	/********************** form parts **********************/
 
 
 	/**
@@ -46,24 +34,6 @@ abstract class TextControl extends Control
 		$form->addTextarea('content', 'Obsah:')
 			->setAttribute('class', 'ckeditor');
 	}
-
-
-	/**
-	 * @param Nette\Application\UI\Form
-	 */
-	protected function addFormAttachments($form)
-	{
-		if ($this->moduleParams->attachmentGallery) {
-			$form->addGroup('Přílohy');
-
-			$galleryList = $this->galleryModel->fetchPairs('id', 'name');
-			$form->addSelect('gallery_id', 'Připojená galerie', $galleryList)
-				->setPrompt($galleryList ? 'Vyberte' : 'Zatím neexistuje žádná fotogalerie');
-		}
-	}
-
-
-	/********************** process form **********************/
 
 
 	/**
@@ -123,10 +93,6 @@ abstract class TextControl extends Control
 	}
 
 
-
-	/********************** render **********************/
-
-
 	/**
 	 * @param  string
 	 */
@@ -140,9 +106,6 @@ abstract class TextControl extends Control
 			}
 		}
 	}
-
-
-	/********************** helpers **********************/
 
 
 	/**

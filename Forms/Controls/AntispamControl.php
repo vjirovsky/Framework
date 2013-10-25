@@ -86,9 +86,9 @@ class AntispamControl extends TextInput
 	protected function addAntispamScript(Html $control)
 	{
 		$control = Html::el('')->add($control);
-		$control->add( Html::el('script', array('type' => 'text/javascript'))->setHtml('
+		$control->add( Html::el('script', array('type' => 'text/javascript'))->setHtml("
 				// Clear input value
-				var input = document.getElementById('' . $control[0]->id . '');
+				var input = document.getElementById('" . $control[0]->id . "');
 				input.value = '';
 
 				// Hide input and label
@@ -100,12 +100,12 @@ class AntispamControl extends TextInput
 					input.style.display = 'none';
 					var labels = input.parentNode.getElementsByTagName('label');
 					for (var i = 0; i < labels.length; i++) {  // find and hide label
-						if (labels[i].getAttribute('for') == '' . $control[0]->id . '') {
+						if (labels[i].getAttribute('for') == '" . $control[0]->id . "') {
 							labels[i].style.display = 'none';
 						}
 					}
 				}
-			')
+			")
 		);
 
 		return $control;

@@ -88,6 +88,7 @@ services:
 	- lessc
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templates\Helpers
+	- Models\Email
 
 
 factories:
@@ -100,6 +101,10 @@ factories:
 	flashMessageControl:
 		class: Components\FlashMessageControl
 		implement: Components\IFlashMessageControl
+
+	contactControl:
+		class: Components\ContactControl
+		implement: Components\IContactControl
 
 	gaControl:
 		class: Components\GaControl

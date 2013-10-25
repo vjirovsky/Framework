@@ -34,6 +34,9 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	/** @inject @var Components\ITitleControl */
 	public $titleControl;
 
+	/** @inject @var Components\IFlashMessageControl */
+	public $flashMessageControl;
+
 	/** @var array|callable[] */
 	public $helpersCallbacks = array();
 
@@ -137,7 +140,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	 */
 	protected function loadItemHelper($model, $id, $redirect = 'default')
 	{
-		if ( ! $id) {
+		if (!$id) {
 			return FALSE;
 		}
 
@@ -147,7 +150,9 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 
 		} else {
 			$this->flashMessage('Tento záznam neexistuje.', 'error');
-			$this->redirect($redirect, ['id' => NULL]);
+			$this->redirect($redirect, array(
+				'id' => NULL
+			));
 		}
 	}
 
