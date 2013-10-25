@@ -10,7 +10,7 @@ class Message extends Nette\Mail\Message
 	/** @var int */
 	public $emailId;
 
-	/** @inject @var Schmutzka\Models\Email */
+	/** @inject @var Models\Email */
 	public $emailModel;
 
 	/** @inject @var Schmutzka\ParamService */
