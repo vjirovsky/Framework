@@ -25,16 +25,6 @@
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-.tab-content {
-	overflow: none;
-	overflow: hidden;
-
-	.span12 {
-		width: 600px;
-	}
-}
-
-
 #newsletterForm {
 	.email_list {
 		width: 810px;
@@ -47,48 +37,6 @@
 	width: 100%;
 	border: 5px solid #FFF;
 	height: 600px;
-}
-
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ Forms
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-.menuBreak {
-	background: #333;
-	height: 7px;
-}
-
-
-textarea.wider {
-	width: 700px;
-	height: 60px;
-}
-
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ MenuModule
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-.dd {
-	.active {
-		.ico(active, 0, 50%);
-
-		&:hover {
-			.inactive;
-		}
-	}
-	.inactive {
-		.ico(inactive, 0, 50%);
-
-		&:hover {
-			.active;
-		}
-	}
-
-	.active, .inactive, .edit {margin-right: 10px;}
 }
 
 
@@ -130,21 +78,6 @@ textarea.wider {
 	}
 }
 
-#article {
-	#pickImage {.clearfix;margin-bottom:20px;
-		img {height:80px;margin:3px;border:4px solid #FFF;
-			&:hover {border:4px solid #DDD}
-		}
-	}
-
-	ul#pickGallery {
-		li {width:200px;float:left}
-	}
-
-	.promoPhoto {.clearfix;width:100%;
-		img {height:200px;margin:0 0 10px 0;border:4px solid #DDD;}
-	}
-}
 
 #galleryFileList {
 	padding: 10px 10px 0px 10px;
@@ -167,11 +100,6 @@ textarea.wider {
 		}
 	}
 }
-
-
-/*	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	~ functions & shortucts (required to be at the same file, unless doesn't inherit functions)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
 legend {
