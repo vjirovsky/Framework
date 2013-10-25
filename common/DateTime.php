@@ -9,6 +9,19 @@ class DateTime extends Nette\DateTime
 	/** @var array */
 	private static $holidays = array('12-24', '12-25', '12-26', '01-01', '05-01', '05-08', '07-05', '07-06', '09-28', '10-28', '11-17');
 
+	/** @var array */
+	private $weekDayLocalized = [
+		'cs' => [
+			'short' => [1 => 'Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'],
+			'long' => [1 => 'pondělí', 'úterý', 'středa', 'čtvtek', 'pátek', 'sobota', 'neděle']
+		]
+	];
+
+	/** @var array */
+	private $monthLocalized = [
+		'cs' => [1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec']
+	];
+
 
 	/**
 	 * Object factory
@@ -83,6 +96,7 @@ class DateTime extends Nette\DateTime
 
 	/**
 	 * Minus another DateTime
+	 * @param  string
 	 * @return int
 	 */
 	public function minus($dateTime)
@@ -129,19 +143,17 @@ class DateTime extends Nette\DateTime
 
 
 	/**
-	 * Get distance from now (in days by default)
-	 * @param string
+	 * Get distance from now in days
+	 * @return int
 	 */
-	public function getFromNow($type = 'd')
+	public function getFromNow()
 	{
 		$today = new self;
-		$diff = self::diff($today);
+		$diff = strtotime($this) - strtotime($today); // in secs
 
-		if ($type) {
-			return $diff->{$type};
-		}
+		$days = floor($diff / (60 * 60 * 24));
 
-		return $diff;
+		return $days;
 	}
 
 
@@ -166,17 +178,10 @@ class DateTime extends Nette\DateTime
 	 */
 	public function dayLocalized($lang = 'cs', $type = 'short', $ucfirst = TRUE)
 	{
-		$nameList = array(
-			'cs' => array(
-				'short' => array(1 => 'Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'),
-				'long' => array(1 => 'pondělí', 'úterý', 'středa', 'čtvtek', 'pátek', 'sobota', 'neděle')
-			)
-		);
-
 		$day = $this->format('N');
 
-		if (isset($nameList[$lang][$type][$day])) {
-			$return = $nameList[$lang][$type][$day];
+		if (isset($this->weekDayLocalized[$lang][$type][$day])) {
+			$return = $this->weekDayLocalized[$lang][$type][$day];
 			return ($ucfirst ? ucfirst($return) : strtolower($return));
 		}
 
@@ -191,14 +196,10 @@ class DateTime extends Nette\DateTime
 	 */
 	public function monthLocalized($lang = 'cs', $ucfirst = TRUE)
 	{
-		$nameList = array(
-			'cs' => array(1 => 'leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec')
-		);
-
 		$month = $this->format('n');
 
-		if (isset($nameList[$lang][$month])) {
-			$return = $nameList[$lang][$month];
+		if (isset($this->monthLocalized[$lang][$month])) {
+			$return = $this->monthLocalized[$lang][$month];
 			return ($ucfirst ? ucfirst($return) : strtolower($return));
 		}
 
