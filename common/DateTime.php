@@ -55,21 +55,6 @@ class DateTime extends Nette\DateTime
 	}
 
 
-	/********************** month/year **********************/
-
-
-	/**
-	 * Get number of days in month
-	 * @return int
-	 */
-	public function daysInMonth()
-	{
-		$month = $this->format('m');
-		$year = $this->format('Y');
-		return cal_days_in_month(CAL_GREGORIAN, $month, $year);
-	}
-
-
 	/**
 	 * Get week start and end
 	 */
@@ -95,14 +80,13 @@ class DateTime extends Nette\DateTime
 
 
 	/**
-	 * Minus another DateTime
 	 * @param  string
 	 * @return int
 	 */
 	public function minus($dateTime)
 	{
 		$time1 = strtotime($this);
-		$time2 = strtotime($dateTime . ':00');
+		$time2 = strtotime($dateTime);
 
 		return $time2 - $time1;
 	}
@@ -204,16 +188,6 @@ class DateTime extends Nette\DateTime
 		}
 
 		return $this->format('F');
-	}
-
-
-	/**
-	 * @param string
-	 * @return string
-	 */
-	public function format($mask = 'Y-m-d H:i:s')
-	{
-		return parent::format($mask);
 	}
 
 
