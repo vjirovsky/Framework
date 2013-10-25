@@ -3,6 +3,7 @@
 namespace Schmutzka\Templates;
 
 use Nette;
+use Nette\Utils\Html;
 use Schmutzka;
 use Schmutzka\Utils\Time;
 
@@ -233,33 +234,29 @@ class Helpers extends Nette\Object
 	}
 
 
-
-
 	/**
-	 * Protect mail against spam
 	 * @param string
 	 * @param string
-	 * @param bool
-	 * @param string
-	 * @return string
+	 * @return Html
 	 */
-	public function email($email, $node = NULL, $clickable = TRUE, $class = NULL)
+	public function email($email, $class = NULL)
 	{
-		$return = NULL;
-		for ($i=0, $j=strlen($email); $i < $j; $i++) {
-			$return .= '&#0' . ord($email[$i]) . ';';
+		$emailEncoded = NULL;
+		for ($x = 0, $_length = strlen($email); $x < $_length; $x++) {
+			if (preg_match('!\w!' . 'u', $email[$x])) {
+				$emailEncoded .= '%' . bin2hex($email[$x]);
+
+			} else {
+				$emailEncoded .= $email[$x];
+			}
 		}
 
-		if ($clickable) {
-			$node = $node ? $node : $return;
-			// @todo: html object?
-			return '<a '
-				. ($class ? 'class="' . $class . '" ' : NULL)
-				. "href='mailto:$return'>$node</a>";
+		$link = Html::el('a')
+			->addClass($class)
+			->setHref('mailto:' . $emailEncoded)
+			->setText($email);
 
-		} else {
-			return $return;
-		}
+		return $link;
 	}
 
 
