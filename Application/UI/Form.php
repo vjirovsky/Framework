@@ -35,7 +35,7 @@ class Form extends Nette\Application\UI\Form
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @inject @var Schmutzka\Models\File */
+	/** @inject @var Models\File */
 	public $fileModel;
 
 	/** @var callable */

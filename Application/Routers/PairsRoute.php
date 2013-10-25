@@ -49,7 +49,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 	 * @param Nette\Caching\Cache
 	 * @param array
 	 */
-	public function __construct($mask, $metadata = array(), $flags = 0, Schmutzka\Models\Base $model, Nette\Caching\Cache $cache, $columns = array('id', 'name'))
+	public function __construct($mask, $metadata = [], $flags = 0, Schmutzka\Models\Base $model, Nette\Caching\Cache $cache, $columns = ['id', 'name'])
 	{
 		$this->mask = $mask;
 		$this->metadata = $metadata;
@@ -70,12 +70,12 @@ class PairsRoute extends Nette\Application\Routers\Route
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		$appRequest = parent::match($httpRequest);
-		if (!$appRequest) {
+
+		if ( ! $appRequest) {
 			return $appRequest;
 		}
 
 		$keyParam = $appRequest->parameters[$this->primaryKey];
-
 		if (!empty($keyParam)) {
 			$id = $this->getByValue($keyParam);
 			if ($id === NULL) {
@@ -100,7 +100,6 @@ class PairsRoute extends Nette\Application\Routers\Route
 	public function constructUrl(Request $appRequest, Url $refUrl)
 	{
 		if (isset($appRequest->parameters[$this->primaryKey])) {
-
 			$params = $appRequest->parameters;
 			$keyParam = $params[$this->primaryKey];
 
@@ -114,6 +113,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 				if ($value === NULL) {
 					return NULL;
 				}
+
 
 				$params = $appRequest->parameters;
 				$params[$this->primaryKey] = $value;
@@ -131,21 +131,22 @@ class PairsRoute extends Nette\Application\Routers\Route
 	/**
 	 * Get cached list
 	 * @return array
-	 */
+ 	 */
 	private function getPairList()
 	{
 		$pairList = $this->cache->load($this->cacheTag);
 
 		if ($pairList == NULL) {
 			$pairList = $this->model->fetchPairs($this->primaryKey, $this->secondaryKey);
+
 			foreach ($pairList as $key => $value) {
 				$pairList[$key] = Strings::webalize($value);
 			}
 
-			$this->cache->save($this->cacheTag, $pairList, array(
+			$this->cache->save($this->cacheTag, $pairList, [
 				'tag' => $this->cacheTag,
 				'expire' => '30 mins'
-			));
+			]);
 		}
 
 		return $pairList;
@@ -170,6 +171,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 	private function getByKey($key)
 	{
 		$pairList = $this->getPairList();
+
 		if (isset($pairList[$key])) {
 			return $pairList[$key];
 		}
