@@ -2,13 +2,72 @@
 
 namespace Schmutzka\Application\UI\Module;
 
-use AdminModule;
+use Schmutzka;
 
 
-class Presenter extends AdminModule\BasePresenter
+class Presenter extends Schmutzka\Application\UI\Presenter
 {
 	/** @persistent @var int */
 	public $id;
+
+	/** @var array */
+	public $moduleParams;
+
+	/** @inject @var Models\User */
+	public $userModel;
+
+	/** @inject @var Components\IAdminMenuControl */
+	public $adminMenuControl;
+
+	/** @var string */
+	protected $unloggedRedirect = 'Homepage:default';
+
+	/** @var Schmutzka\Models\Page */
+	private $pageModel;
+
+	/** @var Schmutzka\Models\Gallery */
+	private $galleryModel;
+
+	/** @var Nette\Security\Permission */
+	private $acl;
+
+
+	public function injectDependencies(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Gallery $galleryModel = NULL, Nette\Security\IAuthorizator $acl = NULL)
+	{
+		$this->pageModel = $pageModel;
+		$this->galleryModel = $galleryModel;
+		$this->acl = $acl;
+	}
+
+
+	public function startup()
+	{
+		parent::startup();
+
+		if ( ! $this->user->loggedIn) {
+			$this->layout = 'layoutLogin';
+		}
+
+		if ($this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
+				$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
+				$this->redirect(':Admin:Homepage:default');
+			}
+
+		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
+			// $this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
+			$this->flashMessage('Byli jste úspěšně přihlášeni.', 'success');
+			$this->redirect(':Front:Homepage:logged'); // custom manage
+		}
+
+		$this->template->modules = $this->paramService->getActiveModules();
+
+		if ($this->translator) {
+			$this->template->adminLangs = $this->paramService->adminLangs;
+			$this->template->lang = $this->lang;
+		}
+
+		$this->template->modules = $this->paramService->getActiveModules();
+	}
 
 
 	public function renderAdd()
@@ -61,9 +120,6 @@ class Presenter extends AdminModule\BasePresenter
 			$i++;
 		}
 	}
-
-
-	/********************** module helpers **********************/
 
 
 	/**
