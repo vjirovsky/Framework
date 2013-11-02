@@ -12,7 +12,7 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 	/** @inject @var Schmutzka\Models\CustomEmail */
 	public $customEmailModel;
 
-	/** @inject @var Schmutzka\Models\EmailLog */
+	/** @inject @var Models\EmailLog */
 	public $emailLogModel;
 
 	/** @inject @var Schmutzka\ParamService */
@@ -43,7 +43,7 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 		parent::send($message);
 	}
 
-	
+
 	/**
 	 * Get mail data
 	 * @param Nette\Mail\Message

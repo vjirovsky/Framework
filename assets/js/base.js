@@ -1,15 +1,13 @@
 $(document).ready(function() {
-
-	// tooltip
-	$('[rel=tooltip]').tooltip();
-
-
 	// form on change submit
 	$(function () {
 		$('input.onChangeSubmit').change(function () {
 			$(this).closest('form').submit();
 		});
 	});
+
+	// tooltip - @todo test
+	// $('*[data-tooltip]').tooltip($(this).data('tooltip'));
 
 	// confirm alert
 	$('*[data-confirm]').on('click', function() {

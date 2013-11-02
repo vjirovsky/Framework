@@ -7,7 +7,7 @@ use Nette;
 
 class User extends Nette\Security\User
 {
-	/** @inject @var Schmutzka\Models\User */
+	/** @inject @var Models\User */
 	public $userModel;
 
 

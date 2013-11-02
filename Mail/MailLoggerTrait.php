@@ -8,7 +8,7 @@ use Schmutzka;
 
 trait MailLoggerTrait
 {
-	/** @inject @var Schmutzka\Models\EmailLog */
+	/** @inject @var Models\EmailLog */
 	public $emailLogModel;
 
 	/** @var Schmutzka\ParamService */
@@ -53,6 +53,8 @@ trait MailLoggerTrait
 			$data['to'] = $message->getHeader('To');
 			$data['from'] =  $message->getHeader('From');
 		}
+
+		$data = array_merge($data, $this->loggerData);
 
 		return $data;
 	}

@@ -33,7 +33,7 @@ abstract class BaseJoint extends Base
 	public function modify($id, $data)
 	{
 		$oldItems = $this->table($this->mainKeyName, $id)
-			->fetchPairs($this->otherKeyName);
+			->fetchPairs($this->otherKeyName, $this->otherKeyName);
 
 		$key[$this->mainKeyName] = $id;
 
@@ -69,6 +69,7 @@ abstract class BaseJoint extends Base
 			$checkKey[$this->otherKeyName] = $key;
 
 			if ($remove = $this->table($checkKey)->fetch()) {
+
 				unset($oldItemsIds[$remove['id']]);
 				$this->update($value, $remove['id']);
 

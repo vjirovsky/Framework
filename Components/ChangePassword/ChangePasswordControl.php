@@ -9,7 +9,7 @@ use Schmutzka\Security\UserManager;
 
 class ChangePasswordControl extends Control
 {
-	/** @inject @var Schmutzka\Models\User */
+	/** @inject @var Models\User */
 	public $userModel;
 
 	/** @inject @var Schmutzka\Security\User */

@@ -13,6 +13,12 @@ trait FileUploadTrait
 	/** @var [] */
 	public $files;
 
+	/** @var string */
+	private $imagesDir = '/images/data/';
+
+	/** @var string */
+	private $storageDir = '/storage/files/';
+
 
 	/**
 	 * @param  array
@@ -31,12 +37,13 @@ trait FileUploadTrait
 						'size' => $value->getSize(),
 					];
 
+
 					if ($value->isImage()) {
 						$control = $this->form[$key];
 						$resize = $control->getResize();
 
 						$data['name'] = $this->getImageUniqueName($value->getName());
-						$data['path'] = $this->getImagesDir();
+						$data['path'] = $this->imagesDir;
 
 						$image = $value->toImage();
 
@@ -73,13 +80,13 @@ trait FileUploadTrait
 
 					} else {
 						$data['name'] = $this->getRandomName();
-						$data['path'] = $this->getStorageDir();
+						$data['path'] = $this->storageDir;
 
 						$value->move($this->paramService->wwwDir . $data['path']. $data['name']);
 					}
 
-					$file = $this->fileModel->insert($data);
-					$this->files[$key] = $file['id'];
+					$fileId = $this->fileModel->insert($data);
+					$this->files[$key] = $fileId;
 				}
 
 				unset($values[$key]);
@@ -87,23 +94,6 @@ trait FileUploadTrait
 		}
 	}
 
-
-	/**
-	 * @return string
-	 */
-	private function getStorageDir()
-	{
-		return '/storage/files/';
-	}
-
-
-	/**
-	 * @return string
-	 */
-	private function getImagesDir()
-	{
-		return '/images/data/';
-	}
 
 
 	/**
@@ -136,7 +126,7 @@ trait FileUploadTrait
 		$file = $filename . '.' . $extensions;
 
 		$i = 1;
-		while (file_exists($this->getImagesDir() . $file)) {
+		while (file_exists($this->imagesDir . $file)) {
 			$file = $filename . '_' . $i++ . '.' . $extension;
 		}
 

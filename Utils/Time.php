@@ -78,7 +78,12 @@ class Time extends Nette\Object
 			}
 
 		} elseif ($from == 'h:m:s') {
-			list ($h, $m, $s) = explode(':', $time);
+			$temp = explode(':', $time);
+			if (count($temp) < 3) {
+				return $time;
+			}
+
+			list ($h, $m, $s) = $temp;
 			switch ($to) {
 				case 's' :
 					return $h * 60 * 60 + $m * 60 + $s;

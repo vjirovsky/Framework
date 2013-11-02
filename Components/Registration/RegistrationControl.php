@@ -13,14 +13,8 @@ use Schmutzka\Security\UserManager;
 
 
 /**
- * @method setFrom(string)
- * @method getFrom()
- * @method setLoginAfter(bool)
- * @method getLoginAfter()
  * @method setSendSuccessEmail(bool)
- * @method getSendSuccessEmail()
- * @method setRole(bool)
- * @method getRole()
+ * @method setRole(stringl)
  */
 class RegistrationControl extends Control
 {
@@ -30,7 +24,7 @@ class RegistrationControl extends Control
 	/** @inject @var Schmutzka\Mail\IMessage */
 	public $message;
 
-	/** @inject @var Schmutzka\Models\User  */
+	/** @inject @var Models\User */
 	public $userModel;
 
 	/** @inject @var Schmutzka\Security\User */
@@ -42,17 +36,12 @@ class RegistrationControl extends Control
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @var string */
-	public $from;
 
 	/** @var bool */
-	private $loginAfter = TRUE;
-
-	/** @var bool */
-	private $sendSuccessEmail = TRUE;
+	private $sendSuccessEmail = FALSE;
 
 	/** @var string */
-	private $role = 'visitor';
+	private $role;
 
 
 	protected function createComponentForm()
@@ -60,11 +49,6 @@ class RegistrationControl extends Control
 		$userModel = $this->userModel;
 
 		$form = new Form;
-		$form->addText('login', $this->paramService->form->login->label)
-			->addRule(Form::FILLED, $this->paramService->form->login->ruleFilled)
-			->addRule(function ($input) use ($userModel) {
-				return ! $userModel->fetch(['login' => $input->value]);
-			}, $this->paramService->form->login->alreadyExists);
 
 		$form->addText('email', $this->paramService->form->email->label)
 			->addRule(Form::FILLED, $this->paramService->form->email->ruleFilled)
@@ -99,14 +83,10 @@ class RegistrationControl extends Control
 			$this->sendSuccessEmail($values);
 		}
 
-		if ($this->loginAfter) {
-			$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
-			$this->user->login($values[$loginColumn], $rawValues['password']);
-			$this->presenter->flashMessage($this->paramService->registration->onSuccessAndLogin, 'success');
+		$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
+		$this->user->login($values[$loginColumn], $rawValues['password']);
+		$this->presenter->flashMessage($this->paramService->registration->onSuccessAndLogin, 'success');
 
-		} else {
-			$this->presenter->flashMessage($this->paramService->registration->onSuccess, 'success');
-		}
 
 		$this->redirect('this');
 	}
@@ -117,12 +97,12 @@ class RegistrationControl extends Control
 	 */
 	private function sendSuccessEmail($values)
 	{
-		if ($this->from == NULL) {
-			throw new \Exception("Missing $from value");
+		if ( ! isset($this->paramService->email->from)) {
+			throw new \Exception('Missing param email.from');
 		}
 
 		$message = $this->message->create();
-		$message->setFrom($this->from);
+		$message->setFrom($this->paramService->email->from);
 		$message->addTo($values['email']);
 		$message->addCustomTemplate('registration', $values);
 

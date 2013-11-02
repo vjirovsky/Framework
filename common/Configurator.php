@@ -19,10 +19,10 @@ class Configurator extends Nette\Configurator
 
 		$this->parameters = $this->getParameters();
 
-		// debugger
-		if ($debug) {
+		if ($debug !== NULL) {
 			$this->setDebugMode($debug);
 		}
+
 		$this->enableDebugger($this->parameters['logDir']);
 
 		// robot loader

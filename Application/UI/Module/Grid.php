@@ -11,7 +11,7 @@ abstract class Grid extends DataGrid
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @inject @var Schmutzka\Models\User */
+	/** @inject @var Models\User */
 	public $userModel;
 
 

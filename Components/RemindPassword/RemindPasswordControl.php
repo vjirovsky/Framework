@@ -9,7 +9,7 @@ use Nette\Utils\Strings;
 
 class RemindPasswordControl extends Control
 {
-	/** @inject @var Schmutzka\Models\User */
+	/** @inject @var Models\User */
 	public $userModel;
 
 	/** @inject @var Nette\Mail\IMailer */
@@ -44,9 +44,7 @@ class RemindPasswordControl extends Control
 
 		if ($record = $this->userModel->fetch(['email' => $values['email']])) {
 			$message = $this->message->create();
-
-			$from = $this->paramService->emailModule->noReplyEmail;
-			$message->setFrom($from)
+			$message->setFrom($this->paramService->email->from)
 				->addTo($values['email']);
 
 			$values['new_password'] = $password = Strings::random(10);

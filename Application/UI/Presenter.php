@@ -4,7 +4,6 @@ namespace Schmutzka\Application\UI;
 
 use Nette;
 use Schmutzka;
-use Schmutzka\Http\Browser;
 use Schmutzka\Utils\Name;
 
 
@@ -14,16 +13,10 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	use Schmutzka\Diagnostics\Panels\CleanerPanelTrait;
 
 	/** @persistent @var string */
-	public $lang;
-
-	/** @persistent @var string */
 	public $backlink;
 
 	/** @var string */
 	public $module;
-
-	/** @inject @var Nette\Caching\Cache */
-	public $cache;
 
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
@@ -36,18 +29,9 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 
 	/** @inject @var Components\IFlashMessageControl */
 	public $flashMessageControl;
-
 	/** @var array|callable[] */
-	public $helpersCallbacks = array();
+	public $helpersCallbacks = [];
 
-	/** @var Nette\localization\ITranslator */
-	protected $translator;
-
-
-	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
 
 
 	public function startup()
@@ -56,7 +40,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 
 		$this->module = Name::mpv($this->presenter, 'module');
 
-		if ($this->user->loggedIn && $this->paramService->logUserActivity) {
+		if ($this->user->loggedIn && $this->user->id && $this->paramService->logUserActivity) {
 			$this->user->logLastActive();
 		}
 	}
@@ -84,7 +68,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	public function createTemplate($class = NULL)
 	{
 		$template = parent::createTemplate($class);
-		$this->templateService->configure($template, $this->lang);
+		$this->templateService->configure($template);
 
 		foreach ($this->helpersCallbacks as $helpersCallback) {
 			$template->registerHelperLoader($helpersCallback);
@@ -101,59 +85,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		$layoutTemplateFiles[] = $this->paramService->appDir . '/FrontModule/templates/@' . ($this->layout ?: 'layout') . '.latte';
 
 		return $layoutTemplateFiles;
-	}
-
-
-	/********************** module helpers **********************/
-
-
-	/**
-	 * @param Schmutzka\Models\Base
-	 * @param int
-	 * @param string
-	 */
-	protected function deleteHelper($model, $id, $redirect = 'default')
-	{
-		if (!$id) {
-			return FALSE;
-		}
-
-		if ($model->delete($id)) {
-			$this->flashMessage($this->paramService->flashes->onDeleteSuccess, 'success');
-
-		} else {
-			$this->flashMessage($this->paramService->flashes->onDeleteError, 'error');
-		}
-
-		if ($redirect) {
-			$this->redirect($redirect, array(
-				'id' => NULL
-			));
-		}
-	}
-
-
-	/**
-	 * @param Schmutzka\Models\Base
-	 * @param int
-	 * @param string
-	 */
-	protected function loadItemHelper($model, $id, $redirect = 'default')
-	{
-		if (!$id) {
-			return FALSE;
-		}
-
-		if ($item = $model->fetch($id)) {
-			$this->template->item = $item;
-			return $item;
-
-		} else {
-			$this->flashMessage('Tento záznam neexistuje.', 'error');
-			$this->redirect($redirect, array(
-				'id' => NULL
-			));
-		}
 	}
 
 }

@@ -8,6 +8,9 @@ use Schmutzka\Utils\Filer;
 
 trait CleanerPanelTrait
 {
+	/** @inject @var Nette\Caching\Cache */
+	public $cache;
+
 
 	/**
 	 * @param  string
@@ -25,7 +28,7 @@ trait CleanerPanelTrait
 
 			} elseif ($type == 'session') {
 				$this->session->destroy();
-            	$this->session->start();
+				$this->session->start();
 			}
 		}
 

@@ -90,7 +90,6 @@ services:
 	- Schmutzka\Templates\Helpers
 	- Models\Email
 
-
 factories:
 	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
 

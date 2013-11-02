@@ -1,6 +1,8 @@
 <?php
 
-namespace Schmutzka\Models;
+namespace Models;
+
+use Schmutzka\Models\Base;
 
 
 class User extends Base

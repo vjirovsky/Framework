@@ -9,7 +9,7 @@ use Nette\Utils\Strings;
 
 class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 {
-	/** @inject @var Schmutzka\Models\User */
+	/** @inject @var Models\User */
 	public $userModel;
 
 	/** @inject @var Schmutzka\ParamService */

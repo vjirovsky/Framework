@@ -44,7 +44,7 @@ class BaseSearchControl extends Control
 	{
 		$values = $form->values;
 
-		$result = $this->searchModel->fetchAll();
+		$result = $this->fetchBaseResult();
 		if ($values[$this->searchColumn]) {
 			$result->where($this->searchColumn . ' LIKE ?', '%' . $values[$this->searchColumn] . '%');
 		}
@@ -71,6 +71,15 @@ class BaseSearchControl extends Control
 		$this->values = NULL;
 		$this->presenter->result = NULL;
 		$this->presenter->redirect('this');
+	}
+
+
+	/**
+	 * @return  NotORM_Result
+	 */
+	public function fetchBaseResult()
+	{
+		return $this->searchModel->fetchAll();
 	}
 
 }
