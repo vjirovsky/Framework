@@ -20,9 +20,6 @@ class Macros extends MacroSet
 		$set = new static($compiler);
 		$set->addMacro('phref', NULL, NULL, array($set, 'macroPhref'));
 		$set->addMacro('current', NULL, NULL, array($set, 'macroCurrent'));
-		$set->addMacro('src', NULL, NULL, array($set, 'macroSrc'));
-		$set->addMacro('confirm', NULL, NULL, array($set, 'macroConfirm'));
-		$set->addMacro('tooltip', NULL, NULL, array($set, 'macroTooltip'));
 		$set->addMacro('id', NULL, NULL, array($set, 'macroId'));
 		$set->addMacro('description', '$__desc = $form[%node.word]->getOption("description"); echo %escape($__desc);');
 	}
@@ -45,41 +42,6 @@ class Macros extends MacroSet
 	{
 		$node = $node->args;
 		return $writer->write('if ($_l->tmp = array_filter(array($presenter->isLinkCurrent() ? "'. $node .'" :null))) echo \' class="\' . %escape(implode(" ", array_unique($_l->tmp))) . \'"\'');
-	}
-
-
-	/**
-	 * n:src="..."
-	 */
-	public function macroSrc(MacroNode $node, PhpWriter $writer)
-	{
-		$replace = array(
-			'{' => '\" . ',
-			'}' => ' . \"',
-		);
-		$node = strtr($node->args, $replace);
-
-		return $writer->write('echo \' src="\' . %escape($basePath) . \'/images/' . $node . '"\'');
-	}
-
-
-	/**
-	 * n:confirm="..." => data-confirm='confirm("...")';
-	 */
-	public function macroConfirm(MacroNode $node, PhpWriter $writer)
-	{
-		$node = $node->args;
-		return $writer->write('echo "  data-confirm=\'" . %escape($template->translate("' . $node . '")) . "\'"');
-	}
-
-
-	/**
-	 * n:tooltip="..." => rel='tooltip' title='$node'
-	 */
-	public function macroTooltip(MacroNode $node, PhpWriter $writer)
-	{
-		$node = $node->args;
-		return $writer->write('echo " rel=\'tooltip\' title=\'" . %escape($template->translate("' . $node . '")) . " \'"');
 	}
 
 
