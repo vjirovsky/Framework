@@ -29,9 +29,6 @@ class Form extends Nette\Application\UI\Form
 	/** @var bool */
 	public $useBootstrap = TRUE;
 
-	/** @inject @var Nette\Localization\ITranslator */
-	public $translator;
-
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
@@ -146,8 +143,8 @@ class Form extends Nette\Application\UI\Form
 			$this->afterBuild();
 		}
 
-		if ($this->translator) {
-			$this->setTranslator($this->translator);
+		if ($presenter->translator) {
+			$this->setTranslator($presenter->translator);
 		}
 
 		if ($presenter instanceof Nette\Application\IPresenter) {

@@ -14,7 +14,7 @@ use Schmutzka\Security\UserManager;
 
 /**
  * @method setSendSuccessEmail(bool)
- * @method setRole(stringl)
+ * @method setRole(string)
  */
 class RegistrationControl extends Control
 {
