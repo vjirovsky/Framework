@@ -9,8 +9,9 @@ use Schmutzka\Utils\Name;
 
 abstract class Presenter extends Nette\Application\UI\Presenter
 {
-	use CreateComponentTrait;
-	use Schmutzka\Diagnostics\Panels\CleanerPanelTrait;
+	use Schmutzka\Diagnostics\Panels\TCleanerPanel;
+	use Schmutzka\Templating\TTemplateSetup;
+	use TCreateComponent;
 
 	/** @persistent @var string */
 	public $backlink;
@@ -21,17 +22,11 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @inject @var Schmutzka\Templates\TemplateService */
-	public $templateService;
-
 	/** @inject @var Components\ITitleControl */
 	public $titleControl;
 
 	/** @inject @var Components\IFlashMessageControl */
 	public $flashMessageControl;
-	/** @var array|callable[] */
-	public $helpersCallbacks = [];
-
 
 
 	public function startup()
@@ -59,22 +54,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		} else {
 			$this->redirect('Homepage:default');
 		}
-	}
-
-
-	/**
-	 * @param string
-	 */
-	public function createTemplate($class = NULL)
-	{
-		$template = parent::createTemplate($class);
-		$this->templateService->configure($template);
-
-		foreach ($this->helpersCallbacks as $helpersCallback) {
-			$template->registerHelperLoader($helpersCallback);
-		}
-
-		return $template;
 	}
 
 

@@ -9,17 +9,8 @@ use Schmutzka;
 
 abstract class Control extends Nette\Application\UI\Control
 {
-	/** @inject @var Schmutzka\Templates\TemplateService */
-	public $templateService;
-
-	/** @var Nette\Localization\ITranslator */
-	protected $translator;
-
-
-	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
+	use Schmutzka\Templating\TTemplateSetup;
+	use TCreateComponent;
 
 
 	/**
@@ -50,43 +41,6 @@ abstract class Control extends Nette\Application\UI\Control
 
 			$this->template->render();
 		}
-	}
-
-
-	/**
-	 * Create template and set file
-	 * @param string
-	 * @param bool
-	 * @return Nette\Templating\FileTemplate
-	 */
-	public function createTemplate($class = NULL)
-	{
-		$template = parent::createTemplate($class);
-		$this->templateService->configure($template);
-
-		foreach ($this->presenter->helpersCallbacks as $helpersCallback) {
-			$template->registerHelperLoader($helpersCallback);
-		}
-
-		return $template;
-	}
-
-
-	/**
-	 * @param  string
-	 * @return Nette\ComponentModel\IComponent
-	 */
-	protected function createComponent($name)
-	{
-		$component = parent::createComponent($name);
-		if (property_exists($this, $name)) {
-			$component = $this->{$name}->create();
-
-		} elseif ($name !== 'form') {
-			$component = $this->presenter->createComponent($name);
-		}
-
-		return $component;
 	}
 
 }
