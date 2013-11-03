@@ -2,6 +2,7 @@
 
 namespace Schmutzka\Application\Routers;
 
+use Models;
 use Nette;
 use Nette\Application\Request;
 use Nette\Utils\Strings;
@@ -12,11 +13,11 @@ use Schmutzka\Utils\Name;
 
 
 /**
- * @use: $frontRouter[] = new PairsRoute('predmet/<id>', 'Subject:detail', NULL, $this->subjectModel, $this->cache, array('id', 'url'));
+ * @use: $frontRouter[] = new PairsRoute('predmet/<id>', 'Subject:detail', $this->subjectModel, $this->cache, ['id', 'url']);
  */
 class PairsRoute extends Nette\Application\Routers\Route
 {
-	/** @var Schmutzka\Models\Base */
+	/** @var Models\Base */
 	private $model;
 
 	/** @var array */
@@ -44,12 +45,11 @@ class PairsRoute extends Nette\Application\Routers\Route
 	/**
 	 * @param string
 	 * @param array
-	 * @param array
-	 * @param Schmutzka\Models\Base
+	 * @param Models\Base
 	 * @param Nette\Caching\Cache
 	 * @param array
 	 */
-	public function __construct($mask, $metadata = [], $flags = 0, Schmutzka\Models\Base $model, Nette\Caching\Cache $cache, $columns = ['id', 'name'])
+	public function __construct($mask, $metadata = [], $model, Nette\Caching\Cache $cache, $columns = ['id', 'name'])
 	{
 		$this->mask = $mask;
 		$this->metadata = $metadata;
@@ -59,7 +59,7 @@ class PairsRoute extends Nette\Application\Routers\Route
 
 		$this->cacheTag = 'route_' . sha1($mask);
 
-		parent::__construct($mask, $metadata, $flags);
+		parent::__construct($mask, $metadata, 0);
 	}
 
 

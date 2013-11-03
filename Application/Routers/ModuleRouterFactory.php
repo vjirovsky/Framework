@@ -2,6 +2,7 @@
 
 namespace Schmutzka\Application\Routers;
 
+use Models;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 use Schmutzka;
@@ -16,21 +17,13 @@ class ModuleRouterFactory
 	/** @inject @var Nette\Caching\Cache */
 	public $cache;
 
-	/** @var Schmutzka\Models\Page */
+	/** @var Models\Page - @todo, make automatic in module extension */
 	private $pageModel;
 
-	/** @var Schmutzka\Models\Article */
-	private $articleModel;
 
-	/** @var Schmutzka\Models\News */
-	private $newsModel;
-
-
-	public function injectModels(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Article $articleModel = NULL, Schmutzka\Models\News $newsModel = NULL)
+	public function injectModels(Models\Page $pageModel = NULL)
 	{
 		$this->pageModel = $pageModel;
-		$this->articleModel = $articleModel;
-		$this->newsModel = $newsModel;
 	}
 
 
@@ -46,22 +39,22 @@ class ModuleRouterFactory
 	}
 
 
-	protected function addPageRouter(RouteList &$frontRouter)
+	protected function addPageRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('<uid [A-z-]+>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = ['uid', 'title']);
-		$frontRouter[] = new PairsRoute('<id [1-9]+>', 'Page:detail', NULL, $this->pageModel, $this->cache, $columns = ['id', 'title']);
+		$frontRouter[] = new PairsRoute('<uid [A-z-]+>', 'Page:detail', $this->pageModel, $this->cache, $columns = ['uid', 'title']);
+		$frontRouter[] = new PairsRoute('<id [1-9]+>', 'Page:detail', $this->pageModel, $this->cache, $columns = ['id', 'title']);
 	}
 
 
-	protected function addArticleRouter(RouteList &$frontRouter)
+	protected function addArticleRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', NULL, $this->articleModel, $this->cache, $columns = ['id', 'url']);
+		$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', $this->articleModel, $this->cache, $columns = ['id', 'url']);
 	}
 
 
-	protected function addNewsRouter(RouteList &$frontRouter)
+	protected function addNewsRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', NULL, $this->newsModel, $this->cache, $columns = ['id', 'title']);
+		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', $this->newsModel, $this->cache, $columns = ['id', 'title']);
 	}
 
 
