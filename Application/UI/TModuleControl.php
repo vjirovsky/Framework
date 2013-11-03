@@ -1,11 +1,11 @@
 <?php
 
-namespace Schmutzka\Application\UI\Module;
+namespace Schmutzka\Application\UI;
 
 use Schmutzka;
 
 
-class Control extends Schmutzka\Application\UI\Control
+trait TModuleControl
 {
 	/** @persistent @var int */
 	public $id;
@@ -15,9 +15,6 @@ class Control extends Schmutzka\Application\UI\Control
 
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
-
-	/** @var string */
-	protected $onProcessRedirect;
 
 
 	public function attached($presenter)
@@ -67,15 +64,7 @@ class Control extends Schmutzka\Application\UI\Control
 		$this->postProcessValues($values, $this->id);
 
 		$this->presenter->flashMessage('Uloženo.', 'success');
-
-		if ($this->onProcessRedirect) {
-			$this->presenter->redirect($this->onProcessRedirect);
-
-		} else {
-			$this->presenter->redirect('edit', array(
-				'id' => $this->id
-			));
-		}
+		$this->presenter->redirect('edit', ['id' => $this->id]);
 	}
 
 
@@ -93,7 +82,7 @@ class Control extends Schmutzka\Application\UI\Control
 
 
 	/**
-	 * @return  Schmutzka\Models\Base
+	 * @return  Models\Base
 	 */
 	public function getModel()
 	{
@@ -103,9 +92,6 @@ class Control extends Schmutzka\Application\UI\Control
 
 		return $this->{$modelName};
 	}
-
-
-	/********************** process helpers **********************/
 
 
 	/**

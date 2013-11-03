@@ -1,11 +1,11 @@
 <?php
 
-namespace Schmutzka\Application\UI\Module;
+namespace Schmutzka\Application\UI;
 
 use Schmutzka;
 
 
-class Presenter extends Schmutzka\Application\UI\Presenter
+trait TModulePresenter
 {
 	/** @persistent @var int */
 	public $id;
@@ -22,17 +22,17 @@ class Presenter extends Schmutzka\Application\UI\Presenter
 	/** @var string */
 	protected $unloggedRedirect = 'Homepage:default';
 
-	/** @var Schmutzka\Models\Page */
+	/** @var Models\Page */
 	private $pageModel;
 
-	/** @var Schmutzka\Models\Gallery */
+	/** @var Models\Gallery */
 	private $galleryModel;
 
 	/** @var Nette\Security\Permission */
 	private $acl;
 
 
-	public function injectDependencies(Schmutzka\Models\Page $pageModel = NULL, Schmutzka\Models\Gallery $galleryModel = NULL, Nette\Security\IAuthorizator $acl = NULL)
+	public function injectDependencies(Models\Page $pageModel = NULL, Models\Gallery $galleryModel = NULL, Nette\Security\IAuthorizator $acl = NULL)
 	{
 		$this->pageModel = $pageModel;
 		$this->galleryModel = $galleryModel;

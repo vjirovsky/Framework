@@ -1,22 +1,15 @@
 <?php
 
-namespace Schmutzka\Application\UI\Module;
+namespace Schmutzka\Components;
 
 use Nette;
 use Nette\Utils\Strings;
-use Schmutzka\Application\UI\Module\Control;
 use Schmutzka\Application\UI\Form;
 
 
-abstract class TextControl extends Control
+trait TTextControl
 {
-	/** @var string (article|page) */
-	protected $type;
 
-
-	/**
-	 * @param Nette\Application\UI\Form
-	 */
 	protected function addFormPerex(Form $form)
 	{
 		if ($this->moduleParams->perex) {
@@ -26,9 +19,6 @@ abstract class TextControl extends Control
 	}
 
 
-	/**
-	 * @param Nette\Application\UI\Form
-	 */
 	protected function addFormContent(Form $form)
 	{
 		$form->addTextarea('content', 'Obsah:')
@@ -60,16 +50,6 @@ abstract class TextControl extends Control
 	 */
 	public function postProcessValues($values, $id)
 	{
-		$this->postProcessValuesSaveContentHistory($values, $id);
-	}
-
-
-	/**
-	 * @param  array
-	 * @param  int
-	 */
-	private function postProcessValuesSaveContentHistory($values, $id)
-	{
 		if ($this->moduleParams->contentHistory) {
 			$array = array(
 				'content' => $values['content'],
@@ -89,22 +69,10 @@ abstract class TextControl extends Control
 	 */
 	public function handleLoadContentVersion($versionId)
 	{
-		$this['form']['content']->setValue($this->{$this->type . 'ContentModel'}->fetch('content'));
-	}
+		$content = $this->{$this->type . 'ContentModel'}
+			->fetch('content');
 
-
-	/**
-	 * @param  string
-	 */
-	protected function loadTemplateValues()
-	{
-		if ($this->id) {
-			if ($this->moduleParams->contentHistory) {
-				$this->template->contentHistory = $this->{$this->type . 'ContentModel'}->fetchAll(array($this->type . '_id' => $this->id))
-					->select('user.login login, ' . $this->type . '_content.*')
-					->order('edited DESC');
-			}
-		}
+		$this['form']['content']->setValue($content);
 	}
 
 
@@ -116,7 +84,7 @@ abstract class TextControl extends Control
 		$url = $originUrl = Strings::webalize($name);
 		$i = 1;
 
-		while ($item = $this->{$this->type . 'Model'}->fetch(['url' => $url]) {
+		while ($item = $this->{$this->type . 'Model'}->fetch(['url' => $url])) {
 			if ($item['id'] == $this->id) {
 				return $url;
 			}

@@ -1,12 +1,9 @@
 <?php
 
-namespace Schmutzka\Application\UI\Module;
-
-use Nette;
-use TwiGrid\DataGrid;
+namespace Schmutzka\Application\UI;
 
 
-abstract class Grid extends DataGrid
+trait TModuleGrid
 {
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
@@ -15,9 +12,6 @@ abstract class Grid extends DataGrid
 	public $userModel;
 
 
-	/**
-	 * @param  Nette\Application\UI\Presenter
-	 */
 	public function attached($presenter)
 	{
 		$this->build();
@@ -44,9 +38,7 @@ abstract class Grid extends DataGrid
 	 */
 	public function editRecord($id)
 	{
-		$this->presenter->redirect('edit', array(
-			'id' => $id
-		));
+		$this->presenter->redirect('edit', ['id' => $id]);
 	}
 
 
@@ -64,9 +56,6 @@ abstract class Grid extends DataGrid
 	}
 
 
-	/********************** columns **********************/
-
-
 	public function addEditRowAction()
 	{
 		$this->addRowAction('edit', 'Upravit', $this->editRecord);
@@ -79,13 +68,23 @@ abstract class Grid extends DataGrid
 	}
 
 
-	/********************** helpers **********************/
+	/**
+	 * @return  Models\Base
+	 */
+	public function getModel()
+	{
+		$className = $this->getReflection()->getName();
+		$classNameParts = explode('\\', $className);
+		$modelName = lcfirst(substr(array_pop($classNameParts), 0, -4)) . 'Model';
+
+		return $this->{$modelName};
+	}
 
 
 	/**
 	 * @return  Nette\ArrayHash
 	 */
-	public function getModuleParams()
+	protected function getModuleParams()
 	{
 		return $this->paramService->getModuleParams($this->presenter->module);
 	}
@@ -99,19 +98,6 @@ abstract class Grid extends DataGrid
 	{
 		$class = $this->getReflection();
 		return dirname($class->getFileName()) . '/templates/grid.latte';
-	}
-
-
-	/**
-	 * @return  Schmutzka\Models\Base
-	 */
-	public function getModel()
-	{
-		$className = $this->getReflection()->getName();
-		$classNameParts = explode('\\', $className);
-		$modelName = lcfirst(substr(array_pop($classNameParts), 0, -4)) . 'Model';
-
-		return $this->{$modelName};
 	}
 
 }
