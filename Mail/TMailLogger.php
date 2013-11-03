@@ -6,7 +6,7 @@ use Nette;
 use Schmutzka;
 
 
-trait MailLoggerTrait
+trait TMailLogger
 {
 	/** @inject @var Models\EmailLog */
 	public $emailLogModel;
