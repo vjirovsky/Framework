@@ -6,7 +6,7 @@ use Nette;
 use Schmutzka\Utils\Filer;
 
 
-trait CleanerPanelTrait
+trait TCleanerPanel
 {
 	/** @inject @var Nette\Caching\Cache */
 	public $cache;

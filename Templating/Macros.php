@@ -1,6 +1,6 @@
 <?php
 
-namespace Schmutzka\Templates;
+namespace Schmutzka\Templating;
 
 use Nette;
 use Nette\Latte\MacroNode;

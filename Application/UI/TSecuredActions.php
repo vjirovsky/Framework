@@ -7,7 +7,7 @@ use Nette\Reflection;
 use Nette\Security\User;
 
 
-trait SecuredActionsTrait
+trait TSecuredActions
 {
 
 	public function beforeRender()

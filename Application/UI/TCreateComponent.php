@@ -6,7 +6,7 @@ use Nette\Utils\Strings;
 use WebLoader;
 
 
-trait CreateComponentTrait
+trait TCreateComponent
 {
 
 	/**

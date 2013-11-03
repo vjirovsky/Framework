@@ -1,6 +1,6 @@
 <?php
 
-namespace Schmutzka\Templates;
+namespace Schmutzka\Templating;
 
 use Nette;
 use Nette\Utils\Html;
@@ -23,7 +23,6 @@ class Helpers extends Nette\Object
 
 
 	/**
-	 * Number format
 	 * @param array
 	 * @param int
 	 * @param string
@@ -33,50 +32,6 @@ class Helpers extends Nette\Object
 	public static function number($number, $decimals = 0, $dec_point = ',', $thousand_sep = ' ')
 	{
 		return number_format($number, $decimals, $dec_point, $thousand_sep);
-	}
-
-
-	/**
-	 * Linkify text
-	 * @param string
-	 * @param bool
-	 */
-	public static function linkifyText($string, $linkName = NULL)
-	{
-		return Url::linkifyText($string, $linkName);
-	}
-
-
-	/**
-	 * @param string
-	 * @return string
-	 */
-	public static function suffix($file)
-	{
-		$temp = explode('.', $file);
-		return array_pop($temp);
-	}
-
-
-	/**
-	 * First upper
-	 * @param string
-	 */
-	public static function fupper($string)
-	{
-		return ucfirst($string);
-	}
-
-
-	/**
-	 * @param mixed
-	 * @param string
-	 * @param string
-	 * @param mixed
-	 */
-	public static function ternal($value, $one = 'ano', $two = 'ne', $cond = 1)
-	{
-		return ($value == $cond) ? $one : $two;
 	}
 
 
@@ -98,8 +53,7 @@ class Helpers extends Nette\Object
 
 
 	/**
-	  * Returns field from array
-	  * @param mixed
+	  * @param string|int
 	  * @param string
 	  */
 	public function inArray($value, $array, $return = '-')
@@ -116,7 +70,7 @@ class Helpers extends Nette\Object
 	/**
 	 * @param float
 	 * @param int
-	 * @return int
+	 * @return float|int
 	 */
 	public static function round($n, $precision = 0)
 	{
@@ -257,17 +211,6 @@ class Helpers extends Nette\Object
 			->setText($email);
 
 		return $link;
-	}
-
-
-	/**
-	 * Date default values
-	 * @param string
-	 * @param string
-	 */
-	public static function date($date, $format = 'j. n. Y H:i')
-	{
-		return Nette\Templating\Helpers::date($date, $format);
 	}
 
 
