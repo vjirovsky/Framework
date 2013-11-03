@@ -25,7 +25,7 @@ class PaySecControl extends Control
 	/** @var Schmutzka\Shop\Basket */
 	private $basket;
 
-	/** @var Schmutzka\Models\* */
+	/** @var Models\* */
 	private $orderModel;
 
 
@@ -200,7 +200,7 @@ class PaySecControl extends Control
 
 	/**
 	 * Set order model
-	 * @param Schmutzka\Models\*
+	 * @param Models\*
 	 */
 	public function setOrderModel($orderModel)
 	{

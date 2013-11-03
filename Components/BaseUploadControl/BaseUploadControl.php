@@ -2,12 +2,14 @@
 
 namespace Schmutzka\Components;
 
+use Schmutzka;
 use Schmutzka\Application\UI\Module\Control;
 use UploadHandler;
 
 
 abstract class BaseUploadControl extends Control
 {
+	use Schmutzka\Application\UI\TModuleControl;
 
 	public function handleUpload()
 	{

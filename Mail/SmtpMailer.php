@@ -9,7 +9,7 @@ use Schmutzka\Models;
 
 class SmtpMailer extends Nette\Mail\SmtpMailer
 {
-	/** @inject @var Schmutzka\Models\CustomEmail */
+	/** @inject @var Models\CustomEmail */
 	public $customEmailModel;
 
 	/** @inject @var Models\EmailLog */
