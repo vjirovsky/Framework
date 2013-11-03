@@ -1,13 +1,12 @@
 <?php
 
-namespace Schmutzka\Models;
+namespace Schmutzka\Model;
 
-use GettextTranslator;
 use NotORM_Row_Lang;
 use Schmutzka\Utils\Name;
 
 
-abstract class BaseTranslation extends Base
+trait TTranslation
 {
 	/** @inject @var Nette\Localization\ITranslator */
 	public $translator;
@@ -19,8 +18,7 @@ abstract class BaseTranslation extends Base
 	 */
 	public function fetch($key)
 	{
-		NotORM_Row_Lang::$lang = $this->translator->getLang();
-
+		NotORM_Row_Lang::$lang = $this->translator->getLocale();
 		$row = parent::fetch($key);
 
 		// setup keys
@@ -38,7 +36,7 @@ abstract class BaseTranslation extends Base
 	 */
 	public function fetchAll($key = [])
 	{
-		NotORM_Row_Lang::$lang = $this->translator->getLang();
+		NotORM_Row_Lang::$lang = $this->translator->getLocale();
 		return parent::fetchAll($key);
 	}
 
@@ -113,7 +111,7 @@ abstract class BaseTranslation extends Base
 			}
 		}
 
-		$data['language_id'] = $this->translator->getLang();
+		$data['language_id'] = $this->translator->getLocale();
 
 		return $data;
 	}

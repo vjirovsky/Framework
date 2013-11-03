@@ -3,14 +3,8 @@
 namespace Schmutzka\Models;
 
 
-abstract class BaseJoint extends Base
+trait TJoint
 {
-	/** @var string */
-	protected $mainKeyName;
-
-	/** @var string */
-	protected $otherKeyName;
-
 
 	/**
 	 * Fetch by main

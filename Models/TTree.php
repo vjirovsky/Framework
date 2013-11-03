@@ -2,9 +2,8 @@
 
 namespace Schmutzka\Models;
 
-use Nette;
 
-class BaseTree extends Base
+trait TTree
 {
 	/** @var array */
 	public $structure;
@@ -20,10 +19,10 @@ class BaseTree extends Base
 	 * @param array
 	 * @return array { [ id => { [ NotORM_Row => ..., children ] } ] }
 	 */
-	public function fetchStructure($cond = array())
+	public function fetchStructure($cond = [])
 	{
 		$data = $this->fetchData($cond);
-		$structure = array();
+		$structure = [];
 
 		foreach ($data as $row) {
 			if (!$row[$this->parentColumn]) { // no parent items
@@ -49,7 +48,7 @@ class BaseTree extends Base
 	public function fullroadView($sep = ' » ')
 	{
 		$data = $this->fetchData()->fetchPairs('id');
-		$array = array();
+		$array = [];
 
 		foreach ($data as $key => $row) {
 			$item = $row[$this->idColumn];
@@ -67,9 +66,6 @@ class BaseTree extends Base
 	}
 
 
-	/********************** helpers **********************/
-
-
 	/**
 	 * Returns children by record id
 	 * @param array
@@ -79,7 +75,7 @@ class BaseTree extends Base
 	private function getChildren($cond, $parentId)
 	{
 		$data = $this->fetchData($cond);
-		$array = array();
+		$array = [];
 
 		foreach ($data as $row) {
 			if ($row[$this->parentColumn] == $parentId) {
