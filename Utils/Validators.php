@@ -5,16 +5,11 @@ namespace Schmutzka\Utils;
 use Nette;
 use DateTime;
 
-/**
- * isTime($time)
- * isDate($date)
- */
 
 class Validators extends Nette\Utils\Validators
 {
 
 	/**
-	 * Is date time
 	 * @param string
 	 * @return bool
 	 */
@@ -25,7 +20,6 @@ class Validators extends Nette\Utils\Validators
 
 
 	/**
-	 * Check time format
 	 * @return bool
 	 */
 	public static function isTime($time)
@@ -35,26 +29,36 @@ class Validators extends Nette\Utils\Validators
 
 
 	/**
-	 * Check date form
 	 * @param string
-	 * @return bool
+	 * @return FALSE|Nette\DateTime
 	 */
 	public static function isDate($date)
 	{
-		if (is_object($date) && $date instanceof DateTime) {
-			$date = $date->format('Y-m-d');
-		}
-
-		if (strpos('-', $date)) { // A. world format
+		if (strpos($date, '-')) { // A. world format
 			$dateArray = explode('-', $date, 3);
 			list($y, $m, $d) = $dateArray;
 
-		} elseif (strpos('.', $date)) { // B. czech format
+		} elseif (strpos($date, '.')) { // B. czech format
+
 			$dateArray = explode('.', $date, 3);
 			list($d, $m, $y) = $dateArray;
+
+			$d = trim($d);
+			$m = trim($m);
+			$y = trim($y);
+
+		} else {
+			return FALSE;
 		}
 
-		return (checkdate((int) $m,(int) $d,(int) $y) && strtotime('$y-$m-$d') && preg_match('#\b\d{2}[/-]\d{2}[/-]\d{4}\b#', '$d-$m-$y'));
+		$dateForm = $y . '-' . $m . '-' . $d;
+
+		if (checkdate((int) $m,(int) $d,(int) $y)) {
+			return new Nette\DateTime($dateForm);
+
+		} else {
+			return FALSE;
+		}
 	}
 
 }

@@ -65,10 +65,6 @@ nette:
 	security:
 		debugger: TRUE
 
-	latte:
-		macros:
-			- Schmutzka\Templating\Macros::install
-
 
 services:
 	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
@@ -83,7 +79,6 @@ services:
 	- lessc
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templating\Helpers
-	- Models\Email
 
 
 factories:
