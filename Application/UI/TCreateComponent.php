@@ -23,9 +23,6 @@ trait TCreateComponent
 
 			} elseif ($this->isWebloaderControl($name)) {
 				$component = $this->createWebloaderControl($name);
-
-			} elseif (method_exists($this->context, 'createService' .  ucfirst($name))) { // @deprecated
-				$component = call_user_func(array($this->context, 'createService' .  ucfirst($name)));
 			}
 		}
 

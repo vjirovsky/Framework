@@ -143,7 +143,7 @@ class Form extends Nette\Application\UI\Form
 			$this->afterBuild();
 		}
 
-		if ($presenter->translator) {
+		if (property_exists($presenter, 'translator')) {
 			$this->setTranslator($presenter->translator);
 		}
 
@@ -255,6 +255,20 @@ class Form extends Nette\Application\UI\Form
 			return (Validators::isUrl($value) || $value == NULL) ? $value : 'http://' . $value;
 		})->addCondition(Form::FILLED)
 			->addRule(Form::URL, 'Opravte adresu odkazu');
+
+		return $control;
+	}
+
+
+	/**
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return  Controls\IconSubmitButton
+	 */
+	public function addIconSubmitButton($name, $label, $iconClass)
+	{
+		$control = $this[$name] = new Controls\IconSubmitButton($label, $iconClass);
 
 		return $control;
 	}

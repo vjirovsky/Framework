@@ -17,16 +17,6 @@ class TitleControl extends Control
 	private $titles = [];
 
 
-	protected function renderDefault()
-	{
-		if ($this->reversed) {
-			rsort($this->titles);
-		}
-
-		$this->template->title = implode($this->sep, $this->titles);
-	}
-
-
 	/**
 	 * @param string
 	 */
@@ -51,6 +41,31 @@ class TitleControl extends Control
 	public function setReversed($reversed)
 	{
 		$this->reversed = $reversed;
+	}
+
+
+	protected function renderDefault()
+	{
+		$this->template->title = $this->getFinalTitle();
+	}
+
+
+	protected function renderH1()
+	{
+		$this->template->title = $this->getFinalTitle();
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getFinalTitle()
+	{
+		if ($this->reversed) {
+			rsort($this->titles);
+		}
+
+		return implode($this->sep, $this->titles);
 	}
 
 }

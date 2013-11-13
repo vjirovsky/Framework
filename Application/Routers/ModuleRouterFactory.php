@@ -17,15 +17,6 @@ class ModuleRouterFactory
 	/** @inject @var Nette\Caching\Cache */
 	public $cache;
 
-	/** @var Models\Page - @todo, make automatic in module extension */
-	private $pageModel;
-
-
-	public function injectModels(Models\Page $pageModel = NULL)
-	{
-		$this->pageModel = $pageModel;
-	}
-
 
 	/**
 	 * @return RouteList
@@ -41,20 +32,20 @@ class ModuleRouterFactory
 
 	protected function addPageRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('<uid [A-z-]+>', 'Page:detail', $this->pageModel, $this->cache, $columns = ['uid', 'title']);
-		$frontRouter[] = new PairsRoute('<id [1-9]+>', 'Page:detail', $this->pageModel, $this->cache, $columns = ['id', 'title']);
+		$frontRouter[] = new PairsRoute('<uid [A-z-]+>', 'Page:detail', $this->pageModel, $this->cache, 'uid', 'title');
+		$frontRouter[] = new PairsRoute('<id [1-9]+>', 'Page:detail', $this->pageModel, $this->cache, 'id', 'title');
 	}
 
 
 	protected function addArticleRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', $this->articleModel, $this->cache, $columns = ['id', 'url']);
+		$frontRouter[] = new PairsRoute('clanek/<id>', 'Article:detail', $this->articleModel, $this->cache, 'id', 'url');
 	}
 
 
 	protected function addNewsRouter(RouteList $frontRouter)
 	{
-		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', $this->newsModel, $this->cache, $columns = ['id', 'title']);
+		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', $this->newsModel, $this->cache, 'id', 'title');
 	}
 
 

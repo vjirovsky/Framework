@@ -16,7 +16,7 @@ class FlashMessageControl extends Control
 			return NULL;
 		}
 
-		if ($this->translator) {
+		if ($this->getTranslator()) {
 			foreach ($flashes as $key => $row) {
 				$flashes[$key]->message = $this->translator->translate($row->message);
 			}

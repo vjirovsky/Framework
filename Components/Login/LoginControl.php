@@ -19,9 +19,6 @@ class LoginControl extends Control
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
 
-	/** @inject @var Schmutzka\ParamService */
-	public $paramService;
-
 	/** @inject @var Nette\Http\Session */
 	public $session;
 
@@ -43,15 +40,12 @@ class LoginControl extends Control
 	{
 		$form = new Form;
 
-		$formLabels = $this->paramService->form;
-		$customLabels = $formLabels->email;
+		$form->addText('email', 'Email')
+			->addRule(Form::EMAIL, 'Zadejte email');
+		$form->addPassword('password', 'Heslo')
+			->addRule(Form::FILLED, 'Zadejte heslo');
 
-		$form->addText('email', $customLabels->label)
-			->addRule(Form::EMAIL, $customLabels->ruleFormat);
-		$form->addPassword('password', $formLabels->password->label)
-			->addRule(Form::FILLED, $formLabels->password->ruleFilled);
-
-		$form->addSubmit('send', $formLabels->send->login)
+		$form->addSubmit('send', 'Přihlásit se')
 			->setAttribute('class', 'btn btn-primary');
 
 		return $form;
