@@ -139,10 +139,6 @@ class Form extends Nette\Application\UI\Form
 			$this->build();
 		}
 
-		if (method_exists($this, 'afterBuild')) {
-			$this->afterBuild();
-		}
-
 		if (property_exists($presenter, 'translator')) {
 			$this->setTranslator($presenter->translator);
 		}

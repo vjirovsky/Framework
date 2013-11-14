@@ -9,8 +9,8 @@ use Schmutzka\Models;
 
 class SmtpMailer extends Nette\Mail\SmtpMailer
 {
-	/** @inject @var Models\CustomEmail */
-	public $customEmailModel;
+	/** @inject @var Models\Email */
+	public $emailModel;
 
 	/** @inject @var Models\EmailLog */
 	public $emailLogModel;
@@ -56,7 +56,7 @@ class SmtpMailer extends Nette\Mail\SmtpMailer
 		$from = $message->getHeader('From');
 
 		$array = [
-			'custom_email_id' => $this->customEmailId,
+			'email_id' => $this->emailId,
 			'datetime' => new Nette\DateTime,
 			'to_email' => key($to),
 			'to_name' => array_pop($to),
