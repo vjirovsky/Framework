@@ -2,8 +2,8 @@
 
 namespace Schmutzka\Templating;
 
+use Schmutzka;
 use Nette;
-use Kdyby;
 
 
 trait TTemplateSetup
@@ -14,19 +14,10 @@ trait TTemplateSetup
 	/** @var callback[] */
 	protected $helpersCallbacks = [];
 
-	/** @var Nette\Localization\ITranslator */
-	private $translator;
-
-
-	public function injectTranslator(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
-
 
 	/**
 	 * @param  string|NULL
-	 * @return Nette\Templating\FileTemplate;
+	 * @return  Nette\Templating\FileTemplate
 	 */
 	public function createTemplate($class = NULL)
 	{
@@ -45,23 +36,13 @@ trait TTemplateSetup
 			}
 		}
 
+		// blank translations
+		$template->registerHelper('translate', function ($message) {
+			return $message;
+		});
+
 		// macros
-		// Schmutzka\Templating\Macros::install
-
-		// translation
-		if ($this->translator) {
-			$template->setTranslator($this->translator);
-
-			if ($this->translator instanceof Kdyby\Translation\Translator) {
-				Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
-				$template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
-			}
-
-		} else {
-			$template->registerHelper('translate', function ($message) {
-				return $message;
-			});
-		}
+		Schmutzka\Templating\Macros::install($engine->compiler);
 
 		return $template;
 	}
