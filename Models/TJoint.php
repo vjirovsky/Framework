@@ -5,17 +5,56 @@ namespace Schmutzka\Models;
 
 trait TJoint
 {
+	/** @var string */
+	private $mainTable;
+
+	/** @var string */
+	private $otherTable;
+
+	/** @var string */
+	private $mainKey;
+
+	/** @var string */
+	private $otherKey;
+
+
+
+	public function __construct()
+	{
+		$this->setup();
+	}
+
 
 	/**
-	 * Fetch by main
 	 * @param  int
 	 * @param  string|NULL
 	 * @return  array
 	 */
 	public function fetchByMain($id, $secondKey = NULL)
 	{
-		return $this->table($this->mainKeyName, $id)
-			->fetchPairs($this->otherKeyName, $secondKey ?: $this->otherKeyName);
+		return $this->table($this->mainKey, $id)
+			->fetchPairs($this->otherKey, $secondKey ?: $this->otherKey);
+	}
+
+
+
+	/**
+	 * @param  int
+	 * @return  NotORM_Result
+	 */
+	public function fetchResultByMain($id)
+	{
+		return $this->fetchResultHelper($id, $this->mainKey, $this->otherKey, $this->otherTable);
+	}
+
+
+	/**
+	 * @param  int
+	 * @return  NotORM_Result
+	 */
+	public function fetchResultByOther($id)
+	{
+		return $this->fetchResultHelper($id, $this->otherKey, $this->mainKey, $this->mainTable);
 	}
 
 
@@ -26,13 +65,13 @@ trait TJoint
 	 */
 	public function modify($id, $data)
 	{
-		$oldItems = $this->table($this->mainKeyName, $id)
-			->fetchPairs($this->otherKeyName, $this->otherKeyName);
+		$oldItems = $this->table($this->mainKey, $id)
+			->fetchPairs($this->otherKey, $this->otherKey);
 
-		$key[$this->mainKeyName] = $id;
+		$key[$this->mainKey] = $id;
 
 		foreach ($data as $otherKey) {
-			$key[$this->otherKeyName] = $otherKey;
+			$key[$this->otherKey] = $otherKey;
 			if ( ! isset($oldItems[$otherKey])) {
 				$this->insert($key);
 			}
@@ -41,7 +80,7 @@ trait TJoint
 		}
 
 		foreach ($oldItems as $otherKey) {
-			$key[$this->otherKeyName] = $otherKey;
+			$key[$this->otherKey] = $otherKey;
 			$this->delete($key);
 		}
 	}
@@ -54,13 +93,13 @@ trait TJoint
 	 */
 	public function modifyArrayData($id, $data)
 	{
-		$oldItemsIds = $this->table($this->mainKeyName, $id)
+		$oldItemsIds = $this->table($this->mainKey, $id)
 			->fetchPairs('id', 'id');
 
-		$checkKey[$this->mainKeyName] = $id;
+		$checkKey[$this->mainKey] = $id;
 
 		foreach ($data as $key => $value) {
-			$checkKey[$this->otherKeyName] = $key;
+			$checkKey[$this->otherKey] = $key;
 
 			if ($remove = $this->table($checkKey)->fetch()) {
 
@@ -68,7 +107,7 @@ trait TJoint
 				$this->update($value, $remove['id']);
 
 			} else {
-				$value[$this->mainKeyName] = $id;
+				$value[$this->mainKey] = $id;
 				$this->insert($value);
 			}
 		}
@@ -76,6 +115,50 @@ trait TJoint
 		foreach ($oldItemsIds as $key) {
 			$this->delete($key);
 		}
+	}
+
+
+	private function setup()
+	{
+		$data = explode('\\', get_class());
+		$data = explode('In', $data[1]); // what if start with In
+
+		$this->mainTable = $this->camelCaseToUnderscore($data[1]);
+		$this->otherTable = $this->camelCaseToUnderscore($data[0]);
+		$this->mainKey = $this->mainTable . '_id';
+		$this->otherKey = $this->otherTable . '_id';
+	}
+
+
+	/**
+	 * @param  string
+	 * @return  string
+	 */
+	private function camelCaseToUnderscore($string)
+	{
+    	$string[0] = strtolower($string[0]);
+    	$func = create_function('$c', 'return "_" . strtolower($c[1]);');
+    	return preg_replace_callback('/([A-Z])/', $func, $string);
+    }
+
+
+	/**
+	 * @param  int
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return  NotORM_Result
+	 */
+	private function fetchResultHelper($condKey, $cond, $key, $table)
+	{
+		$keys = $this->table($condKey, $cond)
+			->fetchPairs($key, $key);
+
+		$result = $this->db->{$table}
+			->where('id', $keys)
+			->order('name'); // @ ok?
+
+		return $result;
 	}
 
 }
