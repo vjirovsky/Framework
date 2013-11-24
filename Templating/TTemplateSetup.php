@@ -47,4 +47,19 @@ trait TTemplateSetup
 		return $template;
 	}
 
+
+	/**
+	 * @return string[]
+	 */
+	public function formatLayoutTemplateFiles()
+	{
+		$layout = ($this->layout ?: 'layout') . '.latte';
+
+		$layoutTemplateFiles = parent::formatLayoutTemplateFiles();
+		$layoutTemplateFiles[] = $this->paramService->appDir . '/AdminModule/templates/@' . $layout;
+		$layoutTemplateFiles[] = $this->paramService->appDir . '/FrontModule/templates/@' . $layout;
+
+		return $layoutTemplateFiles;
+	}
+
 }

@@ -92,7 +92,7 @@ class Configurator extends Nette\Configurator
 		$parameters = Neon::fromFile($this->parameters['appDir'] . '/config/config.neon', 'parameters');
 
 		if (isset($parameters['modules'])) {
-			$this->addConfig($this->parameters['modulesDir'] . '/AdminModule/config.neon');
+			$this->addConfig($this->parameters['appDir'] . '/AdminModule/config.neon');
 			foreach ($parameters['modules'] as $module) {
 				$moduleDirConfig = ucfirst($module) . 'Module/config.neon';
 				if (file_exists($config = $this->parameters['modulesDir'] . '/' . $moduleDirConfig)) {

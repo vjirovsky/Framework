@@ -79,6 +79,7 @@ services:
 	- lessc
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templating\Helpers
+	- Models\Email
 
 
 factories:

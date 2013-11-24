@@ -20,7 +20,7 @@ trait TModuleGrid
 
 		parent::attached($presenter);
 		$this->setTemplateFile($this->getTemplatePath());
-		$this->addTemplateValue('moduleGridTemplate', $this->paramService->modulesDir . '/templates/moduleGrid.latte');
+		$this->addTemplateValue('moduleGridTemplate', $this->paramService->appDir . '/AdminModule/templates/parts/moduleGrid.latte');
 	}
 
 
@@ -84,7 +84,7 @@ trait TModuleGrid
 	/**
 	 * @return  Nette\ArrayHash
 	 */
-	protected function getModuleParams()
+	public function getModuleParams()
 	{
 		return $this->paramService->getModuleParams($this->presenter->module);
 	}

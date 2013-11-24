@@ -22,6 +22,9 @@ class LoginControl extends Control
 	/** @inject @var Nette\Http\Session */
 	public $session;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
 	/** @var string */
 	private $forgotLink = NULL;
 
