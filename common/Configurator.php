@@ -3,6 +3,7 @@
 namespace Schmutzka;
 
 use Nette;
+use Nette\Utils\Strings;
 use Schmutzka\Utils\Neon;
 
 
@@ -11,9 +12,8 @@ class Configurator extends Nette\Configurator
 
 	/**
 	 * @param bool|string|array
-	 * @param bool
 	 */
-	public function __construct($debug = NULL, $autoloadConfig = TRUE)
+	public function __construct($debug = NULL)
 	{
 		parent::__construct();
 
@@ -37,10 +37,18 @@ class Configurator extends Nette\Configurator
 
 		// configs
 		$this->addConfig($this->parameters['libsDir'] . '/Schmutzka/configs/default.neon');
-		if ($autoloadConfig) {
-			$name = $this->parameters['environment'] == 'development' ? 'local' : 'prod';
-			$this->loadConfigByName($name);
+
+		if (Strings::startsWith($_SERVER['HTTP_HOST'], 'dev.')) {
+			$name = 'dev';
+
+		} elseif ($this->parameters['environment'] == 'development') {
+			$name = 'local';
+
+		} else {
+			$name = 'prod';
 		}
+
+		$this->loadConfigByName($name);
 	}
 
 

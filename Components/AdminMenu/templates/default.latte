@@ -1,7 +1,7 @@
 {if count($items) >= 2}
 	<li n:class="submenu, $presenter->module == $module ? 'active open'">
 		<a href="#">
-			<i n:class="$icon"></i>
+			<i n:class="fa, $icon"></i>
 			%span {$title}
 			%i.arrow.icon-chevron-right
 		</a>
@@ -18,7 +18,7 @@
 {else}
 	<li n:class="topmenu, $presenter->module == $module ? 'active'">
 		<a n:phref=":$module:Homepage:default, id => NULL">
-			<i n:class="$icon"></i>
+			<i n:class="fa, $icon"></i>
 			{$title}
 		</a>
 	</li>

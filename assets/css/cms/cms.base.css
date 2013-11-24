@@ -44,6 +44,15 @@
 	~ Admin
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+.panel {
+	label {
+		font-weight: normal;
+	}
+
+	.row {
+		padding-bottom: .3em;
+	}
+}
 
 .move {
 	cursor: move;

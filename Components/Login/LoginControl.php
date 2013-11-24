@@ -9,7 +9,6 @@ use Schmutzka\Application\UI\Control;
 
 /**
  * @method setForgotLink(string)
- * @method getForgotLink()
  */
 class LoginControl extends Control
 {
@@ -22,16 +21,13 @@ class LoginControl extends Control
 	/** @inject @var Nette\Http\Session */
 	public $session;
 
-	/** @inject @var Schmutzka\ParamService */
-	public $paramService;
-
 	/** @var string */
 	private $forgotLink = NULL;
 
 	/** @var string */
 	public $loginColumn = 'email';
 
-
+	
 	public function attached($presenter)
 	{
 		parent::attached($presenter);
@@ -61,11 +57,7 @@ class LoginControl extends Control
 			$values = $form->values;
 			$this->user->setExpiration('+ 14 days', FALSE);
 			$this->user->login($values[$this->loginColumn], $values['password'], $this->loginColumn);
-
-			if ($this->paramService->flashes->onLogin) {
-				$this->presenter->flashMessage($this->paramService->flashes->onLogin, 'success');
-			}
-
+			
 			$this->presenter->restoreRequest($this->backlink);
 			$this->presenter->redirect('Homepage:default');
 
