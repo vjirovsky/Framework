@@ -58,7 +58,7 @@ class BaseSearchControl extends Control
 	}
 
 
-	public function renderDefault()
+	protected function renderDefault()
 	{
 		if ($this->values) {
 			$this->template->searched = TRUE;
