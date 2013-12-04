@@ -19,6 +19,18 @@ class ModuleRouterFactory
 
 
 	/**
+	 * @param  RouteList
+	 * @param  array
+	 */
+	public function listToRoutes(RouteList $router, $aliasList)
+	{
+		foreach ($aliasList as $key => $value) {
+			$router[] = new Route($key, $value);
+		}
+	}
+
+
+	/**
 	 * @return RouteList
 	 */
 	protected function createModuleRouter(RouteList $router)
