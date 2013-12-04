@@ -7,9 +7,6 @@ use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Control;
 
 
-/**
- * @method setForgotLink(string)
- */
 class LoginControl extends Control
 {
 	/** @persistent @var string */
@@ -20,9 +17,6 @@ class LoginControl extends Control
 
 	/** @inject @var Nette\Http\Session */
 	public $session;
-
-	/** @var string */
-	private $forgotLink = NULL;
 
 	/** @var string */
 	public $loginColumn = 'email';
@@ -63,14 +57,6 @@ class LoginControl extends Control
 
 		} catch (Nette\Security\AuthenticationException $e) {
 			$this->presenter->flashMessage($e->getMessage(), 'danger');
-		}
-	}
-
-
-	protected function renderDefault()
-	{
-		if ($this->forgotLink) {
-			$this->template->forgotLink = $this->forgotLink;
 		}
 	}
 
