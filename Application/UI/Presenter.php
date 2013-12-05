@@ -56,4 +56,20 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		}
 	}
 
+
+	/**
+	 * @param  array
+	 * @return  boolean
+	 */
+	protected function isLinkCurrentOneOf($links = [])
+	{
+		foreach ($links as $link) {
+			if ($this->isLinkCurrent($link)) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
 }
