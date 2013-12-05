@@ -4,7 +4,7 @@ parameters:
 services:
 	user: Schmutzka\Security\User
 	userManager: Schmutzka\Security\UserManager
-	userModel: Models\User
+	- Models\User
 	- Models\File
 
 factories:

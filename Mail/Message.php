@@ -34,7 +34,7 @@ class Message extends Nette\Mail\Message
 
 		$template = new Nette\Templating\FileTemplate();
 		$template->registerFilter(new Nette\Latte\Engine());
-		$template->setFile($this->paramService->modulesDir . '/EmailModule/templates/@blankEmail.latte');
+		$template->setFile($this->paramService->appDir . '/EmailModule/templates/@blankEmail.latte');
 
 		$replaceArray = [];
 		foreach ($values as $key => $value) {

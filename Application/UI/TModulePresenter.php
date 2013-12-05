@@ -57,7 +57,8 @@ trait TModulePresenter
 			$this->template->lang = $this->lang;
 		}
 
-		$this->template->modules = $this->paramService->getActiveModules();
+		$this->template->modules = $modules = $this->paramService->getActiveModules();
+		$this->template->useCkeditor = $this->useCkeditor($modules);
 	}
 
 
@@ -146,6 +147,22 @@ trait TModulePresenter
 		}
 
 		return $this->{$modelName};
+	}
+
+
+	/**
+	 * @param  array
+	 * @return boolean
+	 */
+	private function useCkeditor($modules)
+	{
+		foreach ($modules as $value) {
+			if (in_array($value, ['page', 'article', 'email'])) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 
 }

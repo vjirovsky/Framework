@@ -29,11 +29,8 @@ trait TTemplateSetup
 
 		// helpers
 		$template->registerHelperLoader([$this->helpers, 'loader']);
-
-		if (count($this->helpersCallbacks)) {
-			foreach ($this->helpersCallbacks as $callback) {
-				$template->registerHelperLoader($callback);
-			}
+		foreach ($this->helpersCallbacks as $callback) {
+			$template->registerHelperLoader($callback);
 		}
 
 		// blank translations

@@ -2,19 +2,16 @@
 
 namespace Schmutzka\Components;
 
-use Schmutzka;
+use Schmutzka\Application\UI\Control;
 
 
-class TwitterModalControl extends Schmutzka\Application\UI\Control
+class TwitterModalControl extends Control
 {
 
-	/**
-	 * Use this control template
-	 * @return Nette\Templating\FileTemlate
-	 */
-	public function useParentTemplate()
+	protected function setupLayoutTemplate()
 	{
-		return $this->createTemplate()->setFile(__DIR__ . '/templates/default.latte');
+		$this->template->layoutTemplate = __DIR__ . '/templates/default.latte';
+		$this->template->id = sha1(__CLASS__ . rand(0,100));
 	}
 
 }
