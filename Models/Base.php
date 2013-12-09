@@ -165,6 +165,7 @@ abstract class Base extends Nette\Object
 	public function fetchPairs($id = 'id', $column = NULL, $key = [])
 	{
 		return $this->table($key)
+			->order($column)
 			->fetchPairs($id, $column);
 	}
 

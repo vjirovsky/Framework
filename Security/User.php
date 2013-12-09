@@ -27,6 +27,15 @@ class User extends Nette\Security\User
 
 
 	/**
+	 * @return array
+	 */
+	public function getData()
+	{
+		return $this->getIdentity()->data;
+	}
+
+
+	/**
 	 * Update user identity data, and db record optionaly
 	 * @param array
 	 * @param bool
