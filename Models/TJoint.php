@@ -102,7 +102,6 @@ trait TJoint
 			$checkKey[$this->otherKey] = $key;
 
 			if ($remove = $this->table($checkKey)->fetch()) {
-
 				unset($oldItemsIds[$remove['id']]);
 				$this->update($value, $remove['id']);
 
@@ -149,7 +148,7 @@ trait TJoint
 	 * @param  string
 	 * @return  NotORM_Result
 	 */
-	private function fetchResultHelper($condKey, $cond, $key, $table)
+	private function fetchResultHelper($cond, $condKey, $key, $table)
 	{
 		$keys = $this->table($condKey, $cond)
 			->fetchPairs($key, $key);

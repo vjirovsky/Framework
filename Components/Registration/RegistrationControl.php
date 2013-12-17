@@ -45,8 +45,7 @@ class RegistrationControl extends Control
 			->addRule(Form::FILLED, 'Zadejte heslo')
 			->addRule(Form::MIN_LENGTH, 'Heslo musí mít aspoň %d znaků', 5);
 
-		$form->addSubmit('send', 'Registrovat se')
-			->setAttribute('class', 'btn btn-success');
+		$form->addSubmit('send', 'Registrovat se');
 
 		return $form;
 	}
@@ -61,7 +60,13 @@ class RegistrationControl extends Control
 			$values['role'] = $this->role;
 		}
 
-		$this->userManager->register($values);
+		try {
+			$this->userManager->register($values);
+
+		} catch (\Exception $e) {
+			$this->presenter->flashMessage($e->getMessage(), 'danger');
+			$this->redirect('this');
+		}
 
 		$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
 		$this->user->login($values[$loginColumn], $rawValues['password']);

@@ -20,7 +20,8 @@ class PathFilter extends Nette\Object
 			'url(../' => 'url(../../',
 			"url('../" => "url('../../",
 			'url("../' => 'url("../../',
-			"url('chosen-sprite" => "url('../../images/chosen/chosen-sprite"
+			"url('chosen-sprite" => "url('../../images/chosen/chosen-sprite",
+			"url('../fonts/fontawesome" => "url('../../modules/font-awesome/fonts/fontawesome"
 		));
 
 		return $code;

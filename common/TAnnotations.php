@@ -53,8 +53,9 @@ trait TAnnotations
 		$ref = $this->getRef();
 
 		if ($ref->hasMethod($method)) {
-			if ($refMethod = $ref->getMethod($method)->hasAnnotation($annotation)) {
-				if ($flag = $ref->getAnnotation($annotation)) {
+			$refMethod = $ref->getMethod($method);
+			if ($refMethod->hasAnnotation($annotation)) {
+				if ($flag = $refMethod->getAnnotation($annotation)) {
 					return $flag;
 				}
 

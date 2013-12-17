@@ -3,26 +3,13 @@ parameters:
 
 services:
 	user: Schmutzka\Security\User
-	userManager: Schmutzka\Security\UserManager
+	- Schmutzka\Security\UserManager
 	- Models\User
 	- Models\File
-
-factories:
-	changePasswordControl:
-		class: Components\ChangePasswordControl
-		implement: Components\IChangePasswordControl
-
-	loginControl:
-		class: Components\LoginControl
-		implement: Components\ILoginControl
-
-	registrationControl:
-		class: Components\RegistrationControl
-		implement: Components\IRegistrationControl
-
-	remindPasswordControl:
-		class: Components\RemindPasswordControl
-		implement: Components\IRemindPasswordControl
+	- Components\IChangePasswordControl
+	- Components\ILoginControl
+	- Components\IRegistrationControl
+	- Components\IRemindPasswordControl
 
 extensions:
 	notorm: NotORMExtension\DI\Extension

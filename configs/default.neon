@@ -52,19 +52,16 @@ nette:
 	session:
 		autoStart: TRUE
 		debugger: TRUE
-
+		expiration: 30 days
 	container:
 		debugger: TRUE
-
 	debugger:
 		email: tomas.vot@gmail.com
 		strictMode: TRUE
 		bar:
 			- @cleanerPanel
-
 	security:
 		debugger: TRUE
-
 
 services:
 	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
@@ -72,48 +69,21 @@ services:
 	pathFilter: Schmutzka\Components\WebLoader\Filter\PathFilter
 	routerFactory: RouterFactory
 	router: @routerFactory::createRouter
-	session:
-		setup:
-			- setExpiration(+ 30 days)
-
+	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
 	- lessc
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templating\Helpers
 
-
-factories:
-	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
-
-	message:
-		class: Schmutzka\Mail\Message
-		implement: Schmutzka\Mail\IMessage
-
-	flashMessageControl:
-		class: Components\FlashMessageControl
-		implement: Components\IFlashMessageControl
-
-	contactControl:
-		class: Components\ContactControl
-		implement: Components\IContactControl
-
-	gaControl:
-		class: Components\GaControl
-		implement: Components\IGaControl
-
-	rssControl:
-		class: Components\RssControl
-		implement: Components\IRssControl
-
-	titleControl:
-		class: Components\TitleControl
-		implement: Components\ITitleControl
-
+	- Schmutzka\Mail\IMessage
+	- Components\IFlashMessageControl
+	- Components\IContactControl
+	- Components\IGaControl
+	- Components\IRssControl
+	- Components\ITitleControl
 
 extensions:
-	- Kdyby\BootstrapFormRenderer\DI\RendererExtension
 	- Schmutzka\DI\Extensions\SchmutzkaExtension
 	webloader: WebLoader\Nette\Extension
-
 
 webloader:
 	css:

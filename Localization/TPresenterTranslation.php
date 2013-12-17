@@ -15,20 +15,14 @@ trait TTemplateTranslation
 	public $translator;
 
 
-	/**
-	 * @param  string|NULL
-	 * @return  Nette\Templating\FileTemplate
-	 */
-	public function createTemplate($class = NULL)
+	public function setupTranslator()
 	{
-		$template = parent::createTemplate($class);
-		$template->setTranslator($this->translator);
+		$this->template->setTranslator($this->translator);
 
 		$engine = new Nette\Latte\Engine;
 		Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
-		$template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
 
-		return $template;
+		$this->template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
 	}
 
 }

@@ -1,23 +1,23 @@
-$(document).ready(function() {
+jQuery(document).ready(function() {
 	// form on change submit
-	$(function () {
-		$('input.onChangeSubmit').change(function () {
-			$(this).closest('form').submit();
+	jQuery(function () {
+		jQuery('input.onChangeSubmit').change(function () {
+			jQuery(this).closest('form').submit();
 		});
 	});
 
 	// tooltip - @todo test
-	// $('*[data-tooltip]').tooltip($(this).data('tooltip'));
+	// jQuery('*[data-tooltip]').tooltip(jQuery(this).data('tooltip'));
 
 	// confirm alert
-	$('*[data-confirm]').on('click', function() {
-		return confirm($(this).data('confirm'));
+	jQuery('*[data-confirm]').on('click', function() {
+		return confirm(jQuery(this).data('confirm'));
 	});
 
 	// hide flashes
 	window.setTimeout(function() {
-		$('.alert.timeout').fadeTo(500, 0).slideUp(500, function(){
-			$(this).remove();
+		jQuery('.alert.timeout').fadeTo(500, 0).slideUp(500, function(){
+			jQuery(this).remove();
 		});
 	}, 2000);
 });

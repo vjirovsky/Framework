@@ -77,8 +77,7 @@ class User extends Nette\Security\User
 
 
 	/**
-	 * Automated login
-	 * @param string
+	 * @param array
 	 */
 	public function autologin($user)
 	{
@@ -88,8 +87,10 @@ class User extends Nette\Security\User
 
 		unset($user['password']);
 
-		$identity = new Nette\Security\Identity($user['id'], (isset($user['role']) ? $user['role'] : 'user'), $user);
-		$this->login($identity);
+		if ($user) {
+			$identity = new Nette\Security\Identity($user['id'], (isset($user['role']) ? $user['role'] : 'user'), $user);
+			$this->login($identity);
+		}
 	}
 
 }

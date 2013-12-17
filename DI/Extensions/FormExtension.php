@@ -27,13 +27,6 @@ class FormExtension extends Nette\Object
 
 			return $control;
 		});
-
-		Container::extensionMethod('addMultiCheckbox', function(Container $container, $name, $label = NULL, $items = []) {
-			$control = new MultiOptionList($label, $items);
-			$container[$name] = $control;
-
-			return $control;
-		});
 	}
 
 }

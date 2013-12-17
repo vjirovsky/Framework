@@ -65,7 +65,13 @@ class TitleControl extends Control
 			rsort($this->titles);
 		}
 
-		return implode($this->sep, $this->titles);
+		$title = implode($this->sep, $this->titles);
+
+		if (property_exists($this->presenter, 'translator')) {
+			$title = $this->presenter->translator->translate($title);
+		}
+
+		return $title;
 	}
 
 }

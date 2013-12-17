@@ -10,8 +10,8 @@
 // datepicker nette.ajax.js extension
 $.nette.ext('datepicker', {
 	load: function () {
-		$('.date, .datetime-local').each(function(i, el) {
-			el = $(el);
+		jQuery('.date, .datetime-local').each(function(i, el) {
+			el = jQuery(el);
 			el.get(0).type = 'text';
 			el.datetimepicker({
 				startDate: el.attr('min'),
