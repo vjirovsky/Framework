@@ -2,14 +2,14 @@
 
 namespace Schmutzka\Application\Routers;
 
-use Models;
+use Nette;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 use Schmutzka;
 use Schmutzka\Utils\Name;
 
 
-class ModuleRouterFactory
+class BaseRouterFactory
 {
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
@@ -21,12 +21,16 @@ class ModuleRouterFactory
 	/**
 	 * @param  RouteList
 	 * @param  array
+	 * @param  string
+	 * @param  string
 	 */
-	public function listToRoutes(RouteList $router, $aliasList)
+	public function listToRoutes(RouteList $router, $aliasList, $pre = NULL, $post = NULL)
 	{
 		foreach ($aliasList as $key => $value) {
-			$router[] = new Route($key, $value);
+			$router[] = new Route($pre . $key . $post, $value);
 		}
+
+		return $router;
 	}
 
 
@@ -59,6 +63,5 @@ class ModuleRouterFactory
 	{
 		$frontRouter[] = new PairsRoute('aktualita/<id>', 'News:detail', $this->newsModel, $this->cache, 'id', 'title');
 	}
-
 
 }
