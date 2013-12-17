@@ -2,13 +2,13 @@
 
 namespace Schmutzka\Application\UI;
 
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 use Nette\Utils\Validators;
+use Schmutzka;
 use Schmutzka\Forms\Controls;
-use Schmutzka\Forms\FileUploadTrait;
 
 
 /**
@@ -16,7 +16,8 @@ use Schmutzka\Forms\FileUploadTrait;
  */
 class Form extends Nette\Application\UI\Form
 {
-	use FileUploadTrait;
+	use Schmutzka\Forms\TFileUpload;
+	use Schmutzka\Forms\Rendering\TBootstrapRenderer;
 
 	/** validators */
 	const DATE = 'Schmutzka\Forms\Rules::validateDate';
@@ -25,9 +26,6 @@ class Form extends Nette\Application\UI\Form
 
 	/** @var string */
 	public $csrfProtection = 'Prosím odešlete formulář znovu, vypršel bezpečnostní token.';
-
-	/** @var bool */
-	public $useBootstrap = TRUE;
 
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
@@ -152,10 +150,9 @@ class Form extends Nette\Application\UI\Form
 			}
 		}
 
-		if (($presenter->module != 'front' && $this->useBootstrap) ||
-				isset($this->presenter->paramService->useBootstrap
-			)) {
-			$this->setRenderer(new BootstrapRenderer($presenter->template));
+		if (($presenter->module == 'front' && isset($presenter->paramService->useBootstrapFront)) || isset($this->presenter->paramService->useBootstrap)) {
+			$form = $this;
+			$this->setupBootstrapRenderer($form);
 		}
 	}
 
@@ -181,11 +178,10 @@ class Form extends Nette\Application\UI\Form
 	public function getValues($asArray = TRUE)
 	{
 		$values = parent::getValues($asArray);
-		if ($this->processor && is_callable($this->processor)) {
-			$values = call_user_func($this->processor, $values);
 
-		} elseif (method_exists($this->parent, lcfirst($this->getName()) . 'Processor') && is_callable($this->processor)) {
-			$values = call_user_func($this->processor, $values);
+		$processorMethod = lcfirst($this->getName()) . 'Processor';
+		if (method_exists($this->parent, $processorMethod) && is_callable($this->parent->$processorMethod)) {
+			$values = call_user_func($this->parent->$processorMethod, $values);
 		}
 
 		$this->processFileUploads($values);
@@ -269,4 +265,26 @@ class Form extends Nette\Application\UI\Form
 		return $control;
 	}
 
+
+	/**
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 */
+	public function addConditions($name, $label, $link)
+	{
+		$a = Html::el('a')
+			->setText($label['link'])
+			->target('_blank')
+			->href($link);
+
+		$label = Html::el('span')
+			->setHtml($label['text'] . $a);
+
+		$control = $this[$name] = new Checkbox($label);
+		$control->addCondition(Form::FILLED, 'Musíte souhlasit s podmínkami');
+
+		return $control;
+	}
 }

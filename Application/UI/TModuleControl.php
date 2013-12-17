@@ -20,12 +20,14 @@ trait TModuleControl
 	public function attached($presenter)
 	{
 		parent::attached($presenter);
+
 		if (($this->id || (property_exists($presenter, 'id') && $this->id = $presenter->id)) && isset($this['form'])) {
 			$this['form']['send']->caption = 'Uložit';
 			$this['form']['send']
-				->setAttribute('class', 'btn btn-primary');
+				->setAttribute('class', 'btn btn-success');
 
 			$this['form']->addSubmit('cancel', 'Zrušit')
+				->setAttribute('class', 'btn btn-default')
 				->setValidationScope(FALSE);
 
 			$defaults = $this->model->fetch($this->id);
@@ -43,16 +45,6 @@ trait TModuleControl
 
 		$values = $form->values;
 		$values = $this->preProcessValues($values);
-
-		// process all dynamics
-		foreach ($values as $key => $value) {
-			if (isset($form[$key]) && $form[$key] instanceof Kdyby\Replicator\Container) {
-				foreach ($value as $key2 => $value2) {
-					$this->model->update($value2, $key2);
-				}
-				unset($values[$key]);
-			}
-		}
 
 		if ($this->id) {
 			$this->model->update($values, $this->id);

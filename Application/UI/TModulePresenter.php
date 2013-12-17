@@ -45,10 +45,12 @@ trait TModulePresenter
 			$this->redirect(':Admin:Homepage:default');
 
 		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
-			// $this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
-			$this->flashMessage('Byli jste úspěšně přihlášeni.', 'success');
+			$this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
+
 			$this->redirect(':Front:Homepage:logged'); // custom manage
 		}
+
+
 
 		$this->template->modules = $this->paramService->getActiveModules();
 

@@ -57,13 +57,13 @@ trait TCreateComponent
 
 		if (Strings::endsWith($name, 'ssControl')) {
 			$part = ucfirst(substr($name, 0, -10)) ?: 'Default';
-			$compiler = $this->context->{'webloader.css' . $part . 'Compiler'};
+			$compiler = $this->context->getService('webloader.css' . $part . 'Compiler');
 
 			return new WebLoader\Nette\CssLoader($compiler, $webtemp);
 
 		} else {
 			$part = ucfirst(substr($name, 0, -9)) ?: 'Default';
-			$compiler = $this->context->{'webloader.js' . $part . 'Compiler'};
+			$compiler = $this->context->getService('webloader.js' . $part . 'Compiler');
 
 			return new WebLoader\Nette\JavaScriptLoader($compiler, $webtemp);
 		}

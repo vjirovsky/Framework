@@ -39,6 +39,11 @@ abstract class Control extends Nette\Application\UI\Control
 				call_user_func_array(array($this, $renderMethod), $args);
 			}
 
+			// translator
+			if (property_exists($this->presenter, 'translator')) {
+				$this->template->setTranslator($this->presenter->translator);
+			}
+
 			$this->template->render();
 		}
 	}

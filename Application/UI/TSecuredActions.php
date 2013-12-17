@@ -2,9 +2,6 @@
 
 namespace Schmutzka\Application\UI;
 
-use Nette;
-use Nette\Reflection;
-use Nette\Security\User;
 use Schmutzka;
 
 
@@ -38,13 +35,13 @@ trait TSecuredActions
 
 		if ($authenticate) {
 			if ( ! $this->user->isLoggedIn()) {
-				$this->flashMessage('Pro přístup k této operaci se prosím přihlaste.', 'error');
+				$this->flashMessage('Pro přístup k této operaci se prosím přihlaste.', 'danger');
 				$backlink = $this->presenter->storeRequest();
 				$this->redirect('Auth:signIn', ['backlink' => $backlink]);
 
 			} elseif (isset($flag['role'])) {
 				if (in_array($this->user->role, (array) $flag['role'][0]) == FALSE) {
-					$this->flashMessage('Nemáte oprávnění pro přístup k této operaci.', 'error');
+					$this->flashMessage('Nemáte oprávnění pro přístup k této operaci.', 'danger');
 					$this->redirect('Homepage:default');
 				}
 			}
