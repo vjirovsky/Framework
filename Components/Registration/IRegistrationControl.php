@@ -5,7 +5,7 @@ namespace Components;
 
 interface IRegistrationControl
 {
-	/** @return IRegistrationControl */
+	/** @return RegistrationControl */
 	public function create();
 
 }
