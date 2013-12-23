@@ -10,18 +10,17 @@ trait TSecuredActions
 	use Schmutzka\TAnnotations;
 
 
-	public function beforeRender()
+	public function checkSecuredAnnotations()
 	{
 		$this->authCheck();
 		$this->unloggedCheck();
-		parent::beforeRender();
 	}
 
 
 	/**
-	 * Provides an authentication check on methods and classes marked with @secured[, @role] annotation
+	 * Provides an authentication check on methods and classes marked with @secured or @role annotation
 	 */
-	protected function authCheck()
+	public function authCheck()
 	{
 		$annotation = 'secured';
 		$authenticate = FALSE;
@@ -29,7 +28,10 @@ trait TSecuredActions
 		if ($flag = $this->getViewAnnotation($this->view, $annotation)) {
 			$authenticate = TRUE;
 
-		} elseif ($flag = $this->getPresenterAnnotation($annotation)) {
+		} elseif ($this->getPresenterAnnotation($annotation)) {
+			if ($this->getPresenterAnnotation('role')) {
+				$flag['role'][0] = $this->getPresenterAnnotation('role');
+			}
 			$authenticate = TRUE;
 		}
 
@@ -39,9 +41,9 @@ trait TSecuredActions
 				$backlink = $this->presenter->storeRequest();
 				$this->redirect('Auth:signIn', ['backlink' => $backlink]);
 
-			} elseif (isset($flag['role'])) {
+			} elseif (isset($flag['role']) && is_array($flag['role'])) {
 				if (in_array($this->user->role, (array) $flag['role'][0]) == FALSE) {
-					$this->flashMessage('Nemáte oprávnění pro přístup k této operaci.', 'danger');
+					$this->flashMessage('Na tuto stránku nemáte přístup.', 'danger');
 					$this->redirect('Homepage:default');
 				}
 			}
