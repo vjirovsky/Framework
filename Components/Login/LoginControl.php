@@ -21,7 +21,7 @@ class LoginControl extends Control
 	/** @var string */
 	public $loginColumn = 'email';
 
-	
+
 	public function attached($presenter)
 	{
 		parent::attached($presenter);
@@ -34,7 +34,8 @@ class LoginControl extends Control
 		$form = new Form;
 
 		$form->addText('email', 'Email')
-			->addRule(Form::EMAIL, 'Zadejte email');
+			->addRule(Form::FILLED, 'Zadejte email')
+			->addRule(Form::EMAIL, 'Opravte formát emailu');
 		$form->addPassword('password', 'Heslo')
 			->addRule(Form::FILLED, 'Zadejte heslo');
 
@@ -49,9 +50,10 @@ class LoginControl extends Control
 	{
 		try {
 			$values = $form->values;
+
 			$this->user->setExpiration('+ 14 days', FALSE);
 			$this->user->login($values[$this->loginColumn], $values['password'], $this->loginColumn);
-			
+
 			$this->presenter->restoreRequest($this->backlink);
 			$this->presenter->redirect('Homepage:default');
 
