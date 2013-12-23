@@ -3,8 +3,6 @@
 namespace Schmutzka\Application\UI;
 
 use Nette;
-use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 use Nette\Utils\Validators;
 use Schmutzka;
@@ -72,7 +70,7 @@ class Form extends Nette\Application\UI\Form
 	 */
 	public function moveBefore($name, $where)
 	{
-		if (!$this->isBuilt) {
+		if ( ! $this->isBuilt) {
 			$this->build();
 		}
 
@@ -83,7 +81,6 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * Set defaults accepts array, object or empty string
 	 * @param array|object
 	 * @param bool
 	 * @return  this
@@ -101,12 +98,10 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * Flash message error
 	 * @param string
 	 */
 	public function addError($message)
 	{
-		// $this->valid = FALSE;
 		$this->presenter->flashMessage($message, 'error');
 	}
 
@@ -133,12 +128,12 @@ class Form extends Nette\Application\UI\Form
 	{
 		parent::attached($presenter);
 
-		if ( ! $this->isBuilt) {
-			$this->build();
-		}
-
 		if (property_exists($presenter, 'translator')) {
 			$this->setTranslator($presenter->translator);
+		}
+
+		if ( ! $this->isBuilt) {
+			$this->build();
 		}
 
 		if ($presenter instanceof Nette\Application\IPresenter) {
@@ -203,11 +198,11 @@ class Form extends Nette\Application\UI\Form
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @return  Controls\UploadControl
+	 * @return  Schmutzka\Forms\Controls\UploadControl
 	 */
 	public function addUpload($name, $label = NULL, $multiple = FALSE)
 	{
-		return $this[$name] = new Controls\UploadControl($label, $multiple);
+		return $this[$name] = new Schmutzka\Forms\Controls\UploadControl($label, $multiple);
 	}
 
 
@@ -215,11 +210,11 @@ class Form extends Nette\Application\UI\Form
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return Controls\AntispamControl
+	 * @return  Schmutzka\Forms\Controls\AntispamControl
 	 */
 	public function addAntispam($name = 'antispam', $label = 'Toto pole vymažte.', $msg = 'Byl detekován pokus o spam')
 	{
-		return $this[$name] = new Controls\AntispamControl($label, NULL, NULL, $msg);
+		return $this[$name] = new Schmutzka\Forms\Controls\AntispamControl($label, NULL, NULL, $msg);
 	}
 
 
@@ -238,11 +233,11 @@ class Form extends Nette\Application\UI\Form
 	/**
 	 * @param  string
 	 * @param  string|NULL
-	 * @return  TextInput
+	 * @return  Nette\Forms\Controls\TextInput
 	 */
 	public function addUrl($name, $label = NULL)
 	{
-		$control = $this[$name] = new TextInput($label);
+		$control = $this[$name] = new Nette\Forms\Controls\TextInput($label);
 		$control->addFilter(function ($value) {
 			return (Validators::isUrl($value) || $value == NULL) ? $value : 'http://' . $value;
 		})->addCondition(Form::FILLED)
@@ -256,13 +251,11 @@ class Form extends Nette\Application\UI\Form
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return  Controls\IconSubmitButton
+	 * @return  Schmutzka\Forms\Controls\IconSubmitButton
 	 */
 	public function addIconSubmitButton($name, $label, $iconClass)
 	{
-		$control = $this[$name] = new Controls\IconSubmitButton($label, $iconClass);
-
-		return $control;
+		return $this[$name] = new Schmutzka\Forms\Controls\IconSubmitButton($label, $iconClass);
 	}
 
 
@@ -271,8 +264,9 @@ class Form extends Nette\Application\UI\Form
 	 * @param  string
 	 * @param  string
 	 * @param  string
+	 * @return  Nette\Forms\Controls\Checkbox
 	 */
-	public function addConditions($name, $label, $link)
+	public function addConditions($name, $label, $link, $flash = 'Musíte souhlasit s podmínkami')
 	{
 		$a = Html::el('a')
 			->setText($label['link'])
@@ -282,9 +276,10 @@ class Form extends Nette\Application\UI\Form
 		$label = Html::el('span')
 			->setHtml($label['text'] . $a);
 
-		$control = $this[$name] = new Checkbox($label);
-		$control->addCondition(Form::FILLED, 'Musíte souhlasit s podmínkami');
+		$control = $this[$name] = new Nette\Forms\Controls\Checkbox($label);
+		$control->addRule(Form::FILLED, $flash);
 
 		return $control;
 	}
+
 }
