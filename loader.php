@@ -14,4 +14,4 @@ if ( ! defined('NETTE')) {
 	require_once __DIR__ . '/../Schmutzka/Utils/Neon.php';
 }
 
-require_once __DIR__ . '/shortcuts.php';
+require_once __DIR__ . '/common/shortcuts.php';

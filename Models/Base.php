@@ -2,9 +2,9 @@
 
 namespace Schmutzka\Models;
 
-use Schmutzka\Utils\Name;
 use Nette;
 use NotORM;
+use Schmutzka\Utils\Name;
 
 
 abstract class Base extends Nette\Object
@@ -12,27 +12,18 @@ abstract class Base extends Nette\Object
 	/** @inject @var NotORM */
 	public $db;
 
+	/** @var string */
+	private $tableName;
 
-	/**
-	 * Table shortcut
-	 */
-	final public function table()
+
+	public function table()
 	{
-		$tableName = Name::tableFromClass(get_class($this));
-
 		$args = func_get_args();
 		if (count($args) == 1 && is_numeric($args[0])) {
 			array_unshift($args, 'id');
 		}
 
-		foreach ($args as $key => $value) {
-			if ($key === 'id') {
-				$args[$tableName . '.id'] = $value;
-				unset($args[$key]);
-			}
-		}
-
-		return call_user_func_array(array($this->db, $tableName), $args);
+		return call_user_func_array(array($this->db, $this->getTableName()), $args);
 	}
 
 
@@ -71,7 +62,7 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetch($key)
 	{
-		return $this->table($key)
+		return $this->table(is_numeric($key) ? ['id' => $key] : $key)
 			->fetch();
 	}
 
@@ -235,6 +226,19 @@ abstract class Base extends Nette\Object
 
 		return $this->table()
 			->insert_update($unique, $data, $data);
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getTableName()
+	{
+		if ($this->tableName == NULL) {
+			$this->tableName = Name::tableFromClass(get_class($this));
+		}
+
+		return $this->tableName;
 	}
 
 }

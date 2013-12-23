@@ -4,12 +4,6 @@ parameters:
 services:
 	user: Schmutzka\Security\User
 	- Schmutzka\Security\UserManager
-	- Models\User
-	- Models\File
-	- Components\IChangePasswordControl
-	- Components\ILoginControl
-	- Components\IRegistrationControl
-	- Components\IRemindPasswordControl
 
 extensions:
 	notorm: NotORMExtension\DI\Extension

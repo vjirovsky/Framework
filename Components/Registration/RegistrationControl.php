@@ -25,7 +25,7 @@ class RegistrationControl extends Control
 	public $paramService;
 
 	/** @var string */
-	private $role;
+	protected $role;
 
 
 	protected function createComponentForm()
@@ -33,7 +33,6 @@ class RegistrationControl extends Control
 		$userModel = $this->userModel;
 
 		$form = new Form;
-
 		$form->addText('email', 'Email')
 			->addRule(Form::FILLED, 'Zadejte email')
 			->addRule(Form::EMAIL, 'Opravte formáte emailu')
@@ -71,7 +70,7 @@ class RegistrationControl extends Control
 		$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
 		$this->user->login($values[$loginColumn], $rawValues['password']);
 
-		$this->presenter->flashMessage($this->paramService->registration->onSuccessAndLogin, 'success');
+		$this->presenter->flashMessage('Byli jste úspěšně registrováni a přihlášeni', 'success');
 		$this->redirect('this');
 	}
 

@@ -32,7 +32,12 @@ trait TBootstrapRenderer
 				$usedPrimary = TRUE;
 
 			} elseif ($control instanceof Nette\Forms\Controls\TextBase || $control instanceof Nette\Forms\Controls\SelectBox || $control instanceof Nette\Forms\Controls\MultiSelectBox) {
-				$control->setAttribute('class', 'form-control');
+				$class = 'form-control';
+				if (isset($control->getControl()->attrs['class'])) {
+					$class .= ' ' . $control->getControl()->attrs['class'];
+				}
+
+				$control->setAttribute('class', $class);
 
 			} elseif ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\CheckboxList || $control instanceof Nette\Forms\Controls\RadioList) {
 				$control->getSeparatorPrototype()->setName('div')->class($control->getControlPrototype()->type);

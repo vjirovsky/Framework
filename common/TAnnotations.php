@@ -11,7 +11,7 @@ trait TAnnotations
 
 	/**
 	 * @param  string
-	 * @param  bool|array
+	 * @return  NULL|array
 	 */
 	protected function getPresenterAnnotation($annotation)
 	{
@@ -21,7 +21,7 @@ trait TAnnotations
 			return $ref->getAnnotation($annotation);
 		}
 
-		return FALSE;
+		return NULL;
 	}
 
 
