@@ -12,6 +12,16 @@ abstract class Control extends Nette\Application\UI\Control
 	use Schmutzka\Templating\TTemplateSetup;
 	use TCreateComponent;
 
+	/** @var Nette\Localization\ITranslator */
+	protected $translator;
+
+
+	public function __construct(Nette\Localization\ITranslator $translator = NULL)
+	{
+		parent::__construct();
+		$this->translator = $translator;
+	}
+
 
 	/**
 	 * Rendering view

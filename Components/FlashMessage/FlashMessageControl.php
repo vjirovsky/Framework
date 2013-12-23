@@ -16,9 +16,9 @@ class FlashMessageControl extends Control
 			return NULL;
 		}
 
-		if (property_exists($this->presenter, 'translator')) {
+		if ($this->translator) {
 			foreach ($flashes as $key => $row) {
-				$flashes[$key]->message = $this->presenter->translator->translate($row->message);
+				$flashes[$key]->message = $this->translator->translate($row->message);
 			}
 		}
 

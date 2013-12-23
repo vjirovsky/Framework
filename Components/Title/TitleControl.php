@@ -67,8 +67,8 @@ class TitleControl extends Control
 
 		$title = implode($this->sep, $this->titles);
 
-		if (property_exists($this->presenter, 'translator')) {
-			$title = $this->presenter->translator->translate($title);
+		if ($this->translator) {
+			$title = $this->translator->translate($title);
 		}
 
 		return $title;
