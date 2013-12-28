@@ -40,7 +40,11 @@ trait TModuleControl
 				->setValidationScope(FALSE);
 
 			$defaults = $this->model->fetch($this->id);
-			$defaults = $this->preProcessDefaults($defaults);
+
+			if ($this->method_exists($this, 'preProcessDefaults')) {
+				$defaults = $this->preProcessDefaults($defaults);
+			}
+
 			$this['form']->setDefaults($defaults);
 		}
 	}
@@ -53,7 +57,10 @@ trait TModuleControl
 		}
 
 		$values = $form->values;
-		$values = $this->preProcessValues($values);
+
+		if ($this->method_exists($this, 'preProcessValues')) {
+			$values = $this->preProcessValues($values);
+		}
 
 		if ($this->id) {
 			$this->model->update($values, $this->id);
@@ -62,7 +69,9 @@ trait TModuleControl
 			$this->id = $this->model->insert($values);
 		}
 
-		$this->postProcessValues($values, $this->id);
+		if ($this->method_exists($this, 'postProcessValues')) {
+			$this->postProcessValues($values, $this->id);
+		}
 
 		$this->presenter->flashMessage('Uloženo.', 'success');
 		$this->presenter->redirect('edit', ['id' => $this->id]);
@@ -92,35 +101,6 @@ trait TModuleControl
 		$modelName = lcfirst(substr(array_pop($classNameParts), 0, -7)) . 'Model';
 
 		return $this->{$modelName};
-	}
-
-
-	/**
-	 * @param   array
-	 * @return  array
-	 */
-	public function preProcessDefaults($defaults)
-	{
-		return $defaults;
-	}
-
-
-	/**
-	 * @param   array
-	 * @return  array
-	 */
-	public function preProcessValues($values)
-	{
-		return $values;
-	}
-
-
-	/**
-	 * @param   array
-	 * @param   int
-	 */
-	public function postProcessValues($values, $id)
-	{
 	}
 
 }

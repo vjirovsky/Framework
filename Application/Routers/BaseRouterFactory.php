@@ -20,11 +20,18 @@ use Schmutzka\Utils\Name;
 
 class BaseRouterFactory
 {
-	/** @inject @var Schmutzka\ParamService */
-	public $paramService;
+	/** @var Schmutzka\ParamService */
+	private $paramService;
 
-	/** @inject @var Nette\Caching\Cache */
-	public $cache;
+	/** Nette\Caching\Cache */
+	private $cache;
+
+
+	public function __construct(Schmutzka\ParamService $paramService, Nette\Caching\Cache $cache)
+	{
+		$this->paramService = $paramService;
+		$this->cache = $cache;
+	}
 
 
 	/**

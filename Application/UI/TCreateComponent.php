@@ -17,6 +17,9 @@ use WebLoader;
 
 trait TCreateComponent
 {
+	/** @inject @var Nette\DI\Container */
+	public $container;
+
 
 	/**
 	 * @param string
@@ -29,6 +32,7 @@ trait TCreateComponent
 		if ($component == NULL) {
 			if (property_exists($this, $name)) {
 				$component = $this->{$name}->create();
+				$this->container->callInjects($component);
 
 			} elseif ($this->isWebloaderControl($name)) {
 				$component = $this->createWebloaderControl($name);

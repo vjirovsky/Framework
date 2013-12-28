@@ -2,8 +2,11 @@ parameters:
 	logUserActivity: TRUE
 
 services:
-	user: Schmutzka\Security\User
+	user:
+		class: Schmutzka\Security\User
+		inject: TRUE
 	- Schmutzka\Security\UserManager
+	- Models\User
 
 extensions:
 	notorm: NotORMExtension\DI\Extension

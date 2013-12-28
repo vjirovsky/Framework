@@ -14,19 +14,27 @@ namespace Schmutzka\Security;
 use Nette;
 use Nette\Security\AuthenticationException as AE;
 use Nette\Utils\Strings;
+use Models;
+use Schmutzka;
 
 
 class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 {
-	/** @inject @var Models\User */
-	public $userModel;
+	/** @var Schmutzka\ParamService */
+	private $paramService;
 
-	/** @inject @var Schmutzka\ParamService */
-	public $paramService;
+	/** @var Models\User */
+	private $userModel;
+
+
+	public function __construct(Models\User $userModel, Schmutzka\ParamService $paramService)
+	{
+		$this->userModel = $userModel;
+		$this->paramService = $paramService;
+	}
 
 
 	/**
-	 * Performs an authentication
 	 * @return Nette\Security\Identity
 	 * @throws Nette\Security\AuthenticationException
 	 */
@@ -34,7 +42,7 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	{
 		list($login, $password) = $credentials;
 		$key[strpos($login, '@') ? 'email' : 'login'] = $login;
-		$row = $this->userModel->fetch($key);
+  		$row = $this->userModel->fetch($key);
 
 		$params = $this->paramService->login;
 

@@ -62,26 +62,6 @@ class Configurator extends Nette\Configurator
 
 
 	/**
-	 * @param  array { [ string => string ] }
-	 * @param  string
-	 */
-	public function loadConfigByHost($hostConfigs, $host)
-	{
-		$configLoaded = FALSE;
-		foreach ($hostConfigs as $key => $config) {
-			if ($key == $host) {
-				$this->addConfig($this->parameters['appDir'] . '/config/' . $config, FALSE);
-				$configLoaded = TRUE;
-			}
-		}
-
-		if ($configLoaded == FALSE) {
-			$this->loadConfigByName('local');
-		}
-	}
-
-
-	/**
 	 * Include paths to directories
 	 * @return array
 	 */

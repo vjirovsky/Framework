@@ -18,21 +18,27 @@ use Schmutzka\Utils\Name;
 
 abstract class Base extends Nette\Object
 {
-	/** @inject @var NotORM */
-	public $db;
+	/** @var NotORM */
+	private $notorm;
 
 	/** @var string */
 	private $tableName;
 
 
-	public function table()
+	public function __construct(NotORM $notorm)
 	{
+		$this->notorm = $notorm;
+	}
+
+
+	public function table()
+ 	{
 		$args = func_get_args();
 		if (count($args) == 1 && is_numeric($args[0])) {
 			array_unshift($args, 'id');
 		}
 
-		return call_user_func_array(array($this->db, $this->getTableName()), $args);
+		return call_user_func_array(array($this->notorm, $this->getTableName()), $args);
 	}
 
 

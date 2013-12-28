@@ -4,38 +4,9 @@
 }
 
 .right {
-	text-align:right;
+	text-align: right;
 }
 
-.center, table td.center, td.center {
+.center, td.center {
 	text-align: center;
 }
-
-.rotate(@deg: 135deg) {
-	-webkit-transform: rotate(@deg);
-    -moz-transform: rotate(@deg);
-    -o-transform: rotate(@deg);
-}
-
-.responsiveBackground(@url) {
-	background: url(@url)  no-repeat center center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-}
-
-.a(@color, @colorHover, @decoration: none, @decorationUnderline: hover) {
-	color: @color;
-	text-decoration: @decoration;
-
-	&:hover {
-		color: @colorHover;
-		text-decoration: @decorationHover;
-	}
-}
-
-.clearfix:after {content: ".";display: block;clear: both;visibility: hidden;line-height: 0;height: 0;}
-.clearfix {display: inline-block;}
-html[xmlns] .clearfix {display: block;}
- * html .clearfix {height: 1%;}

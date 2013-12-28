@@ -28,14 +28,11 @@ trait TModulePresenter
 	/** @inject @var Components\IAdminMenuControl */
 	public $adminMenuControl;
 
-	/** @var string */
-	protected $unloggedRedirect = 'Homepage:default';
-
 	/** @var Nette\Security\Permission */
 	private $acl;
 
 
-	public function injectDependencies(Nette\Security\IAuthorizator $acl = NULL)
+	public function injectAcl(Nette\Security\IAuthorizator $acl = NULL)
 	{
 		$this->acl = $acl;
 	}
@@ -46,28 +43,24 @@ trait TModulePresenter
 		parent::startup();
 
 		if ( ! $this->user->loggedIn) {
-			$this->layout = 'layoutLogin';
-		}
+		 	if ($this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
+				$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
+				$this->redirect(':Admin:Homepage:default');
+			}
 
-		if ($this->user->loggedIn == FALSE && $this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
-			$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
-			$this->redirect(':Admin:Homepage:default');
+			$this->layout = 'layoutLogin';
 
 		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
 			$this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
-
-			$this->redirect(':Front:Homepage:logged'); // custom manage
+			$this->redirect(':Front:Homepage:default');
 		}
-
-
-
-		$this->template->modules = $this->paramService->getActiveModules();
 
 		if (property_exists($this, 'translator')) {
 			$this->template->adminLangs = $this->paramService->adminLangs;
 			$this->template->lang = $this->lang;
 		}
 
+		$this->template->module = $this->module;
 		$this->template->modules = $modules = $this->paramService->getActiveModules();
 		$this->template->useCkeditor = $this->useCkeditor($modules);
 	}
