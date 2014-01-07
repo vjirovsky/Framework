@@ -150,23 +150,23 @@ class PaySecControl extends Control
 					break;
 
 				case 2:
-					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.2', 'error');
+					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.2', 'danger');
 					break;
 
 				case 3:
-					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.3', 'error');
+					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.3', 'danger');
 					break;
 
 				case 4:
-					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.4', 'error');
+					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.4', 'danger');
 					break;
 
 				case 5:
-					$this->presenter->flashMessage('Platbu se nepodařilo zrealizovat.', 'error');
+					$this->presenter->flashMessage('Platbu se nepodařilo zrealizovat.', 'danger');
 					break;
 
 				case 6:
-					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.6', 'error');
+					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.6', 'danger');
 					break;
 
 				case 7:
@@ -174,7 +174,7 @@ class PaySecControl extends Control
 					break;
 
 				default:
-					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.', 'error');
+					$this->presenter->flashMessage('Stav platby se nepodařilo ověřit. Pracujeme na nápravě.', 'danger');
 					break;
 				}
 		}

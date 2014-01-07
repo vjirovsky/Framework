@@ -29,6 +29,7 @@ class Message extends Nette\Mail\Message
 	/**
 	 * @param string
 	 * @param array
+	 * @return  self
 	 */
 	public function addCustomTemplate($uid, $values = [])
 	{
@@ -55,6 +56,8 @@ class Message extends Nette\Mail\Message
 
 		$this->setSubject($email['subject']);
 		$this->setHtmlBody($body);
+
+		return $this;
 	}
 
 }

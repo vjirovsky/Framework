@@ -41,17 +41,15 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	public function authenticate(array $credentials)
 	{
 		list($login, $password) = $credentials;
-		$key[strpos($login, '@') ? 'email' : 'login'] = $login;
-  		$row = $this->userModel->fetch($key);
-
-		$params = $this->paramService->login;
+		$key = strpos($login, '@') ? 'email' : 'login';
+  		$row = $this->userModel->fetch([$key => $login]);
 
 		if ( ! $row) {
-			throw new AE($params->notExistingAccount, self::IDENTITY_NOT_FOUND);
+			throw new AE('nonExistingAccount', self::IDENTITY_NOT_FOUND);
 		}
 
 		if ($row['password'] !== $this->calculateHash($password, $row['salt'])) {
-			throw new AE($params->wrongPassword, self::INVALID_CREDENTIAL);
+			throw new AE('wrongPassword', self::INVALID_CREDENTIAL);
 		}
 
 		unset($row['password']);
@@ -60,7 +58,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 
 
 	/**
-	 * Computes salted password hash
 	 * @param  string
 	 * @return string
 	 */
@@ -74,7 +71,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 
 
 	/**
-	 * Register user
 	 * @param array
 	 * @return  int
 	 * @throws \Exception
@@ -100,7 +96,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 
 
 	/**
-	 * Update user data
 	 * @param  array $values user data
 	 * @param int $id user id
 	 * @throws  \Exception

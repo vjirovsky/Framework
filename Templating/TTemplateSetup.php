@@ -11,8 +11,9 @@
 
 namespace Schmutzka\Templating;
 
-use Schmutzka;
+use Kdyby;
 use Nette;
+use Schmutzka;
 
 
 trait TTemplateSetup
@@ -21,7 +22,7 @@ trait TTemplateSetup
 	public $helpers;
 
 	/** @var callback[] */
-	protected $helpersCallbacks = [];
+	public $helpersCallbacks = [];
 
 
 	/**
@@ -38,7 +39,7 @@ trait TTemplateSetup
 
 		// helpers
 		$template->registerHelperLoader([$this->helpers, 'loader']);
-		foreach ($this->helpersCallbacks as $callback) {
+		foreach ($this->presenter->helpersCallbacks as $callback) {
 			$template->registerHelperLoader($callback);
 		}
 
@@ -49,6 +50,10 @@ trait TTemplateSetup
 
 		// macros
 		Schmutzka\Templating\Macros::install($engine->compiler);
+
+		if (class_exists('Kdyby\Translation\Latte\TranslateMacros')) {
+			Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
+		}
 
 		return $template;
 	}
