@@ -108,15 +108,6 @@ class Form extends Nette\Application\UI\Form
 
 	/**
 	 * @param string
-	 */
-	public function addError($message)
-	{
-		$this->presenter->flashMessage($message, 'error');
-	}
-
-
-	/**
-	 * @param string
 	 * @param string|NULL
 	 */
 	public function addToggleGroup($id, $label = NULL)
