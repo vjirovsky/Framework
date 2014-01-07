@@ -21,7 +21,7 @@ trait TCreateComponent
 	public $container;
 
 	/** @inject @var WebLoader\LoaderFactory  */
-    public $webLoader;
+	public $webLoader;
 
 
 	/**
