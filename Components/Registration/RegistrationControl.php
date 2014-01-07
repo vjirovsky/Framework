@@ -78,8 +78,6 @@ class RegistrationControl extends Control
 
 		$loginColumn = (isset($this->paramService->loginColumn) ? $this->paramService->loginColumn : 'email');
 		$this->user->login($values[$loginColumn], $rawValues['password']);
-
-		$this->presenter->flashMessage('Byli jste úspěšně registrováni a přihlášeni', 'success');
 		$this->redirect('this');
 	}
 

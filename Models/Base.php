@@ -177,7 +177,6 @@ abstract class Base extends Nette\Object
 
 
 	/**
-	 * Fetch list shortcut
 	 * @param array
 	 * @return array
 	 */
@@ -188,7 +187,6 @@ abstract class Base extends Nette\Object
 
 
 	/**
-	 * Get list by user id
 	 * @param  int
 	 * @return  array
 	 */
@@ -200,7 +198,6 @@ abstract class Base extends Nette\Object
 
 
 	/**
-	 * Fetch random table row
 	 * @param  array
 	 * @return NotORM_Row
 	 */
@@ -224,21 +221,11 @@ abstract class Base extends Nette\Object
 
 
 	/**
-	 * Insert, update on duplicate key
 	 * @param array
-	 * @param mixed
+	 * @param array
 	 */
 	public function upsert($data, $unique)
 	{
-		if ( ! is_array($unique)) {
-			if ( ! $unique) {
-				return $this->table()
-					->insert($data);
-			}
-
-			$unique = ['id' => $unique];
-		}
-
 		return $this->table()
 			->insert_update($unique, $data, $data);
 	}

@@ -3,12 +3,7 @@ php:
 	zlib.output_compression: yes
 
 parameters:
-	libsDir: %appDir%/../libs
 	logUserActivity: FALSE
-
-	login:
-		wrongPassword: Chybné heslo.
-		notExistingAccount: Tento účet neexistuje.
 
 nette:
 	session:

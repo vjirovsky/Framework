@@ -54,25 +54,6 @@ trait TTextControl
 
 
 	/**
-	 * @param  array
-	 * @param  id
-	 */
-	public function postProcessValues($values, $id)
-	{
-		if ($this->moduleParams->contentHistory) {
-			$array = array(
-				'content' => $values['content'],
-				$this->type . '_id' => $id,
-				'user_id' => $this->user->id,
-				'edited' => new Nette\DateTime
-			);
-
-			$this->{$this->type . 'ContentModel'}->insert($array);
-		}
-	}
-
-
-	/**
 	 * Load content version
 	 * @param int
 	 */
