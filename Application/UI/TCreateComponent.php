@@ -20,6 +20,9 @@ trait TCreateComponent
 	/** @inject @var Nette\DI\Container */
 	public $container;
 
+	/** @inject @var WebLoader\LoaderFactory  */
+    public $webLoader;
+
 
 	/**
 	 * @param string
@@ -66,19 +69,13 @@ trait TCreateComponent
 	 */
 	private function createWebloaderControl($name)
 	{
-		$webtemp = $this->template->basePath . '/webtemp/';
-
 		if (Strings::endsWith($name, 'ssControl')) {
-			$part = ucfirst(substr($name, 0, -10)) ?: 'Default';
-			$compiler = $this->context->getService('webloader.css' . $part . 'Compiler');
-
-			return new WebLoader\Nette\CssLoader($compiler, $webtemp);
+			$part = ucfirst(substr($name, 0, -10)) ?: 'default';
+			return $this->webLoader->createCssLoader($part);
 
 		} else {
-			$part = ucfirst(substr($name, 0, -9)) ?: 'Default';
-			$compiler = $this->context->getService('webloader.js' . $part . 'Compiler');
-
-			return new WebLoader\Nette\JavaScriptLoader($compiler, $webtemp);
+			$part = ucfirst(substr($name, 0, -9)) ?: 'default';
+			return $this->webLoader->createJavascriptLoader($part);
 		}
 	}
 
