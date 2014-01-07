@@ -11,6 +11,7 @@
 
 namespace Components;
 
+use Nette;
 use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Security\UserManager;
@@ -25,19 +26,23 @@ class ChangePasswordControl extends Control
 	public $user;
 
 
+	public function __construct(Nette\Localization\ITranslator $translator = NULL)
+	{
+		$this->translator = $translator ?: new ChangePasswordControlCzechTranslator();
+	}
+
+
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->addPassword('oldPassword', 'Staré heslo:')
-			->addRule(Form::FILLED, 'Zadejte staré heslo');
-		$form->addPassword('password', 'Nové heslo:')
-			->addRule(Form::FILLED, 'Zadejte nové heslo')
-			->addRule(Form::MIN_LENGTH, 'Heslo musí mít aspoň %d znaků', 5);
-		$form->addPassword('passwordCheck', 'Znovu nové heslo:')
-			->addRule(Form::FILLED, 'Zadejte heslo k ověření')
-			->addRule(Form::EQUAL, 'Hesla musejí být shodná', $form['password']);
-		$form->addSubmit('send', 'Změnit heslo')
-			->setAttribute('class', 'btn btn-primary');
+
+		$form->addPassword('oldPassword', 'components.changePassword.oldPassword')
+			->addRule(Form::FILLED, 'components.changePassword.oldPasswordRuleFilled');
+		$form->addPassword('password', 'components.changePassword.newPassword')
+			->addRule(Form::FILLED, 'components.changePassword.newPasswordRuleFilled')
+			->addRule(Form::MIN_LENGTH, 'components.changePassword.newPasswordRuleLength', 5);
+		$form->addSubmit('send', 'components.changePassword.send')
+			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}
@@ -50,12 +55,12 @@ class ChangePasswordControl extends Control
 		$oldPass = UserManager::calculateHash($values['oldPassword'], $userData['salt']);
 
 		if ($oldPass != $userData['password']) {
-			$this->presenter->flashMessage('Zadali jste chybně staré heslo.', 'error');
+			$this->presenter->flashMessage('components.changePassword.wrongPassword', 'danger');
 
 		} else {
 			$data['password'] = UserManager::calculateHash($values['password'], $userData['salt']);
 			$this->userModel->update($data, $this->user->id);
-			$this->presenter->flashMessage('Heslo bylo úspěšně změněno.', 'success');
+			$this->presenter->flashMessage('components.changePassword.passwordChanged', 'success');
 		}
 
 		$this->presenter->redirect('this');

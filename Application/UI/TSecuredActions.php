@@ -46,13 +46,13 @@ trait TSecuredActions
 
 		if ($authenticate) {
 			if ( ! $this->user->isLoggedIn()) {
-				$this->flashMessage('Pro přístup k této operaci se prosím přihlaste.', 'danger');
+				$this->flashMessage('singInToAccess', 'danger');
 				$backlink = $this->presenter->storeRequest();
 				$this->redirect('Auth:signIn', ['backlink' => $backlink]);
 
 			} elseif (isset($flag['role']) && is_array($flag['role'])) {
 				if (in_array($this->user->role, (array) $flag['role'][0]) == FALSE) {
-					$this->flashMessage('Na tuto stránku nemáte přístup.', 'danger');
+					$this->flashMessage('forbiddenAccess', 'danger');
 					$this->redirect('Homepage:default');
 				}
 			}

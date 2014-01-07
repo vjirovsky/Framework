@@ -21,19 +21,30 @@ class LoginControl extends Control
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
+
+	public function __construct(Nette\Localization\ITranslator $translator = NULL)
+	{
+		$this->translator = $translator ?: new LoginControlCzechTranslator();
+	}
+
 
 	protected function createComponentForm()
 	{
 		$form = new Form;
 
-		$form->addText('email', 'Email')
-			->addRule(Form::FILLED, 'Zadejte email')
-			->addRule(Form::EMAIL, 'Opravte formát emailu');
-		$form->addPassword('password', 'Heslo')
-			->addRule(Form::FILLED, 'Zadejte heslo');
+		$form->addText('email', 'forms.login.email')
+			->addRule($form::FILLED, 'forms.login.emailFilledRule')
+			->addRule($form::EMAIL, 'forms.login.emailFormatRule');
 
-		$form->addSubmit('send', 'Přihlásit se')
-			->setAttribute('class', 'btn btn-primary');
+		$form->addPassword('password', 'forms.login.password')
+			->addRule($form::FILLED, 'forms.login.passwordFilledRule')
+			->addRule($form::MIN_LENGTH, 'forms.login.passwordLengthRule', 5);
+
+		$form->addSubmit('send', 'forms.login.send')
+			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}
@@ -42,15 +53,34 @@ class LoginControl extends Control
 	public function processForm($form)
 	{
 		try {
- 			$values = $form->values;
+			$values = $form->values;
 			$this->user->login($values['email'], $values['password']);
-
-			$this->presenter->restoreRequest($this->presenter->backlink);
-			$this->presenter->redirect('Homepage:default');
 
 		} catch (Nette\Security\AuthenticationException $e) {
 			$form->addError($e->getMessage());
+			return;
 		}
+
+		$this->customRedirect();
+	}
+
+
+	protected function customRedirect()
+	{
+		$this->presenter->restoreRequest($this->presenter->backlink); // @todo: fix
+		$this->presenter->redirect('Homepage:default');
+	}
+
+
+	protected function renderAdmin()
+	{
+		$form = $this['form'];
+		$form->id = 'loginform';
+		$form['email']->setAttribute('class', 'form-control')
+			->setAttribute('placeholder', 'Email');
+		$form['password']->setAttribute('class', 'form-control')
+			->setAttribute('placeholder', 'Password');
+		$form['send']->setAttribute('class', 'btn btn-success');
 	}
 
 }

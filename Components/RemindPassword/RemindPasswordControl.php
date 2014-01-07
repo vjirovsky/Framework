@@ -33,15 +33,22 @@ class RemindPasswordControl extends Control
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
+
+	public function __construct(Nette\Localization\ITranslator $translator = NULL)
+	{
+		$this->translator = $translator ?: new RemindPasswordControlCzechTranslator();
+	}
+
+
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->addText('email', 'Váš email:')
-			->addRule(Form::FILLED, 'Zadejte email')
-			->addRule(Form::EMAIL, 'Opravte formát emailu');
+		$form->addText('email', 'forms.email')
+			->addRule($form::FILLED, 'forms.emailFilledRule')
+			->addRule($form::EMAIL, 'forms.emailFormatRule');
 
-		$form->addSubmit('send', 'Zaslat nové heslo')
-			->setAttribute('class', 'btn btn-primary');
+		$form->addSubmit('send', 'forms.send')
+			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}
@@ -51,7 +58,7 @@ class RemindPasswordControl extends Control
 	{
 		$values = $form->values;
 
-		if ($record = $this->userModel->fetch(['email' => $values['email']])) {
+		if ($this->userModel->fetch(['email' => $values['email']])) {
 			$message = $this->message->create();
 			$message->setFrom($this->paramService->email->from)
 				->addTo($values['email']);
@@ -59,13 +66,13 @@ class RemindPasswordControl extends Control
 			$values['new_password'] = $password = Strings::random(10);
 			$this->userManager->updatePasswordForUser(['email' => $values['email']], $password);
 
-			$message->addCustomTemplate('remindPassword', $values);
+			$message->addCustomTemplate($this->getMessageUid(), $values);
 			$this->mailer->send($message);
 
-			$this->presenter->flashMessage('Nové heslo bylo nastaveno. Zkontrolujte Vaši emailovou schránku.', 'success');
+			$this->presenter->flashMessage('components.remindPassword.newPasswordSetUp', 'success');
 
 		} else {
-			$this->presenter->flashMessage('Tento uživatel neexistuje.', 'error');
+			$this->presenter->flashMessage('components.remindPassword.userNotExist', 'danger');
 		}
 
 		$this->redirect('this');
@@ -80,6 +87,15 @@ class RemindPasswordControl extends Control
 		$form['email']->setAttribute('class', 'form-control')
 			->setAttribute('placeholder', 'Zadejte Váš email');
 		$form['send']->setAttribute('class', 'btn btn-success');
+	}
+
+
+	/**
+	 * @return  string
+	 */
+	private function getMessageUid()
+	{
+		return 'remindPassword' . ($this->translator ? '_' . $this->translator->getLocale() : NULL);
 	}
 
 }
