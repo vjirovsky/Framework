@@ -1,0 +1,39 @@
+webloader:
+	css:
+		admin:
+			files:
+				- %assetsDir%/css/bootstrap.min.css
+				- %assetsDir%/css/jquery/chosen/chosen.css
+				- %assetsDir%/css/unicorn/unicorn.css
+				- %assetsDir%/css/jquery.jscrollpane.css
+				- modules/font-awesome/css/font-awesome.min.css
+			filters:
+				- @pathFilter
+
+		adminLogin:
+			files:
+				- %assetsDir%/css/bootstrap.min.css
+				- %assetsDir%/css/unicorn/unicorn-login.css
+				- modules/font-awesome/css/font-awesome.min.css
+			filters:
+				- @pathFilter
+
+	js:
+		admin:
+			files:
+				- %assetsDir%/js/jquery/jquery-1.10.2.min.js
+				- %assetsDir%/js/bootstrap/bootstrap.min.js
+				- %assetsDir%/js/nette/netteForms.js
+				- %assetsDir%/js/nette/nette.ajax.js
+				- %assetsDir%/js/unicorn/unicorn.js
+				- %assetsDir%/js/base.js
+
+				# DatePicker & DateTimePicker
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.js
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.cs.js
+				- %assetsDir%/js/bootstrap/nextras.datetimepicker.init.js
+
+		adminLogin:
+			files:
+				- %assetsDir%/js/jquery/jquery-1.10.2.min.js
+				- %assetsDir%/js/unicorn/unicorn.login.js
