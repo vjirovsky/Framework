@@ -21,8 +21,8 @@ trait TTemplateSetup
 	/** @inject @var Schmutzka\Templating\Helpers */
 	public $helpers;
 
-	/** @var callback[] */
-	public $helpersCallbacks = [];
+	/** @inject @var Schmutzka\Templating\IHelpers */
+	public $appHelpers;
 
 
 	/**
@@ -39,8 +39,8 @@ trait TTemplateSetup
 
 		// helpers
 		$template->registerHelperLoader([$this->helpers, 'loader']);
-		foreach ($this->presenter->helpersCallbacks as $callback) {
-			$template->registerHelperLoader($callback);
+		if ($this->appHelpers) {
+			$template->registerHelperLoader([$this->appHelpers, 'loader']);
 		}
 
 		// blank translations
