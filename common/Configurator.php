@@ -13,7 +13,6 @@ namespace Schmutzka;
 
 use Nette;
 use Nette\Utils\Strings;
-use Schmutzka\Utils\Neon;
 
 
 class Configurator extends Nette\Configurator
@@ -32,21 +31,16 @@ class Configurator extends Nette\Configurator
 			$this->setDebugMode($debug);
 		}
 
-		$this->enableDebugger($this->parameters['logDir']);
+		$this->enableDebugger($this->parameters['appDir'] . '/../log');
 
-		// robot loader
 		$this->setTempDirectory($this->parameters['appDir'] . '/../temp');
 		$this->createRobotLoader()
 			->addDirectory($this->parameters['appDir'])
 			->addDirectory($this->parameters['libsDir'])
 			->register();
 
-		// modules
-		$this->registerModules();
 
-		// configs
 		$this->addConfig($this->parameters['libsDir'] . '/Schmutzka/configs/default.neon');
-
 		if (Strings::startsWith($_SERVER['HTTP_HOST'], 'dev.')) {
 			$name = 'dev';
 
@@ -62,7 +56,6 @@ class Configurator extends Nette\Configurator
 
 
 	/**
-	 * Include paths to directories
 	 * @return array
 	 */
 	private function getParameters()
@@ -72,30 +65,10 @@ class Configurator extends Nette\Configurator
 		$rootDir = realpath(__DIR__ . '/../../..');
 		$parameters['appDir'] = $rootDir . '/app';
 		$parameters['libsDir'] =  $rootDir . '/libs';
-		$parameters['logDir'] =  $rootDir . '/log';
 		$parameters['wwwDir'] =  $rootDir . '/www';
 		$parameters['assetsDir'] =  $rootDir . '/libs/Schmutzka/assets';
 
 		return $parameters;
-	}
-
-
-	/**
-	 * Add configs of active modules
-	 */
-	private function registerModules()
-	{
-		$parameters = Neon::fromFile($this->parameters['appDir'] . '/config/config.neon', 'parameters');
-
-		if (isset($parameters['modules'])) {
-			$this->addConfig($this->parameters['appDir'] . '/AdminModule/config.neon');
-			foreach ($parameters['modules'] as $module) {
-				$moduleDirConfig = ucfirst($module) . 'Module/config.neon';
-				if (file_exists($config = $this->parameters['appDir'] . '/' . $moduleDirConfig)) {
-					$this->addConfig($config);
-				}
-			}
-		}
 	}
 
 
@@ -106,10 +79,10 @@ class Configurator extends Nette\Configurator
 	{
 		$file = $this->parameters['appDir'] . '/config/config.' . $name . '.neon';
 		if (file_exists($file)) {
-			$this->addConfig($file, FALSE);
+			$this->addConfig($file);
 
-		} else {
-			$this->addConfig($this->parameters['appDir'] . '/config/config.neon', FALSE);
+		} else { // fallback
+			$this->addConfig($this->parameters['appDir'] . '/config/config.neon');
 		}
 	}
 

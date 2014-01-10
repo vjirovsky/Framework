@@ -44,7 +44,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 
 		$this->module = Name::mpv($this->presenter, 'module');
 
-		if ($this->user->loggedIn && $this->user->id && $this->paramService->logUserActivity) {
+		if ($this->user->loggedIn && $this->user->id) {
 			$this->user->logLastActive();
 		}
 	}

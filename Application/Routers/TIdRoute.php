@@ -49,7 +49,7 @@ trait TIdRoute
 
 		$keyParam = $appRequest->parameters['id'];
 
-		if (!empty($keyParam)) {
+		if ( ! empty($keyParam)) {
 			$id = $this->getKeyByValue($keyParam);
 
 			if ($id === NULL) {

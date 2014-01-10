@@ -39,6 +39,7 @@ class BaseRouterFactory
 	 * @param  array
 	 * @param  string
 	 * @param  string
+	 * @return  RouteList
 	 */
 	public function listToRoutes(RouteList $router, $aliasList, $pre = NULL, $post = NULL)
 	{

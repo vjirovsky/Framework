@@ -2,9 +2,6 @@ php:
 	date.timezone: Europe/Prague
 	zlib.output_compression: yes
 
-parameters:
-	logUserActivity: FALSE
-
 nette:
 	session:
 		autoStart: TRUE
