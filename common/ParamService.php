@@ -18,8 +18,8 @@ use Schmutzka\Utils\Name;
 
 class ParamService extends Nette\Object
 {
-	/** @var array */
-	public $params = array();
+	/** @var [] */
+	public $parameters = [];
 
 
 	/**
@@ -27,44 +27,46 @@ class ParamService extends Nette\Object
 	 */
 	public function __construct($parameters)
 	{
-		$this->params = Nette\ArrayHash::from($parameters);
+		$this->parameters = Nette\ArrayHash::from($parameters);
 	}
 
 
 	/**
-	 * Direct value access
 	 * @param string
 	 */
 	public function &__get($name)
 	{
-		if ($name != 'params' && isset($this->params->{$name})) {
-			return $this->params->{$name};
+		if ($name != 'parameters' && isset($this->parameters->{$name})) {
+			return $this->parameters->{$name};
 		}
 	}
 
 
 	/**
 	 * @param  string
-	 * @return boolean
+	 * @return  bool
 	 */
 	public function __isset($name)
 	{
-		if (isset($this->params[$name])) {
+		if (isset($this->parameters[$name])) {
 			return TRUE;
 		}
 	}
 
 
 	/**
-	 * @return array|NULL
+	 * @return string[]
 	 */
-	public function getActiveModules()
+	public function getModules()
 	{
-		if (isset($this->params->modules)) {
-			return $this->params->modules;
+		$modules = [];
+		foreach ($this->parameters as $key => $value) {
+			if (Strings::endsWith($key, 'Module')) {
+				$modules[] = substr($key, 0, -6);
+			}
 		}
 
-		return NULL;
+		return $modules;
 	}
 
 
@@ -72,15 +74,15 @@ class ParamService extends Nette\Object
 	 * @param string
 	 * @return array
 	 */
-	public function getModuleParams($key)
+	public function getModuleParameters($key)
 	{
 		if (Strings::contains($key, '\\')) {
 			$key = Name::moduleFromNamespace($key, 'module');
 		}
 
 		$moduleName = $key . 'Module';
-		if (isset($this->params->$moduleName)) {
-			return $this->params->$moduleName;
+		if (isset($this->parameters->$moduleName)) {
+			return $this->parameters->$moduleName;
 		}
 
 		return array();
