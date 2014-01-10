@@ -1,0 +1,21 @@
+{
+	"name": "TomasVotruba/SchmutzkaFramework",
+	"type": "library",
+	"description": "Simple, practice inspired, Nette based framework.",
+	"keywords": ["framework", "mvc", "php", "Nette"],
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Tomáš Votruba",
+			"homepage": "http://tomasvotruba.cz"
+		},
+	],
+	"require": {
+		"nette": ">=2.1",
+		"php": ">=5.4",
+	},
+	"autoload": {
+		"classmap": ["Schmutzka/"],
+		"files": ["Schmutzka/loader.php", "Schmutzka/common/shortcuts.php"]
+	},
+}
