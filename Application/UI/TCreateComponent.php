@@ -20,7 +20,7 @@ trait TCreateComponent
 	/** @inject @var Nette\DI\Container */
 	public $container;
 
-	/** @inject @var WebLoader\LoaderFactory  */
+	/** @inject @var WebLoader\LoaderFactory */
 	public $webLoader;
 
 

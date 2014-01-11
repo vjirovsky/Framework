@@ -30,7 +30,7 @@ trait TJoint
 	public function __construct()
 	{
 		$this->setup();
- 	}
+	}
 
 
 	/**
