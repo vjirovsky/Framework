@@ -27,11 +27,10 @@ trait TJoint
 	private $otherKey;
 
 
-
 	public function __construct()
 	{
 		$this->setup();
-	}
+ 	}
 
 
 	/**

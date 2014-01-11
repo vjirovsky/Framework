@@ -26,15 +26,7 @@ class PathFilter extends Nette\Object
 	public function __invoke($code, WebLoader\Compiler $loader)
 	{
 		$code = strtr($code, array(
-			'url(../' => 'url(../../',
-			"url('../" => "url('../../",
-			'url("../' => 'url("../../',
-			"url('chosen-sprite" => "url('../../images/chosen/chosen-sprite",
-			"url('../fonts/fontawesome" => "url('../../modules/font-awesome/fonts/fontawesome",
-			'url("../img' => 'url("../../images/cms',
-			"url('../img" => "url('../../images/cms",
-			'url(../img' => 'url(../../images/cms',
-			"url('../" => "url('../../",
+			"url('../fonts/fontawesome" => "url('../modules/font-awesome/fonts/fontawesome",
 			'url("chosen' => 'url("../../images/cms/chosen/chosen'
 		));
 

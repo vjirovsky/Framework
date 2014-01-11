@@ -57,7 +57,7 @@ class LoginControl extends Control
 			$this->user->login($values['email'], $values['password']);
 
 		} catch (Nette\Security\AuthenticationException $e) {
-			$form->addError($e->getMessage());
+			$this->presenter->flashMessage($e->getMessage(), 'danger');
 			return;
 		}
 

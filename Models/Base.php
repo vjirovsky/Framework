@@ -18,17 +18,11 @@ use Schmutzka\Utils\Name;
 
 abstract class Base extends Nette\Object
 {
-	/** @var NotORM */
-	private $notorm;
+	/** @inject @var NotORM */
+	public $db;
 
 	/** @var string */
 	private $tableName;
-
-
-	public function __construct(NotORM $notorm)
-	{
-		$this->notorm = $notorm;
-	}
 
 
 	public function table()
@@ -38,7 +32,7 @@ abstract class Base extends Nette\Object
 			array_unshift($args, 'id');
 		}
 
-		return call_user_func_array(array($this->notorm, $this->getTableName()), $args);
+		return call_user_func_array(array($this->db, $this->getTableName()), $args);
 	}
 
 

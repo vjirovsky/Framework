@@ -36,7 +36,7 @@ trait TTemplateTranslation
 
 	public function setupTranslator()
 	{
-		if ($this->sessionResolver->getLocale() == NULL) {
+		if ($this->translator->getLocale() == NULL) {
 			foreach ($this->translator->getAvailableLocales() as $locale) {
 				if (in_array($locale, ['cs', 'en'])) {
 					$this->sessionResolver->setLocale($locale);
@@ -51,10 +51,6 @@ trait TTemplateTranslation
 		Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
 
 		$this->template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
-
-		// automatically ad to translator?
-		list(, $presenterName) = explode(':', $this->presenter->name);
-		$this->template->trD = strtolower($presenterName . '.' . $this->presenter->view);
 	}
 
 }
