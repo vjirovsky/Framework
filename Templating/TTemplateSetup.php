@@ -21,8 +21,8 @@ trait TTemplateSetup
 	/** @inject @var Schmutzka\Templating\Helpers */
 	public $helpers;
 
-	/** @inject @var Schmutzka\Templating\IHelpers */
-	public $appHelpers;
+	/** @var Schmutzka\Templating\IHelpers */
+	protected $appHelpers;
 
 
 	/**
