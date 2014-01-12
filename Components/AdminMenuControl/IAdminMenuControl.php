@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface IAdminMenuControl
 {
-	/** @return SubscribeControl */
+	/** @return AdminMenuControl */
 	public function create();
 
 }

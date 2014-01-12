@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface IChangePasswordControl
 {
-	/** @return SubscribeControl */
+	/** @return ChangePasswordControl */
 	public function create();
 
 }

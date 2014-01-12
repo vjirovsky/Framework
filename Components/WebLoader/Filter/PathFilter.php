@@ -11,11 +11,10 @@
 
 namespace Schmutzka\Components\WebLoader\Filter;
 
-use Nette;
 use WebLoader;
 
 
-class PathFilter extends Nette\Object
+class PathFilter
 {
 
 	/**
@@ -26,8 +25,7 @@ class PathFilter extends Nette\Object
 	public function __invoke($code, WebLoader\Compiler $loader)
 	{
 		$code = strtr($code, array(
-			"url('../fonts/fontawesome" => "url('../modules/font-awesome/fonts/fontawesome",
-			'url("chosen' => 'url("../../images/cms/chosen/chosen'
+			"url('../fonts/fontawesome" => "url('../../modules/font-awesome/fonts/fontawesome"
 		));
 
 		return $code;

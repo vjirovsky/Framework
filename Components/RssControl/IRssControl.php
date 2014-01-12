@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface IRssControl
 {
-	/** @return SubscribeControl */
+	/** @return RssControl */
 	public function create();
 
 }

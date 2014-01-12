@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface IGaControl
 {
-	/** @return SubscribeControl */
+	/** @return GaControl */
 	public function create();
 
 }

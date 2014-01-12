@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface ILoginControl
 {
-	/** @return SubscribeControl */
+	/** @return LoginControl */
 	public function create();
 
 }

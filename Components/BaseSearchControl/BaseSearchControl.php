@@ -9,7 +9,7 @@
  * the file license.md that was distributed with this source code.
  */
 
-namespace Components;
+namespace Schmutzka\Components;
 
 use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Control;

@@ -12,9 +12,9 @@
 namespace Schmutzka\Components;
 
 
-interface ISubscribeControl
+interface IFlashMessageControl
 {
-	/** @return SubscribeControl */
+	/** @return FlashMessageControl */
 	public function create();
 
 }
