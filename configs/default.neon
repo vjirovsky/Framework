@@ -18,17 +18,16 @@ services:
 	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
 	pathFilter: Schmutzka\Components\WebLoader\Filter\PathFilter
 	lessFilter: WebLoader\Filter\LessFilter
-
 	routerFactory: RouterFactory
 	router: @routerFactory::createRouter
 	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
 
-	- Schmutzka\Mail\IMessage
 	- Schmutzka\ParamService(@container::getParameters())
 	- Schmutzka\Templating\Helpers
-	- Components\IFlashMessageControl
-	- Components\IGaControl
-	- Components\ITitleControl
+	- Schmutzka\Mail\IMessage
+	- Schmutzka\Components\IFlashMessageControl
+	- Schmutzka\Components\ITitleControl
+	- Schmutzka\Components\IGaControl
 
 extensions:
 	- Schmutzka\DI\Extensions\SchmutzkaExtension
