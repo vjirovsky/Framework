@@ -24,6 +24,7 @@ use Schmutzka\Forms\Controls;
 class Form extends Nette\Application\UI\Form
 {
 	use Schmutzka\Forms\TFileUpload;
+	use Schmutzka\Forms\TOnSuccessCallback;
 	use Schmutzka\Forms\Rendering\TBootstrapRenderer;
 
 	/** validators */
