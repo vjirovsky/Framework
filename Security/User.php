@@ -73,18 +73,6 @@ class User extends Nette\Security\User
 	}
 
 
-	public function logLastActive()
-	{
-		$user = $this->userModel->fetch($this->id);
-		$lastUpdate = time() - strtotime($user['last_active']);
-
-		if ($lastUpdate > (3 * 60)) { // log max once per 3 mins
-			$array['last_active'] = new Nette\DateTime;
-			$this->userModel->update($array, $this->id); // 60 ms!
-		}
-	}
-
-
 	/**
 	 * @param array
 	 */

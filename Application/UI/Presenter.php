@@ -31,22 +31,17 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @inject @var Components\ITitleControl */
+	/** @inject @var Schmutzka\Components\ITitleControl */
 	public $titleControl;
 
-	/** @inject @var Components\IFlashMessageControl */
+	/** @inject @var Schmutzka\Components\IFlashMessageControl */
 	public $flashMessageControl;
 
 
 	public function startup()
 	{
 		parent::startup();
-
 		$this->module = Name::mpv($this->presenter, 'module');
-
-		if ($this->user->loggedIn && $this->user->id) {
-			$this->user->logLastActive();
-		}
 	}
 
 
