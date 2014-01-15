@@ -12,8 +12,12 @@
 namespace Schmutzka\Forms;
 
 use Nette;
+use Nette\Http\FileUpload;
 use Nette\Image;
 use Nette\Utils\Strings;
+use Schmutzka;
+use Schmutzka\Application\UI\Form;
+use Schmutzka\Forms\Controls\UploadControl;
 use Schmutzka\Utils\Filer;
 
 
@@ -31,71 +35,19 @@ trait TFileUpload
 
 	/**
 	 * @param  array
+	 * @param  Form
 	 */
-	public function processFileUploads(&$values)
+	public function processFileUploads(&$values, Form $form)
 	{
 		foreach ($values as $key => $value) {
-			if ($value instanceof Nette\Http\FileUpload) {
-				if ($value->isOk()) {
-
-					$data = [
-						'name_origin' => $value->getName(),
-						'created' => new Nette\DateTime,
-						'extension' => Filer::extension($value->getName()),
-						'type' => $value->getContentType(),
-						'size' => $value->getSize(),
-					];
-
-
-					if ($value->isImage()) {
-						$control = $this->form[$key];
-						$resize = $control->getResize();
-
-						$data['name'] = $this->getImageUniqueName($value->getName());
-						$data['path'] = $this->imagesDir;
-
-						$image = $value->toImage();
-
-						// default resize
-						if ($resize == NULL) {
-							$resize[] = [
-								'width' => 1024,
-								'height' => 800
-							];
-						}
-
-						if ($resize) {
-							$i = 1;
-							foreach ($resize as $dimensions) {
-								if ($dimensions['width'] && $dimensions['height']) {
-									$options = Image::SHRINK_ONLY | Image::EXACT;
-
-								} else {
-									$options = Image::SHRINK_ONLY;
-								}
-
-								$image->resize($dimensions['width'], $dimensions['height'], $options);
-								$image->save($this->paramService->wwwDir . $data['path'] . $data['name']);
-
-								/*
-								if ($i > 1) {
-									// custom size folders (w60h100, w100, h20)
-								}
-								*/
-
-								$i++;
-							}
-						}
-
-					} else {
-						$data['name'] = $this->getRandomName();
-						$data['path'] = $this->storageDir;
-
-						$value->move($this->paramService->wwwDir . $data['path']. $data['name']);
+			if ($form[$key] instanceof UploadControl) {
+				if (is_array($value)) {
+					foreach ($value as $file) {
+						$this->processFileUpload($file, $form[$key], $key, TRUE);
 					}
 
-					$fileId = $this->fileModel->insert($data);
-					$this->files[$key] = $fileId;
+				} else {
+					$this->processFileUpload($value, $form[$key], $key);
 				}
 
 				unset($values[$key]);
@@ -103,6 +55,79 @@ trait TFileUpload
 		}
 	}
 
+
+	/**
+	 * @param  FileUpload
+	 * @param  UploadControl
+	 * @param  string
+	 * @param  bool
+	 */
+	private function processFileUpload(FileUpload $fileUpload, UploadControl $uploadControl, $key, $multiple = FALSE)
+	{
+		if ($fileUpload->isOk()) {
+			$data = [
+				'name_origin' => $fileUpload->getName(),
+				'created' => new Nette\DateTime,
+				'extension' => Filer::extension($fileUpload->getName()),
+				'type' => $fileUpload->getContentType(),
+				'size' => $fileUpload->getSize(),
+			];
+
+			if ($fileUpload->isImage()) {
+				$resize = $uploadControl->getResize();
+
+				$data['name'] = $this->getImageUniqueName($fileUpload->getName());
+				$data['path'] = $this->imagesDir;
+
+				$image = $fileUpload->toImage();
+
+				// default resize
+				if ($resize == NULL) {
+					$resize[] = [
+						'width' => 1024,
+						'height' => 800
+					];
+				}
+
+				if ($resize) {
+					$i = 1;
+					foreach ($resize as $dimensions) {
+						if ($dimensions['width'] && $dimensions['height']) {
+							$options = Image::SHRINK_ONLY | Image::EXACT;
+
+						} else {
+							$options = Image::SHRINK_ONLY;
+						}
+
+						$image->resize($dimensions['width'], $dimensions['height'], $options);
+						$image->save($this->buildSavePath($data));
+
+						/*
+						if ($i > 1) {
+							// custom size folders (w60h100, w100, h20)
+						}
+						*/
+
+						$i++;
+					}
+				}
+
+			} else {
+				$data['name'] = $this->getRandomName();
+				$data['path'] = $this->storageDir;
+				$fileUpload->move($this->buildSavePath($data));
+			}
+
+			$fileId = $this->fileModel->insert($data);
+
+			if ($multiple) {
+				$this->files[$key][] = $fileId;
+
+			} else {
+				$this->files[$key] = $fileId;
+			}
+		}
+	}
 
 
 	/**
@@ -140,6 +165,22 @@ trait TFileUpload
 		}
 
 		return $file;
+	}
+
+
+	/**
+	 * @param  []
+	 * @return string
+	 */
+	private function buildSavePath($data)
+	{
+		$path = $this->paramService->wwwDir . $data['path']. $data['name'];
+		$dir = dirname($path);
+		if (file_exists($dir) == FALSE) {
+			mkdir($dir);
+		}
+
+		return $dir;
 	}
 
 }
