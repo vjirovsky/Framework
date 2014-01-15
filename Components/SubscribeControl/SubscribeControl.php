@@ -24,28 +24,28 @@ class SubscribeControl extends Control
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->addText('email', 'Your mail')
+		$form->addText('email', 'Email')
 			->setAttribute('placeholder', 'your@email.com')
-			->addRule(Form::FILLED, 'Fill your email address')
-			->addRule(Form::EMAIL, 'Correct email address format');
-		$form->addSubmit('send', 'Request an Invite')
+			->addRule(Form::FILLED, 'Zadejte email')
+			->addRule(Form::EMAIL, 'Opravte formát emailu');
+		$form->addSubmit('send', 'Poslat žádost')
 			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}
 
 
-	public function processForm($form)
+	public function processForm($values)
 	{
-		$values = $form->values;
 		$this->subscriptionModel->insert($values);
+		$this->presenter->flashMessage('Děkujeme za zájem.', 'success');
 		$this->redirect('this', ['sent' => 1]);
 	}
 
 
 	protected function renderDefault()
 	{
-		$this->template->sent = $this->getParam('sent');
+		$this->template->sent = $this->getParameter('sent');
 	}
 
 }
