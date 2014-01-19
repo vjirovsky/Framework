@@ -21,9 +21,6 @@ trait TTemplateSetup
 	/** @inject @var Schmutzka\Templating\Helpers */
 	public $helpers;
 
-	/** @var Schmutzka\Templating\IHelpers */
-	protected $appHelpers;
-
 
 	/**
 	 * @param  string|NULL
@@ -39,8 +36,8 @@ trait TTemplateSetup
 
 		// helpers
 		$template->registerHelperLoader([$this->helpers, 'loader']);
-		if ($this->appHelpers) {
-			$template->registerHelperLoader([$this->appHelpers, 'loader']);
+		if (property_exists($this->presenter, 'appHelpers')) {
+			$template->registerHelperLoader([$this->presenter->appHelpers, 'loader']);
 		}
 
 		// blank translations
