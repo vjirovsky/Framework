@@ -12,12 +12,23 @@
 namespace Schmutzka\DI\Extensions;
 
 use Nette;
-use Nette\DI\CompilerExtension;
 use Nette\PhpGenerator\ClassType;
+use Schmutzka\DI\CompilerExtension;
 
 
 class SchmutzkaExtension extends CompilerExtension
 {
+
+	public function loadConfiguration()
+	{
+		$container = $this->getContainerBuilder();
+		$container->getDefinition('user')
+			->setClass('Schmutzka\Security\User')
+			->setInject(TRUE);
+
+		$this->parseFromFile(__DIR__ . '/config.neon');
+	}
+
 
 	public function afterCompile(ClassType $class)
 	{

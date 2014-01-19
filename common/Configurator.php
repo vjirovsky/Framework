@@ -39,8 +39,6 @@ class Configurator extends Nette\Configurator
 			->addDirectory($this->parameters['libsDir'])
 			->register();
 
-
-		$this->addConfig($this->parameters['libsDir'] . '/Schmutzka/configs/default.neon');
 		if (Strings::startsWith($_SERVER['HTTP_HOST'], 'dev.')) {
 			$name = 'dev';
 
@@ -52,6 +50,18 @@ class Configurator extends Nette\Configurator
 		}
 
 		$this->loadConfigByName($name);
+	}
+
+
+	/**
+	 * @return Compiler
+	 */
+	protected function createCompiler()
+    {
+		$compiler = parent::createCompiler();
+		$compiler->addExtension(NULL, new DI\Extensions\SchmutzkaExtension);
+
+		return $compiler;
 	}
 
 
