@@ -1,4 +1,4 @@
-{if count($items) >= 2}
+{if isset($items) && count($items) >= 2}
 	<li n:class="submenu, $presenter->module == $module ? 'active open'">
 		<a href="#">
 			<i n:class="fa, $icon"></i>
@@ -18,7 +18,7 @@
 {else}
 	<li n:class="topmenu, $presenter->module == $module ? 'active'">
 		<a n:phref=":$module:Homepage:default, id => NULL">
-			<i n:class="fa, $icon"></i>
+			<i n:class="fa, isset($icon) ? $icon"></i>
 			{$title}
 		</a>
 	</li>

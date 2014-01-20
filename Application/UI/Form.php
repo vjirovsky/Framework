@@ -180,7 +180,7 @@ class Form extends Nette\Application\UI\Form
 			$values = call_user_func($this->parent->$processorMethod, $values);
 		}
 
-		$this->processFileUploads($values);
+		$this->processFileUploads($values, $this);
 
 		return $values;
 	}

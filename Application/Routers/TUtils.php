@@ -11,12 +11,11 @@
 
 namespace Schmutzka\Application\Routers;
 
-use Nette;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
 
-class BaseRouterFactory
+trait TUtils
 {
 
 	/**

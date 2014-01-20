@@ -30,6 +30,16 @@ class SchmutzkaExtension extends CompilerExtension
 	}
 
 
+	public function beforeCompile()
+	{
+		$router = $this->getContainerBuilder()->getDefinition('router');
+
+		foreach ($this->getSortedServicesByTag('routes') as $service) {
+			$router->addSetup('offsetSet', array(NULL, '@' . $service));
+		}
+	}
+
+
 	public function afterCompile(ClassType $class)
 	{
 		parent::afterCompile($class);

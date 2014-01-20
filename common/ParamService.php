@@ -81,6 +81,7 @@ class ParamService extends Nette\Object
 		}
 
 		$moduleName = $key . 'Module';
+
 		if (isset($this->parameters->$moduleName)) {
 			return $this->parameters->$moduleName;
 		}

@@ -22,9 +22,6 @@ class AdminMenuControl extends Control
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-	/** @inject @var Nette\Http\Request */
-	public $httpRequest;
-
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
 
@@ -34,31 +31,32 @@ class AdminMenuControl extends Control
 	 */
 	protected function renderDefault($module)
 	{
-		$moduleParams = $this->paramService->getModuleParams($module);
+		$moduleParameters = $this->getModuleParameters($module);
 
-		$items = array();
-		if (isset($moduleParams->menu->items)) {
-			foreach ($moduleParams->menu->items as $item) {
+		$items = [];
+		if (isset($moduleParameters->menu) && isset($moduleParameters->menu->items)) {
+			foreach ($moduleParameters->menu->items as $item) {
 				if ( ! isset($item->cond)) {
 					$items[] = $item;
 
-				} elseif ($moduleParams->{$item->cond}) {
+				} elseif ($moduleParameters->{$item->cond}) {
 					$items[] = $item;
 				}
 			}
+
+			$this->template->icon = $moduleParameters->menu->icon;
+			$this->template->items = $items;
 		}
 
-		$this->template->icon = $moduleParams->menu->icon;
-		$this->template->items = $items;
 		$this->template->module = $module;
-		$this->template->title = $moduleParams->title;
+		$this->template->title = $moduleParameters->title;
 	}
 
 
 	protected function renderTitle()
 	{
 		$module = $this->presenter->module;
-		$moduleParams = $this->paramService->getModuleParams($module);
+		$moduleParameters = $this->getModuleParameters($module);
 
 		$view = $this->presenter->view;
 		$title = '';
@@ -66,15 +64,15 @@ class AdminMenuControl extends Control
 		if ($view == 'add') {
 			$link = substr($this->presenter->name, strlen($module) + 1);
 
-			if (isset($moduleParams->menu->items)) {
-				foreach ($moduleParams->menu->items as $item) {
+			if (isset($moduleParameters->menu->items)) {
+				foreach ($moduleParameters->menu->items as $item) {
 					if (Strings::contains($item->link, $link)) {
 						$title = $item->label;
 					}
 				}
 
 			} else {
-				$title = $moduleParams->title;
+				$title = $moduleParameters->title;
 			}
 
 			$title .= ' - nová položka';
@@ -87,19 +85,29 @@ class AdminMenuControl extends Control
 						(isset($item['login']) ? ': ' . $item['login'] :
 					NULL)));
 
-		} elseif (isset($moduleParams->menu->items)) {
+		} elseif (isset($moduleParameters->menu->items)) {
 			$link = substr($this->presenter->name . ':' . $view, strlen($module) + 1);
-			foreach ($moduleParams->menu->items as $item) {
+			foreach ($moduleParameters->menu->items as $item) {
 				if ($item->link == $link) {
 					$title = $item->label;
 				}
 			}
 
 		} else {
-			$title = $moduleParams->title;
+			$title = $moduleParameters->title;
 		}
 
 		$this->template->title = $title;
+	}
+
+
+	/**
+	 * @param  string
+	 * @return []
+	 */
+	private function getModuleParameters($module)
+	{
+		return $this->paramService->getModuleParameters($module);
 	}
 
 }

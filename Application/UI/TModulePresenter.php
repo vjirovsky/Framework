@@ -25,7 +25,7 @@ trait TModulePresenter
 	/** @inject @var Models\User */
 	public $userModel;
 
-	/** @inject @var Components\IAdminMenuControl */
+	/** @inject @var Schmutzka\Components\IAdminMenuControl */
 	public $adminMenuControl;
 
 	/** @var Nette\Security\Permission */
@@ -61,8 +61,7 @@ trait TModulePresenter
 		}
 
 		$this->template->module = $this->module;
-		$this->template->modules = $modules = $this->paramService->getActiveModules();
-		$this->template->useCkeditor = $this->useCkeditor($modules);
+		$this->template->modules = $modules = $this->paramService->getModules();
 	}
 
 
@@ -121,9 +120,9 @@ trait TModulePresenter
 	/**
 	 * @return  Nette\ArrayHash
 	 */
-	public function getModuleParams()
+	public function getModuleParameters()
 	{
-		return $this->paramService->getModuleParams($this->presenter->module);
+		return $this->paramService->getModuleParameters($this->presenter->module);
 	}
 
 
@@ -151,22 +150,6 @@ trait TModulePresenter
 		}
 
 		return $this->{$modelName};
-	}
-
-
-	/**
-	 * @param  array
-	 * @return boolean
-	 */
-	private function useCkeditor($modules)
-	{
-		foreach ($modules as $value) {
-			if (in_array($value, ['page', 'article', 'email'])) {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
 	}
 
 }

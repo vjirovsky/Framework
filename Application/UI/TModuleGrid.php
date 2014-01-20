@@ -93,9 +93,9 @@ trait TModuleGrid
 	/**
 	 * @return  Nette\ArrayHash
 	 */
-	public function getModuleParams()
+	public function getModuleParameters()
 	{
-		return $this->paramService->getModuleParams($this->presenter->module);
+		return $this->paramService->getModuleParameters($this->presenter->module);
 	}
 
 

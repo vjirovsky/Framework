@@ -13,13 +13,14 @@ namespace Schmutzka;
 
 use Nette;
 use Nette\Utils\Strings;
+use Schmutzka;
 
 
 class Configurator extends Nette\Configurator
 {
 
 	/**
-	 * @param bool|string|array
+	 * @param bool|string[]
 	 */
 	public function __construct($debug = NULL)
 	{
@@ -30,13 +31,12 @@ class Configurator extends Nette\Configurator
 		if ($debug !== NULL) {
 			$this->setDebugMode($debug);
 		}
-
 		$this->enableDebugger($this->parameters['appDir'] . '/../log');
 
 		$this->setTempDirectory($this->parameters['appDir'] . '/../temp');
 		$this->createRobotLoader()
 			->addDirectory($this->parameters['appDir'])
-			->addDirectory($this->parameters['libsDir'])
+			->addDirectory($this->parameters['appDir'] . '/../libs')
 			->register();
 
 		if (Strings::startsWith($_SERVER['HTTP_HOST'], 'dev.')) {
@@ -48,7 +48,6 @@ class Configurator extends Nette\Configurator
 		} else {
 			$name = 'prod';
 		}
-
 		$this->loadConfigByName($name);
 	}
 
@@ -57,9 +56,9 @@ class Configurator extends Nette\Configurator
 	 * @return Compiler
 	 */
 	protected function createCompiler()
-    {
+	{
 		$compiler = parent::createCompiler();
-		$compiler->addExtension(NULL, new DI\Extensions\SchmutzkaExtension);
+		$compiler->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension);
 
 		return $compiler;
 	}
@@ -74,7 +73,6 @@ class Configurator extends Nette\Configurator
 
 		$rootDir = realpath(__DIR__ . '/../../..');
 		$parameters['appDir'] = $rootDir . '/app';
-		$parameters['libsDir'] =  $rootDir . '/libs';
 		$parameters['wwwDir'] =  $rootDir . '/www';
 		$parameters['assetsDir'] =  $rootDir . '/libs/Schmutzka/assets';
 
