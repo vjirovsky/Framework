@@ -35,12 +35,12 @@ class LoginControl extends Control
 	{
 		$form = new Form;
 
-		$form->addText('email', 'components.login.email')
-			->addRule($form::FILLED, 'components.login.emailFilledRule')
-			->addRule($form::EMAIL, 'components.login.emailFormatRule');
+		$form->addText('email', 'components.email')
+			->addRule($form::FILLED, 'components.emailFilledRule')
+			->addRule($form::EMAIL, 'components.emailFormatRule');
 
-		$form->addPassword('password', 'components.login.password')
-			->addRule($form::FILLED, 'components.login.passwordFilledRule');
+		$form->addPassword('password', 'components.password')
+			->addRule($form::FILLED, 'components.passwordFilledRule');
 
 		$form->addSubmit('send', 'components.login.send')
 			->setAttribute('class', 'btn btn-success');

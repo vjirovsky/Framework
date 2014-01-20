@@ -28,7 +28,7 @@ class ChangePasswordControl extends Control
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this->translator = $translator ?: new ChangePasswordControlCzechTranslator();
+		$this->translator = $translator ?: new ChangePasswordControl\Localization\CzechTranslator;
 	}
 
 
@@ -39,8 +39,7 @@ class ChangePasswordControl extends Control
 		$form->addPassword('oldPassword', 'components.changePassword.oldPassword')
 			->addRule(Form::FILLED, 'components.changePassword.oldPasswordRuleFilled');
 		$form->addPassword('password', 'components.changePassword.newPassword')
-			->addRule(Form::FILLED, 'components.changePassword.newPasswordRuleFilled')
-			->addRule(Form::MIN_LENGTH, 'components.changePassword.newPasswordRuleLength', 5);
+			->addRule(Form::FILLED, 'components.changePassword.newPasswordRuleFilled');
 		$form->addSubmit('send', 'components.changePassword.send')
 			->setAttribute('class', 'btn btn-success');
 

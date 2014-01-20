@@ -36,16 +36,16 @@ class RemindPasswordControl extends Control
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this['form']->setTranslator($translator ?: new Localization\CzechTranslator);
+		$this['form']->setTranslator($translator ?: new RemindPasswordControl\Localization\CzechTranslator);
 	}
 
 
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->addText('email', 'components.remindPassword.email')
-			->addRule($form::FILLED, 'components.remindPassword.emailFilledRule')
-			->addRule($form::EMAIL, 'components.remindPassword.emailFormatRule');
+		$form->addText('email', 'components.email')
+			->addRule($form::FILLED, 'components.emailFilledRule')
+			->addRule($form::EMAIL, 'components.emailFormatRule');
 
 		$form->addSubmit('send', 'components.remindPassword.send')
 			->setAttribute('class', 'btn btn-success');

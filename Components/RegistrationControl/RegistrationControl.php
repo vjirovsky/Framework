@@ -36,22 +36,22 @@ class RegistrationControl extends Control
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this['form']->setTranslator($translator ?: new Localization\CzechTranslator);
+		$this['form']->setTranslator($translator ?: new RegistrationControl\Localization\CzechTranslator);
 	}
 
 
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->addText('email', 'components.registration.email')
-			->addRule(Form::FILLED, 'components.registration.emailRuleFilled')
-			->addRule(Form::EMAIL, 'components.registration.emailRuleFormat')
+		$form->addText('email', 'components.email')
+			->addRule(Form::FILLED, 'components.emailFilledRule')
+			->addRule(Form::EMAIL, 'components.emailFormatRule')
 			->addRule(function ($input) {
 				return ! $this->userModel->fetch(['email' => $input->value]);
 			}, 'components.registration.alreadyExists');
 
-		$form->addPassword('password', 'components.registration.password')
-			->addRule(Form::FILLED, 'components.registration.passwordRuleFilled');
+		$form->addPassword('password', 'components.password')
+			->addRule(Form::FILLED, 'components.passwordRuleFilled');
 
 		$form->addSubmit('send', 'components.registration.send');
 
