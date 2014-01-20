@@ -18,12 +18,9 @@ class CzechTranslator extends SimpleTranslator
 {
 	/** @var string[] */
 	protected $messages = [
-		'components.email' => 'Email',
-		'components.emailFilledRule' => 'Zadejte email',
-		'components.emailFormatRule' => 'Email nemá správný formát',
 		'components.remindPassword.send' => 'Zaslat nové heslo',
 		'components.remindPassword.newPasswordSetUp' => 'Nové heslo zasláno',
-		'components.remindPassword.userNotExist' => 'Tento uživatel neexistuje',
+		'components.remindPassword.userNotExist' => 'Tento uživatel neexistuje'
 	];
 
 }
