@@ -2,28 +2,17 @@ php:
 	date.timezone: Europe/Prague
 	zlib.output_compression: yes
 
-nette:
-	session:
-		autoStart: TRUE
-		debugger: TRUE
-		expiration: 30 days
-	container:
-		debugger: TRUE
-	debugger:
-		email: tomas.vot@gmail.com
-		bar:
-			- @cleanerPanel
-
 services:
 	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
 	pathFilter: Schmutzka\Components\WebLoader\Filter\PathFilter
 	lessFilter: WebLoader\Filter\LessFilter
-	routerFactory: RouterFactory
-	router: @routerFactory::create
-	cleanerPanel: Schmutzka\Diagnostics\Panels\CleanerPanel
-	- Schmutzka\Mail\IMessage
-	- Schmutzka\ParamService(@container::getParameters())
-	- Schmutzka\Templating\Helpers
+
+	- RouterFactory
+	router: @\RouterFactory::create
+
 	- Schmutzka\Components\IFlashMessageControl
 	- Schmutzka\Components\IGaControl
 	- Schmutzka\Components\ITitleControl
+	- Schmutzka\Diagnostics\Panels\CleanerPanel
+	- Schmutzka\Mail\IMessage
+	- Schmutzka\ParamService(@container::getParameters())

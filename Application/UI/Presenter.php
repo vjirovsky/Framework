@@ -19,7 +19,7 @@ use Schmutzka\Utils\Name;
 abstract class Presenter extends Nette\Application\UI\Presenter
 {
 	use Schmutzka\Diagnostics\Panels\TCleanerPanel;
-	use Schmutzka\Templating\TTemplateSetup;
+	use Schmutzka\Templating\TTemplateFactory;
 	use TCreateComponent;
 
 	/** @persistent @var string */

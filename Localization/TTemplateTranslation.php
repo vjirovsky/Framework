@@ -34,7 +34,7 @@ trait TTemplateTranslation
 	}
 
 
-	public function setupTranslator()
+	public function setupTranslator(&$template)
 	{
 		if ($this->translator->getLocale() == NULL) {
 			foreach ($this->translator->getAvailableLocales() as $locale) {
@@ -45,12 +45,13 @@ trait TTemplateTranslation
 			}
 		}
 
-		$this->template->setTranslator($this->translator);
+		$template->setTranslator($this->translator);
+		$template->locale = $this->translator->getLocale();
 
 		$engine = new Nette\Latte\Engine;
 		Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
 
-		$this->template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
+		$template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
 	}
 
 }

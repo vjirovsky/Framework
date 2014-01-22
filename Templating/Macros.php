@@ -11,7 +11,6 @@
 
 namespace Schmutzka\Templating;
 
-use Nette;
 use Nette\Latte\MacroNode;
 use Nette\Latte\PhpWriter;
 use Nette\Latte\Compiler;

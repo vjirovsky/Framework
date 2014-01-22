@@ -18,7 +18,7 @@ use Schmutzka;
 
 abstract class Control extends Nette\Application\UI\Control
 {
-	use Schmutzka\Templating\TTemplateSetup;
+	use Schmutzka\Templating\TTemplateFactory;
 	use TCreateComponent;
 
 	/** @var Nette\Localization\ITranslator */
