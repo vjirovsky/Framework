@@ -14,6 +14,7 @@ namespace Schmutzka;
 use Nette;
 use Nette\Utils\Strings;
 use Schmutzka;
+use Webloader;
 
 
 class Configurator extends Nette\Configurator
@@ -58,8 +59,10 @@ class Configurator extends Nette\Configurator
 	protected function createCompiler()
 	{
 		$compiler = parent::createCompiler();
-		$compiler->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension);
-
+		$compiler->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension)
+			->addExtension('template', new Schmutzka\DI\Extensions\TemplateExtension)
+			->addExtension('database', new Schmutzka\DI\Extensions\DatabaseExtension)
+			->addExtension('webloader', new Webloader\Nette\Extension);
 		return $compiler;
 	}
 

@@ -13,6 +13,7 @@ namespace Schmutzka\DI\Extensions;
 
 use Nette;
 use Nette\DI\CompilerExtension;
+use NotORMExtension;
 
 
 class DatabaseExtension extends CompilerExtension
@@ -25,8 +26,14 @@ class DatabaseExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('securityManager'))
 			->setClass('Schmutzka\Security\UserManager');
 
-		$builder->addDefinition($this->prefix('users'))
-			->setClass('Models\User');
+		if (class_exists('NotORMExtension\DI\Extension')) {
+			$this->compiler->addExtension('notorm', new NotORMExtension\DI\Extension);
+		}
+
+		if (class_exists('Models\User')) {
+			$builder->addDefinition($this->prefix('users'))
+				->setClass('Models\User');
+		}
 	}
 
 }
