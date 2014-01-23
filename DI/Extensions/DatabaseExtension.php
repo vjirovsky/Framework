@@ -25,15 +25,10 @@ class DatabaseExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('securityManager'))
 			->setClass('Schmutzka\Security\UserManager');
+		$this->compiler->addExtension('notorm', new NotORMExtension\DI\Extension);
 
-		if (class_exists('NotORMExtension\DI\Extension')) {
-			$this->compiler->addExtension('notorm', new NotORMExtension\DI\Extension);
-		}
-
-		if (class_exists('Models\User')) {
-			$builder->addDefinition($this->prefix('users'))
-				->setClass('Models\User');
-		}
+		$builder->addDefinition($this->prefix('users'))
+			->setClass('Models\User');
 	}
 
 }

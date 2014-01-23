@@ -21,8 +21,8 @@ class SchmutzkaExtension extends CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$container = $this->getContainerBuilder();
-		$container->getDefinition('user')
+		$builder = $this->getContainerBuilder();
+		$builder->getDefinition('user')
 			->setClass('Schmutzka\Security\User')
 			->setInject(TRUE);
 
@@ -33,7 +33,6 @@ class SchmutzkaExtension extends CompilerExtension
 	public function beforeCompile()
 	{
 		$router = $this->getContainerBuilder()->getDefinition('router');
-
 		foreach ($this->getSortedServicesByTag('routes') as $service) {
 			$router->addSetup('offsetSet', array(NULL, '@' . $service));
 		}
