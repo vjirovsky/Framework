@@ -20,6 +20,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 {
 	use Schmutzka\Diagnostics\Panels\TCleanerPanel;
 	use Schmutzka\Templating\TTemplateFactory;
+	use Schmutzka\TAnnotations;
 	use TCreateComponent;
 
 	/** @persistent @var string */
@@ -42,6 +43,10 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	{
 		parent::startup();
 		$this->module = Name::mpv($this->presenter, 'module');
+
+		if ($title = $this->getViewAnnotation($this->view, 'title')) {
+			$this['titleControl']->addTitle($title);
+		}
 	}
 
 

@@ -14,9 +14,6 @@ namespace Schmutzka;
 
 trait TAnnotations
 {
-	/** @var Nette\Reflection\ClassType */
-	private $reflection;
-
 
 	/**
 	 * @param  string
@@ -24,7 +21,7 @@ trait TAnnotations
 	 */
 	protected function getPresenterAnnotation($annotation)
 	{
-		$ref = $this->getRef();
+		$ref = $this->getReflection();
 
 		if ($ref->hasAnnotation($annotation)) {
 			return $ref->getAnnotation($annotation);
@@ -59,7 +56,7 @@ trait TAnnotations
 	 */
 	protected function getMethodAnnotation($method, $annotation)
 	{
-		$ref = $this->getRef();
+		$ref = $this->getReflection();
 
 		if ($ref->hasMethod($method)) {
 			$refMethod = $ref->getMethod($method);
@@ -73,19 +70,6 @@ trait TAnnotations
 		}
 
 		return FALSE;
-	}
-
-
-	/**
-	 * @return  Nette\Reflection\ClassType
-	 */
-	protected function getRef()
-	{
-		if ($this->reflection == NULL) {
-			$this->reflection = $this->getReflection();
-		}
-
-		return $this->reflection;
 	}
 
 }
