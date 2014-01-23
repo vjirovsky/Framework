@@ -61,8 +61,11 @@ class Configurator extends Nette\Configurator
 		$compiler = parent::createCompiler();
 		$compiler->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension)
 			->addExtension('template', new Schmutzka\DI\Extensions\TemplateExtension)
-			->addExtension('database', new Schmutzka\DI\Extensions\DatabaseExtension)
 			->addExtension('webloader', new Webloader\Nette\Extension);
+
+		if (class_exists('NotORMExtension\DI\Extension')) {
+			$compiler->addExtension('database', new Schmutzka\DI\Extensions\DatabaseExtension);
+		}
 		return $compiler;
 	}
 

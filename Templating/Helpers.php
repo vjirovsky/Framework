@@ -35,6 +35,16 @@ class Helpers extends Nette\Object
 	 * @param string
 	 * @return string
 	 */
+	public function translate($message)
+	{
+		return $message;
+	}
+
+
+	/**
+	 * @param string
+	 * @return string
+	 */
 	public function phone($number)
 	{
 		return preg_replace('~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{3}).*~', '$1 $2 $3', $number);

@@ -48,8 +48,6 @@ trait TModulePresenter
 				$this->redirect(':Admin:Homepage:default');
 			}
 
-			$this->layout = 'layoutLogin';
-
 		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
 			$this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
 			$this->redirect(':Front:Homepage:default');
@@ -61,7 +59,8 @@ trait TModulePresenter
 		}
 
 		$this->template->module = $this->module;
-		$this->template->modules = $modules = $this->paramService->getModules();
+		$this->template->modules = $this->paramService->getModules();
+		$this->template->useCkeditor = FALSE; // @hotfix
 	}
 
 
