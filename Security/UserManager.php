@@ -26,6 +26,9 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	/** @var Models\User */
 	private $userModel;
 
+	/** @var Nette\Localization\ITranslator */
+	private $translator;
+
 
 	public function __construct(Models\User $userModel, Schmutzka\ParamService $paramService)
 	{
@@ -40,104 +43,80 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		list($login, $password) = $credentials;
-		$key = strpos($login, '@') ? 'email' : 'login';
-  		$row = $this->userModel->fetch([$key => $login]);
+		list($email, $password) = $credentials;
+		$row = $this->userModel->fetch(['email' => $email]);
 
 		if ( ! $row) {
 			throw new AE('nonExistingAccount', self::IDENTITY_NOT_FOUND);
 		}
 
-		if ($row['password'] !== $this->calculateHash($password, $row['salt'])) {
+		if (self::verifyPassword($password, $row['salt'], $row['password']) == FALSE) {
 			throw new AE('wrongPassword', self::INVALID_CREDENTIAL);
 		}
 
-		unset($row['password']);
+		unset($row['password'], $row['salt']);
 		return new Nette\Security\Identity($row['id'], $row['role'], $row);
 	}
 
 
 	/**
-	 * @param  string
-	 * @return string
-	 */
-	public static function calculateHash($password, $salt = NULL)
-	{
-		if ($password === Strings::upper($password)) { // perhaps caps lock is on
-			$password = Strings::lower($password);
-		}
-		return crypt($password, $salt ?: '$2a$07$' . Strings::random(22));
-	}
-
-
-	/**
 	 * @param array
-	 * @return  int
-	 * @throws \Exception
+	 * @return  NotORM_Row
 	 */
-	public function register($values)
+	public function add($values)
 	{
-		if (isset($values['login'])) {
-			if ($this->userModel->fetch(['login' => $values['login']])) {
-				throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
-			}
-		}
-
-		if ($this->userModel->fetch(['email' => $values['email']])) {
-			throw new \Exception('Tento email je již registrován, zadejte jiný.');
-		}
-
-		$values['salt'] = Strings::random(22);
-		$values['password'] = self::calculateHash($values['password'], $values['salt']);
-		$values['created'] = new Nette\DateTime;
+		$values['salt'] = '$2y$07$p5i4kvgo5zmeva331f0as6';
+		$values['password'] = self::hashPassword($values['password'], $values['salt']);
 
 		return $this->userModel->insert($values);
 	}
 
 
 	/**
-	 * @param  array $values user data
-	 * @param int $id user id
-	 * @throws  \Exception
+	 * @param  string
+	 * @param  string
+	 * @return string
 	 */
-	public function update($values, $id)
+	public static function hashPassword($password, $salt)
 	{
-		if ($this->userModel->fetch(['login' => $values['login'], 'id != %i' => $id])) {
-			throw new \Exception('Toto jméno je již registrováno, zadejte jiné.');
-		}
-
-		if ($this->userModel->fetch(['email' => $values['email'], 'id != %i' => $id])) {
-			throw new \Exception('Tento email je již registrován, zadejte jiný.');
-		}
-
-		if ($values['password']) {
-			$this->updatePasswordForUser($id, $values['password']);
-		}
-
-		unset($values['password']);
-
-		$this->userModel->update($values, $id);
+		return crypt($password, $salt);
 	}
 
 
 	/**
-	 * Create hashed password and salt and update for specific user.
-	 * (Note: this is an update helper.)
-	 *
-	 * @param array $cond
-	 * @param string $password
+	 * @return  string
 	 */
-	public function updatePasswordForUser($cond, $password)
+	public static function makeSalt()
 	{
-		$salt = Strings::random(22);
-		$password = self::calculateHash($password, $salt);
+		return implode('$', [
+			'algo' => '$2y',
+			'cost' => '07',
+			'salt' => Strings::random(22),
+		]);
+	}
 
-		$user = [
+
+	/**
+	 * @return bool
+	 */
+	public static function verifyPassword($password, $salt, $hash)
+	{
+		d(self::hashPassword($password, $salt));
+		return self::hashPassword($password, $salt) === $hash;
+	}
+
+
+	/**
+	 * @param []
+	 * @param string
+	 */
+	public function updatePassword($cond, $password)
+	{
+		$salt = self::makeSalt();
+		$this->userModel->update([
 			'salt' => $salt,
-			'password' => $password
-		];
-
-		$this->userModel->update($user, $cond);
+			'password' => self::hashPassword($password, $salt)
+		], $cond);
 	}
 
 }

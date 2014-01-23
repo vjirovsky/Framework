@@ -21,8 +21,12 @@ abstract class Base extends Nette\Object
 	/** @inject @var NotORM */
 	public $db;
 
+	/** @inject @var Nette\DI\Container */
+  	public $container;
+
 	/** @var string */
 	private $tableName;
+
 
 
 	public function table()
@@ -46,11 +50,18 @@ abstract class Base extends Nette\Object
 	public function fetchAll($key = [])
 	{
 		if ($key) {
-			return $this->table($key);
+			$result = $this->table($key);
 
 		} else {
-			return $this->table();
+			$result = $this->table();
 		}
+
+		// experimental
+		foreach ($result as $key => $row) {
+			$result[$key] = $this->createEntity($row);
+		}
+
+		return $result;
 	}
 
 
@@ -71,8 +82,10 @@ abstract class Base extends Nette\Object
 	 */
 	public function fetch($key)
 	{
-		return $this->table(is_numeric($key) ? ['id' => $key] : $key)
+		$row = $this->table(is_numeric($key) ? ['id' => $key] : $key)
 			->fetch();
+
+		return $this->createEntity($row);
 	}
 
 
@@ -235,6 +248,17 @@ abstract class Base extends Nette\Object
 		}
 
 		return $this->tableName;
+	}
+
+
+	/**
+	 * @param  NotORM_Row
+	 * @return Entity
+	 */
+	public function createEntity($row)
+	{
+		$this->container->callInjects($row);
+		return $row;
 	}
 
 }

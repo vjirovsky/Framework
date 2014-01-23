@@ -103,6 +103,16 @@ class Name extends Nette\Object
 
 
 	/**
+	 * @param  string
+	 * @return string
+	 */
+	public static function presenter($path)
+	{
+		self::mpv($path, 'presenter');
+	}
+
+
+	/**
 	 * Modul from namespace
 	 * @param string
 	 * @return string

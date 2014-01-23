@@ -49,9 +49,9 @@ class BaseSearchControl extends Control
 	}
 
 
-	public function processForm($form)
+	public function processForm($values, $form)
 	{
-		$values = $form->values;
+
 
 		$result = $this->fetchBaseResult();
 		if ($values[$this->searchColumn]) {

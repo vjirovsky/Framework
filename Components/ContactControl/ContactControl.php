@@ -80,9 +80,9 @@ class ContactControl extends Control
 	}
 
 
-	public function processForm($form)
+	public function processForm($values, $form)
 	{
-		$values = $form->values;
+
 		$domain = $this->httpRequest->url->host;
 
 		$text = 'Dobrý den,\n\nze stránky ' .

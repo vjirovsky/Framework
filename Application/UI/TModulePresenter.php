@@ -16,8 +16,13 @@ use Schmutzka;
 
 trait TModulePresenter
 {
+	use Schmutzka\Security\TAcl;
+
 	/** @persistent @var int */
 	public $id;
+
+	/** @persistent @var string */
+	public $locale = 'en';
 
 	/** @var array */
 	public $moduleParams;
@@ -28,91 +33,30 @@ trait TModulePresenter
 	/** @inject @var Schmutzka\Components\IAdminMenuControl */
 	public $adminMenuControl;
 
-	/** @var Nette\Security\Permission */
-	private $acl;
-
-
-	public function injectAcl(Nette\Security\IAuthorizator $acl = NULL)
-	{
-		$this->acl = $acl;
-	}
-
 
 	public function startup()
 	{
 		parent::startup();
+		$this->checkAccess();
 
-		if ( ! $this->user->loggedIn) {
-		 	if ($this->presenter->isLinkCurrent('Homepage:default') == FALSE) {
-				$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
-				$this->redirect(':Admin:Homepage:default');
-			}
-
-		} elseif ($this->acl && ! $this->user->isAllowed($this->name, $this->action)) {
-			$this->flashMessage('Na vstup do této sekce nemáte povolený vstup.', 'error');
-			$this->redirect(':Front:Homepage:default');
-		}
-
-		if (property_exists($this, 'translator')) {
-			$this->template->adminLangs = $this->paramService->adminLangs;
-			$this->template->lang = $this->lang;
+		// custom localization
+		if (isset($this->paramService->adminModule->availableLocales)) {
+			$this->template->availableLocales = $this->paramService->adminModule->availableLocales;
+			$this->template->locale = $this->locale;
 		}
 
 		$this->template->module = $this->module;
 		$this->template->modules = $this->paramService->getModules();
-		$this->template->useCkeditor = FALSE; // @hotfix
-	}
-
-
-	public function renderAdd()
-	{
-		if ($this->id) {
-			$this->id = NULL;
-			$this->redirect('this');
-		}
-	}
-
-
-	public function renderDefault()
-	{
-		if ($this->id) {
-			$this->id = NULL;
-			$this->redirect('this');
-		}
+		$this->template->useCkeditor = $this->paramService->isCkeditorUsed();
 	}
 
 
 	/**
 	 * @param  int
 	 */
-	public function handleDelete($id)
-	{
-		$this->deleteHelper($this->model, $id);
-	}
-
-
-	/**
-	 * @param int
-	 */
 	public function renderEdit($id)
 	{
-		$this->template->item = $this->model->fetch($id);
-	}
-
-
-	/**
-	 * Sort helper
-	 * @param  array
-	 * @param string
-	 */
-	public function handleSort($data, $rankKey = 'rank')
-	{
-		$data = explode(',', $data);
-		$i = 1;
-		foreach ($data as $item) {
-			$this->model->update(array($rankKey => $i), $item);
-			$i++;
-		}
+		$this->template->item = $item = $this->getModel()->fetch($id);
 	}
 
 

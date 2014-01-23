@@ -40,7 +40,6 @@ trait TModuleControl
 				->setValidationScope(FALSE);
 
 			$defaults = $this->model->fetch($this->id);
-
 			if ($this->method_exists($this, 'preProcessDefaults')) {
 				$defaults = $this->preProcessDefaults($defaults);
 			}
@@ -50,13 +49,11 @@ trait TModuleControl
 	}
 
 
-	public function processForm($form)
+	public function processForm($values, $form)
 	{
 		if ($this->id && $form['cancel']->isSubmittedBy()) {
-			$this->presenter->redirect('default', array('id' => NULL));
+			$this->presenter->redirect('default', ['id' => NULL]);
 		}
-
-		$values = $form->values;
 
 		if ($this->method_exists($this, 'preProcessValues')) {
 			$values = $this->preProcessValues($values);
@@ -79,7 +76,6 @@ trait TModuleControl
 
 
 
-	/********************** helpers **********************/
 
 
 	/**

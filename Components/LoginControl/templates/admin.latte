@@ -1,21 +1,5 @@
-{form form}
-	%p.infoMessage Zadejte vaše přihlašovací údaje
-	.input-group
-		%span.input-group-addon
-			%i.fa.fa-user.fa-fw
-		{input email}
-
-	.input-group
-		%span.input-group-addon
-			%i.fa.fa-lock.fa-fw
-			.input-prepend
-		{input password}
-
-	%hr
-
-	.form-actions
-		.pull-left
-			<a href='#' class='flip-link to-recover'>Zapomněli jste heslo?</a>
-		.pull-right
-			{input send}
-{/}
+%section.module
+	.module-head
+		%b Zadejte vaše přihlašovací údaje
+	.module-body
+		{control form}

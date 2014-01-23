@@ -12,6 +12,7 @@
 namespace Schmutzka\Components;
 
 use Nette;
+use Schmutzka;
 use Schmutzka\Application\UI\Form;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Security\UserManager;
@@ -19,6 +20,8 @@ use Schmutzka\Security\UserManager;
 
 class ChangePasswordControl extends Control
 {
+	use Schmutzka\Forms\Rendering\TModuleRenderer;
+
 	/** @inject @var Models\User */
 	public $userModel;
 
@@ -28,7 +31,16 @@ class ChangePasswordControl extends Control
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this->translator = $translator ?: new ChangePasswordControl\Localization\CzechTranslator;
+		$this->translator = $translator;
+	}
+
+
+	public function attached($presenter)
+	{
+		parent::attached($presenter);
+		$this['form']->setTranslator($this->translator && $presenter->module == 'front'
+			? $this->translator
+			: new ChangePasswordControl\Localization\CzechTranslator);
 	}
 
 
@@ -47,9 +59,8 @@ class ChangePasswordControl extends Control
 	}
 
 
-	public function processForm($form)
+	public function processForm($values, $form)
 	{
-		$values = $form->values;
 		$userData = $this->userModel->fetch($this->user->id);
 		$oldPass = UserManager::calculateHash($values['oldPassword'], $userData['salt']);
 
@@ -68,10 +79,7 @@ class ChangePasswordControl extends Control
 
 	protected function renderAdmin()
 	{
-		$form = $this['form'];
-		$form['oldPassword']->setAttribute('class', 'form-control');
-		$form['password']->setAttribute('class', 'form-control');
-		$form['passwordCheck']->setAttribute('class', 'form-control');
+		$this->setupModuleRenderer($this['form']);
 	}
 
 }

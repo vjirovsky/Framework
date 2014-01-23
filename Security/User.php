@@ -45,11 +45,9 @@ class User extends Nette\Security\User
 
 
 	/**
-	 * Update user identity data, and db record optionaly
-	 * @param array
-	 * @param bool
+	 * @param []
 	 */
-	public function updateIdentity(array $values, $updateDb = FALSE)
+	public function updateIdentity($values)
 	{
 		foreach ($this->identity->data as $key => $value) {
 			if (array_key_exists($key, $values)) {
@@ -57,9 +55,7 @@ class User extends Nette\Security\User
 			}
 		}
 
-		if ($updateDb) {
-			$this->userModel->update($values, $this->id);
-		}
+		$this->userModel->update($values, $this->id);
 	}
 
 
@@ -74,18 +70,14 @@ class User extends Nette\Security\User
 
 
 	/**
-	 * @param array
+	 * @param []
 	 */
-	public function autologin($user)
+	public function autologin($cond)
 	{
-		if ( ! ($user instanceof User)) {
-			$user = $this->userModel->fetch($user);
-		}
-
-		unset($user['password']);
-
-		if ($user) {
-			$identity = new Nette\Security\Identity($user['id'], (isset($user['role']) ? $user['role'] : 'user'), $user);
+		$row = $this->userModel->fetch($cond);
+		if ($row) {
+			unset($row['password'], $row['salt']);
+			$identity = new Nette\Security\Identity($row['id'], (isset($row['role']) ? $row['role'] : 'user'), $row);
 			$this->login($identity);
 		}
 	}

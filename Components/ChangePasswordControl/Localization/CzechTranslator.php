@@ -20,8 +20,8 @@ class CzechTranslator extends SimpleTranslator
 	protected $messages = [
 		'components.changePassword.oldPassword' => 'Staré heslo',
 		'components.changePassword.oldPasswordFilledRule' => 'Zadejte staré heslo',
-		'components.changePassword.password' => 'Nové heslo',
-		'components.changePassword.passwordFilledRule' => 'Zadejte nové heslo',
+		'components.changePassword.newPassword' => 'Nové heslo',
+		'components.changePassword.newPasswordFilledRule' => 'Zadejte nové heslo',
 		'components.changePassword.send' => 'Změnit heslo'
 	];
 

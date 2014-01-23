@@ -59,9 +59,9 @@ class RegistrationControl extends Control
 	}
 
 
-	public function processForm($form)
+	public function processForm($values)
 	{
-		$rawValues = $values = $form->values;
+		$rawValues = $values;
 		unset($values['conditions']);
 
 		if ($this->role) {

@@ -9,9 +9,9 @@
  * the file license.md that was distributed with this source code.
  */
 
-namespace Schmutzka\Model;
+namespace Schmutzka\Models;
 
-use NotORM_Row_Lang;
+use Models;
 use Schmutzka\Utils\Name;
 
 
@@ -27,7 +27,7 @@ trait TTranslation
 	 */
 	public function fetch($key)
 	{
-		NotORM_Row_Lang::$lang = $this->translator->getLocale();
+		$this->setEntityLang();
 		$row = parent::fetch($key);
 
 		// setup keys
@@ -45,7 +45,7 @@ trait TTranslation
 	 */
 	public function fetchAll($key = [])
 	{
-		NotORM_Row_Lang::$lang = $this->translator->getLocale();
+		$this->setEntityLang();
 		return parent::fetchAll($key);
 	}
 
@@ -123,6 +123,13 @@ trait TTranslation
 		$data['language_id'] = $this->translator->getLocale();
 
 		return $data;
+	}
+
+
+	private function setEntityLang()
+	{
+		$entityName = 'Entity\\' . ucfirst($this->getTableName());
+		$entityName::$lang = $this->translator->getLocale();
 	}
 
 

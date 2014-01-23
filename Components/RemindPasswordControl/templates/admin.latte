@@ -1,16 +1,5 @@
-{form form}
-	%p Nevadí. Zadejte Vaši emailovou adresu a nechte si poslat nové.
-
-	.input-group
-		%span.input-group-addon
-			%i.fa.fa-envelope.fa-fw
-		{input email}
-
-	%hr
-
-	.form-actions
-		.pull-left
-			<a href='#' class="flip-link to-login">&laquo; Zpět na přihlášení</a>
-		.pull-right
-			{input send}
-{/}
+%section.module
+	.module-head
+		%b Zapomenuté heslo?
+	.module-body
+		{control form}

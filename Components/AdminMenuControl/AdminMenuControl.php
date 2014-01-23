@@ -15,6 +15,7 @@ use Nette;
 use Nette\Utils\Strings;
 use Schmutzka;
 use Schmutzka\Application\UI\Control;
+use Schmutzka\Utils\Name;
 
 
 class AdminMenuControl extends Control
@@ -31,7 +32,7 @@ class AdminMenuControl extends Control
 	 */
 	protected function renderDefault($module)
 	{
-		$moduleParameters = $this->getModuleParameters($module);
+		$moduleParameters = $this->paramService->getModuleParameters($module);
 
 		$items = [];
 		if (isset($moduleParameters->menu) && isset($moduleParameters->menu->items)) {
@@ -56,58 +57,19 @@ class AdminMenuControl extends Control
 	protected function renderTitle()
 	{
 		$module = $this->presenter->module;
-		$moduleParameters = $this->getModuleParameters($module);
+		$moduleParameters = $this->paramService->getModuleParameters($module);
 
-		$view = $this->presenter->view;
-		$title = '';
-
-		if ($view == 'add') {
-			$link = substr($this->presenter->name, strlen($module) + 1);
-
-			if (isset($moduleParameters->menu->items)) {
-				foreach ($moduleParameters->menu->items as $item) {
-					if (Strings::contains($item->link, $link)) {
-						$title = $item->label;
-					}
-				}
-
-			} else {
-				$title = $moduleParameters->title;
-			}
-
-			$title .= ' - nová položka';
-
-		} elseif (Strings::startsWith($view, 'edit')) {
-			$item = $this->presenter->template->item;
-			$title = 'Úprava položky' .
-				(isset($item['title']) ? ': ' . $item['title'] :
-					(isset($item['name']) ? ': ' . $item['name'] :
-						(isset($item['login']) ? ': ' . $item['login'] :
-					NULL)));
-
-		} elseif (isset($moduleParameters->menu->items)) {
-			$link = substr($this->presenter->name . ':' . $view, strlen($module) + 1);
+		if (isset($moduleParameters->menu->items)) {
 			foreach ($moduleParameters->menu->items as $item) {
-				if ($item->link == $link) {
-					$title = $item->label;
+				if (Strings::contains(ucfirst($module) . ':' . $item->link, $this->presenter->name)) {
+					$this->template->title = $item->label;
+					$this->template->subtitle = (isset($item->subtitle) ? $item->subtitle : NULL);
 				}
 			}
 
 		} else {
-			$title = $moduleParameters->title;
+			$this->template->title = $moduleParameters->title;
 		}
-
-		$this->template->title = $title;
-	}
-
-
-	/**
-	 * @param  string
-	 * @return []
-	 */
-	private function getModuleParameters($module)
-	{
-		return $this->paramService->getModuleParameters($module);
 	}
 
 }
