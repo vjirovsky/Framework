@@ -11,6 +11,7 @@
 
 namespace Schmutzka\Components;
 
+use Schmutzka;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Application\UI\Form;
 use Nette\Utils\Strings;
@@ -18,6 +19,8 @@ use Nette\Utils\Strings;
 
 class RemindPasswordControl extends Control
 {
+	use Schmutzka\Localization\TComponentSimpleTranslator;
+
 	/** @inject @var Models\User */
 	public $userModel;
 
@@ -33,20 +36,6 @@ class RemindPasswordControl extends Control
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
 
-
-	public function __construct(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
-
-
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-		$this['form']->setTranslator($this->translator && $presenter->module == 'front'
-			? $this->translator
-			: new RemindPasswordControl\Localization\CzechTranslator);
-	}
 
 
 	protected function createComponentForm()

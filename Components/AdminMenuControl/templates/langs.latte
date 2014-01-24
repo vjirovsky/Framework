@@ -1,0 +1,20 @@
+{ifset $availableLocales}
+	%li.nav-header Jazyková verze
+	{foreach $availableLocales as $key => $value}
+		<li n:class='$locale == $key ? active'>
+			<a n:phref='this, locale => $key'>
+				{if $key == 'cs'}
+					{var $icon ='cz'}
+
+				{elseif $key == 'en'}
+					{var $icon = 'gb'}
+
+				{else}
+					{var $icon = $key}
+				{/}
+				<i class="flag-icon flag-icon-{$icon}"></i>
+				{$value}
+			</a>
+		</li>
+	{/}
+{/}

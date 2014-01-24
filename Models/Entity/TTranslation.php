@@ -12,11 +12,10 @@
 namespace Schmutzka\Models\Entity;
 
 
-
 trait TTranslation
 {
-	/** @var string */
-	public static $lang;
+	/** @inject @var Nette\Localization\ITranslator */
+	public $translator;
 
 
 	/**
@@ -25,16 +24,20 @@ trait TTranslation
 	 */
 	public function offsetExists($offset)
 	{
-		if ( ! isset($this->row[$offset])) {
-			$table = $this->result->table . '_translation';
+		$lang = $this->translator->getLocale();
 
-			$row = $this->$table('language_id', array(self::$lang, 'cs'))->order("language_id = '" . self::$lang . "' DESC")
+		if ( ! isset($this->row[$offset])) {
+			list (, $table) = explode('\\', __CLASS__);
+			$table = lcfirst($table) . '_translation';
+
+			$row = $this->row->$table()->where('language_id', [$lang, 'cs', 'en'])
+				->order("language_id = '" . $lang . "' DESC")
 				->limit(1)
 				->fetch();
 
 			if ($row) {
-				foreach ($row as $key => $val) {
-					$this->row[$key] = $val;
+				foreach ($row as $key => $value) {
+					$this->row[$key] = $value;
 				}
 
 			} else {
@@ -42,7 +45,7 @@ trait TTranslation
 			}
 		}
 
-		return parent::offsetExists($offset);
+		return $this->row[$offset];
 	}
 
 
@@ -53,6 +56,7 @@ trait TTranslation
 	public function offsetGet($offset)
 	{
 		$this->offsetExists($offset);
-		return parent::offsetGet($offset);
+		return $this->row[$offset];
 	}
+
 }

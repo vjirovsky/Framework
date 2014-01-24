@@ -21,27 +21,13 @@ use Schmutzka\Security\UserManager;
 class ChangePasswordControl extends Control
 {
 	use Schmutzka\Forms\Rendering\TModuleRenderer;
+	use Schmutzka\Localization\TComponentSimpleTranslator;
 
 	/** @inject @var Models\User */
 	public $userModel;
 
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
-
-
-	public function __construct(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
-
-
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-		$this['form']->setTranslator($this->translator && $presenter->module == 'front'
-			? $this->translator
-			: new ChangePasswordControl\Localization\CzechTranslator);
-	}
 
 
 	protected function createComponentForm()

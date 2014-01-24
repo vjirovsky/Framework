@@ -12,32 +12,20 @@
 namespace Schmutzka\Components;
 
 use Nette;
+use Schmutzka;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Application\UI\Form;
 
 
 class LoginControl extends Control
 {
+	use Schmutzka\Localization\TComponentSimpleTranslator;
+
 	/** @inject @var Nette\Security\User */
 	public $user;
 
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
-
-
-	public function __construct(Nette\Localization\ITranslator $translator = NULL)
-	{
-		$this->translator = $translator;
-	}
-
-
-	public function attached($presenter)
-	{
-		parent::attached($presenter);
-		$this['form']->setTranslator($this->translator && $presenter->module == 'front'
-			? $this->translator
-			: new LoginControl\Localization\CzechTranslator);
-	}
 
 
 	protected function createComponentForm()
@@ -64,8 +52,6 @@ class LoginControl extends Control
 			$this->user->login($values['email'], $values['password']);
 
 		} catch (Nette\Security\AuthenticationException $e) {
-			dd($this->translate($e->getMessage()));
-
 			$this->presenter->flashMessage($this->translate($e->getMessage()), 'danger');
 			$this->redirect('this');
 		}

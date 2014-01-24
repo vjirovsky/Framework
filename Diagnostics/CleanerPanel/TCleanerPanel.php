@@ -33,6 +33,7 @@ trait TCleanerPanel
 				));
 
 			} elseif ($type == 'webtemp') {
+				dd('fix');
 				Filer::emptyFolder($this->paramService->wwwDir . '/webtemp/');
 
 			} elseif ($type == 'session') {

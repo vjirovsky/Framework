@@ -22,7 +22,7 @@ trait TTemplateFactory
 
 	/**
 	 * @param  string
-	 * @return  Nette\Templating\FileTemplate
+	 * @return  Nette\Templating\Template
 	 */
 	public function createTemplate($class = NULL)
 	{

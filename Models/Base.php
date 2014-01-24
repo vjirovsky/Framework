@@ -257,8 +257,15 @@ abstract class Base extends Nette\Object
 	 */
 	public function createEntity($row)
 	{
-		$this->container->callInjects($row);
+		$class = strtr(get_class($this), ['Models' => 'Entity']);
+		if (class_exists($class)) {
+			$entity = new $class($row);
+			$this->container->callInjects($entity);
+			return $entity;
+		}
+
 		return $row;
 	}
 
 }
+

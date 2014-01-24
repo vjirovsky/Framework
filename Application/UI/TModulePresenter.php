@@ -14,9 +14,13 @@ namespace Schmutzka\Application\UI;
 use Schmutzka;
 
 
+/**
+ * @secured
+ * @role(admin)
+ */
 trait TModulePresenter
 {
-	use Schmutzka\Security\TAcl;
+	use Schmutzka\Security\TCheckRequirements;
 
 	/** @persistent @var int */
 	public $id;
@@ -37,14 +41,6 @@ trait TModulePresenter
 	public function startup()
 	{
 		parent::startup();
-		$this->checkAccess();
-
-		// custom localization
-		if (isset($this->paramService->adminModule->availableLocales)) {
-			$this->template->availableLocales = $this->paramService->adminModule->availableLocales;
-			$this->template->locale = $this->locale;
-		}
-
 		$this->template->module = $this->module;
 		$this->template->modules = $this->paramService->getModules();
 		$this->template->useCkeditor = $this->paramService->isCkeditorUsed();

@@ -72,4 +72,14 @@ class AdminMenuControl extends Control
 		}
 	}
 
+
+	protected function renderLangs()
+	{
+		$moduleParameters = $this->paramService->getModuleParameters('admin');
+		if (isset($moduleParameters->availableLocales)) {
+			$this->template->locale = $this->presenter->locale;
+			$this->template->availableLocales = $moduleParameters->availableLocales;
+		}
+	}
+
 }

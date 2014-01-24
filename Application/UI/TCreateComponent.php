@@ -42,6 +42,8 @@ trait TCreateComponent
 			}
 		}
 
+		$this->checkRequirements($component);
+
 		return $component;
 	}
 

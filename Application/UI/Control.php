@@ -24,6 +24,9 @@ abstract class Control extends Nette\Application\UI\Control
 	/** @var Nette\Localization\ITranslator */
 	protected $translator;
 
+	/** @inject @var Schmutzka\ParamService */
+	public $paramService;
+
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
@@ -47,10 +50,11 @@ abstract class Control extends Nette\Application\UI\Control
 				$view = lcfirst(substr($name, 6));
 			}
 
-			// setup template file
-			$class = $this->getReflection();
-			$dir = dirname($class->getFileName());
-			$this->template->setFile($dir . '/templates/' . $view . '.latte');
+			$this->setTemplateSource($this->template, $view);
+
+			if ($this->translator) {
+				$this->template->setTranslator($this->translator);
+			}
 
 			// calls $this->render<View>()
 			$renderMethod = 'render' . ucfirst($view);
@@ -58,12 +62,45 @@ abstract class Control extends Nette\Application\UI\Control
 				call_user_func_array(array($this, $renderMethod), $args);
 			}
 
-			// translator
-			if (property_exists($this->presenter, 'translator')) {
-				$this->template->setTranslator($this->presenter->translator);
-			}
-
 			$this->template->render();
+		}
+	}
+
+
+	/**
+	 * @param Nette\Templating\Template
+	 * @param string
+	 */
+	private function setTemplateSource($template, $view)
+	{
+		// 1. in-app
+		$dir = $this->paramService->appDir . ($this->presenter->module
+			? '/' . ucfirst($this->presenter->module) . 'Module'
+			: '/FrontModule') . '/templates/components/';
+
+		$name = substr(strrchr(get_class($this), '\\'), 1);
+		$path = $dir . lcfirst($name) . '.latte';
+
+		if (file_exists($path)) {
+			$template->setFile($path);
+			return;
+		}
+
+		// 2. in-component
+		$dir = dirname($this->getReflection()->getFileName());
+		$path = $dir . '/templates/' . $view . '.latte';
+
+		if (file_exists($path)) {
+			$template->setFile($path);
+			return;
+		}
+
+		// 3. base fallback
+		if (Strings::endsWith(get_class($this), 'Grid')) {
+			$template->setFile(__DIR__. '/templates/grid.latte');
+
+		} else {
+			$template->setFile(__DIR__. '/templates/control.latte');
 		}
 	}
 

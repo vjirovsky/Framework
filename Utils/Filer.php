@@ -53,7 +53,6 @@ class Filer extends Nette\Object
 
 
 	/**
-	 * Empty all folders and all files from particular folder
 	 * @param string
 	 */
 	public static function emptyFolder($folder)
@@ -97,7 +96,6 @@ class Filer extends Nette\Object
 
 
 	/**
-	 * Resize to subfolder
 	 * @param Nette\Http\FileUpload|Nette\Image
 	 * @param string
 	 * @param int|NULL

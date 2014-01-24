@@ -21,11 +21,8 @@ class FlashMessageControl extends Control
 	protected function renderDefault()
 	{
 		$flashes = $this->parent->template->flashes;
-		if ( ! count($flashes)) {
-			return NULL;
-		}
 
-		if ($this->translator) {
+		if ($this->translator && $this->presenter->module == 'front') {
 			foreach ($flashes as $key => $row) {
 				$flashes[$key]->message = $this->translator->translate($row->message);
 			}

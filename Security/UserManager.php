@@ -39,7 +39,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 
 	/**
 	 * @return Nette\Security\Identity
-	 * @throws Nette\Security\AuthenticationException
 	 */
 	public function authenticate(array $credentials)
 	{
@@ -55,13 +54,13 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 		}
 
 		unset($row['password'], $row['salt']);
-		return new Nette\Security\Identity($row['id'], $row['role'], $row);
+		return new Nette\Security\Identity($row['id'], $row['role'], $row->toArray());
 	}
 
 
 	/**
 	 * @param array
-	 * @return  NotORM_Row
+	 * @return NotORM_Row
 	 */
 	public function add($values)
 	{
@@ -101,7 +100,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public static function verifyPassword($password, $salt, $hash)
 	{
-		d(self::hashPassword($password, $salt));
 		return self::hashPassword($password, $salt) === $hash;
 	}
 

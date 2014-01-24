@@ -43,7 +43,7 @@ class BaseSearchControl extends Control
 		}
 
 		$form->addSubmit('send', $this->searchCaption)
-			->setAttribute('class', 'btn btn-primary');
+			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}

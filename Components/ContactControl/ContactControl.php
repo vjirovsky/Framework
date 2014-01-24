@@ -74,7 +74,7 @@ class ContactControl extends Control
 
 		$form->addAntispam();
 		$form->addSubmit('send', 'Odeslat')
-			->setAttribute('class', 'btn btn-primary');
+			->setAttribute('class', 'btn btn-success');
 
 		return $form;
 	}

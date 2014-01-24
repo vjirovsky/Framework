@@ -16,14 +16,13 @@ use Schmutzka;
 
 trait TModuleControl
 {
+	use Schmutzka\Forms\Rendering\TModuleRenderer;
+
 	/** @persistent @var int */
 	public $id;
 
 	/** @inject @var Schmutzka\Security\User */
 	public $user;
-
-	/** @inject @var Schmutzka\ParamService */
-	public $paramService;
 
 
 	public function attached($presenter)
@@ -46,6 +45,8 @@ trait TModuleControl
 
 			$this['form']->setDefaults($defaults);
 		}
+
+		$this->setupModuleRenderer($this['form']);
 	}
 
 
@@ -75,9 +76,6 @@ trait TModuleControl
 	}
 
 
-
-
-
 	/**
 	 * @return  Nette\ArrayHash
 	 */
@@ -92,6 +90,7 @@ trait TModuleControl
 	 */
 	public function getModel()
 	{
+		dd(__CLASS__ . '@move to Name...');
 		$className = $this->getReflection()->getName();
 		$classNameParts = explode('\\', $className);
 		$modelName = lcfirst(substr(array_pop($classNameParts), 0, -7)) . 'Model';

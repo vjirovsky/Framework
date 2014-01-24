@@ -19,8 +19,8 @@ use Schmutzka\Utils\Name;
 abstract class Presenter extends Nette\Application\UI\Presenter
 {
 	use Schmutzka\Diagnostics\Panels\TCleanerPanel;
+	use Schmutzka\Security\TCheckRequirements;
 	use Schmutzka\Templating\TTemplateFactory;
-	use Schmutzka\TAnnotations;
 	use TCreateComponent;
 
 	/** @persistent @var string */
@@ -42,11 +42,9 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	public function startup()
 	{
 		parent::startup();
-		$this->module = Name::mpv($this->presenter, 'module');
+		$this->module = Name::module($this->presenter);
+		$this->checkTitleAnnotation();
 
-		if ($title = $this->getViewAnnotation($this->view, 'title')) {
-			$this['titleControl']->addTitle($title);
-		}
 	}
 
 
@@ -76,6 +74,25 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		}
 
 		return FALSE;
+	}
+
+
+	private function checkTitleAnnotation()
+	{
+		$reflection = $this->getReflection();
+
+		if ($reflection->hasMethod($method = $this->formatActionMethod($this->view))) {
+			$reflectionMethod = $reflection->getMethod($method);
+			if ($reflectionMethod->hasAnnotation('title')) {
+				$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));
+			}
+
+		} elseif ($reflection->hasMethod($method = $this->formatRenderMethod($this->view))) {
+			$reflectionMethod = $reflection->getMethod($method);
+			if ($reflectionMethod->hasAnnotation('title')) {
+				$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));
+			}
+		}
 	}
 
 }

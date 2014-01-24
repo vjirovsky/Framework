@@ -40,16 +40,13 @@ class Configurator extends Nette\Configurator
 			->addDirectory($this->parameters['appDir'] . '/../libs')
 			->register();
 
+		$this->addConfig($this->parameters['appDir'] . '/config/config.neon');
 		if (Strings::startsWith($_SERVER['HTTP_HOST'], 'dev.')) {
-			$name = 'dev';
+			$this->loadConfigByName('dev');
 
 		} elseif ($this->parameters['environment'] == 'development') {
-			$name = 'local';
-
-		} else {
-			$name = 'prod';
+			$this->loadConfigByName('local');
 		}
-		$this->loadConfigByName($name);
 	}
 
 
@@ -94,9 +91,6 @@ class Configurator extends Nette\Configurator
 		$file = $this->parameters['appDir'] . '/config/config.' . $name . '.neon';
 		if (file_exists($file)) {
 			$this->addConfig($file);
-
-		} else { // fallback
-			$this->addConfig($this->parameters['appDir'] . '/config/config.neon');
 		}
 	}
 

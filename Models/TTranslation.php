@@ -27,7 +27,6 @@ trait TTranslation
 	 */
 	public function fetch($key)
 	{
-		$this->setEntityLang();
 		$row = parent::fetch($key);
 
 		// setup keys
@@ -36,17 +35,6 @@ trait TTranslation
 		}
 
 		return $row;
-	}
-
-
-	/**
-	 * @param  array
-	 * @return NotORM_Result
-	 */
-	public function fetchAll($key = [])
-	{
-		$this->setEntityLang();
-		return parent::fetchAll($key);
 	}
 
 
@@ -123,13 +111,6 @@ trait TTranslation
 		$data['language_id'] = $this->translator->getLocale();
 
 		return $data;
-	}
-
-
-	private function setEntityLang()
-	{
-		$entityName = 'Entity\\' . ucfirst($this->getTableName());
-		$entityName::$lang = $this->translator->getLocale();
 	}
 
 

@@ -21,12 +21,12 @@ trait TModuleRenderer
 	public function setupModuleRenderer(Form $form)
 	{
 		$renderer = $form->getRenderer();
-		$renderer->wrappers['controls']['container'] = NULL;
+		$renderer->wrappers['controls']['container'] = 'div class="module-body"';
 		$renderer->wrappers['pair']['container'] = 'div class=control-group';
 		$renderer->wrappers['control']['container'] = 'div class=controls';
 		$renderer->wrappers['label']['container'] = 'div class="control-label"';
 
-		$form->getElementPrototype()->class('form-horizontal');
+		$form->getElementPrototype()->class('form-horizontal module');
 	}
 
 }

@@ -97,7 +97,7 @@ class Form extends Nette\Application\UI\Form
 	 */
 	public function setDefaults($defaults, $erase = FALSE)
 	{
-		if ($defaults instanceof NotORM_Row) {
+		if (is_object($defaults)) {
 			$defaults = $defaults->toArray();
 		}
 
