@@ -4,12 +4,13 @@ namespace Schmutzka\Templating;
 
 use Nette;
 use Nette\Application\UI\Presenter;
+use Nette\Templating\FileTemplate;
 
 
 /**
  * @method addFilter(object)
  * @method addHelperLoader(object)
- * @method addMacroLoader(string)
+ * @method addMacroSet(string)
  */
 class TemplateFactory extends Nette\Object implements ITemplateFactory
 {
@@ -19,11 +20,14 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	/** @var object[] */
 	private $filters = [];
 
+	/** @var callback[] */
+	private $helpers = [];
+
 	/** @var object[] */
 	private $helperLoaders = [];
 
 	/** @var string[] */
-	private $macroLoaders = [];
+	private $macroSets = [];
 
 
 	public function __construct(Nette\DI\Container $container)
@@ -32,24 +36,33 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	}
 
 
+	public function addHelper($name, $callback)
+	{
+		$this->helpers[$name] = $callback;
+	}
+
+
 	public function createTemplate(Nette\Application\UI\Control $control, $class = NULL)
 	{
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $control->getPresenter(FALSE);
-		$template->onPrepareFilters[] = $control->templatePrepareFilters;
 
-		foreach ($this->filters as $filter) {
-			$template->registerFilter($filter);
-		}
-		$template->registerFilter($latte = new Nette\Latte\Engine);
+		$template->onPrepareFilters[] = $this->templatePrepareFilters;
 
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 		foreach ($this->helperLoaders as $helperLoader) {
 			$template->registerHelperLoader([$helperLoader, 'loader']);
 		}
+		foreach ($this->helpers as $name => $callback) {
+			$template->registerHelper($name, $callback);
+		}
 
-		foreach ($this->macroLoaders as $macroLoader) {
-			$macroLoader::install($latte->compiler);
+		foreach ($this->macroSets as $macroSet) {
+			if (strpos($macroSet, '::') === FALSE && class_exists($macroSet)) {
+				$macroSet .= '::install';
+			}
+
+			call_user_func($macroSet, $this->latte->compiler);
 		}
 
 		// default parameters
@@ -75,6 +88,29 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 		}
 
 		return $template;
+	}
+
+
+	public function templatePrepareFilters(FileTemplate $template)
+	{
+		foreach ($this->filters as $filter) {
+			$template->registerFilter($filter);
+		}
+
+		$template->registerFilter($this->latte);
+	}
+
+
+	/**
+	 * @return Nette\Latte\Engine
+	 */
+	public function getLatte()
+	{
+		if (! $this->container->hasService('nette.latte')) {
+			$this->container->createService('nette.latte');
+		}
+
+		return $this->container->getService('nette.latte');
 	}
 
 }

@@ -48,9 +48,6 @@ trait TTemplateTranslation
 		$template->setTranslator($this->translator);
 		$template->locale = $this->translator->getLocale();
 
-		$engine = new Nette\Latte\Engine;
-		Kdyby\Translation\Latte\TranslateMacros::install($engine->compiler);
-
 		$template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
 	}
 

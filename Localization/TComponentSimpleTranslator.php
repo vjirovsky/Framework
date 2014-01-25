@@ -20,7 +20,7 @@ trait TComponentSimpleTranslator
 		parent::attached($presenter);
 		$this['form']->setTranslator($this->translator && $presenter->module == 'front'
 			? $this->translator
-			: new LoginControl\Localization\CzechTranslator);
+			: new ComponentSimpleTranslator);
 	}
 
 }

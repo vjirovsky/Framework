@@ -11,6 +11,7 @@
 
 namespace Schmutzka;
 
+use Haml;
 use Nette;
 use Nette\Utils\Strings;
 use Schmutzka;
@@ -55,10 +56,11 @@ class Configurator extends Nette\Configurator
 	 */
 	protected function createCompiler()
 	{
-		$compiler = parent::createCompiler();
-		$compiler->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension)
+		$compiler = parent::createCompiler()
+			->addExtension('webloader', new Webloader\Nette\Extension)
+			->addExtension('haml', new Haml\DI\Extension)
 			->addExtension('template', new Schmutzka\DI\Extensions\TemplateExtension)
-			->addExtension('webloader', new Webloader\Nette\Extension);
+			->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension);
 
 		if (class_exists('NotORMExtension\DI\Extension')) {
 			$compiler->addExtension('database', new Schmutzka\DI\Extensions\DatabaseExtension);
