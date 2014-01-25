@@ -9,16 +9,17 @@
  * the file license.md that was distributed with this source code.
  */
 
-namespace Schmutzka\Templating;
+namespace Schmutzka\Latte\Macros;
 
+use Nette;
 use Nette\Latte\MacroNode;
 use Nette\Latte\PhpWriter;
 use Nette\Latte\Compiler;
-use Nette\Latte\Macros\MacroSet;
 
 
-class Macros extends MacroSet
+class MacroSet extends Nette\Latte\Macros\MacroSet
 {
+
 
 	/**
 	 * @param  Compiler

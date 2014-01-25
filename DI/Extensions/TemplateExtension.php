@@ -22,6 +22,7 @@ class TemplateExtension extends CompilerExtension
 	const FILTER_TAG = 'template.filter';
 	const HELPER_TAG = 'template.helper';
 	const HELPER_LOADER_TAG = 'template.helperLoader';
+	const MACRO_SET_TAG = 'template.macroSet';
 
 
 	/** @var string[] */
@@ -37,6 +38,9 @@ class TemplateExtension extends CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
+
+		$builder->addDefinition($this->prefix('latteCompiler'))
+			->setClass('Nette\Latte\Compiler');
 
 		$templateFactory = $builder->addDefinition($this->prefix('templateFactory'))
 			->setClass('Schmutzka\Templating\TemplateFactory');
@@ -82,6 +86,10 @@ class TemplateExtension extends CompilerExtension
 					$templateFactory->addSetup('addHelper', [$name, ['@' . $serviceName, $method]]);
 				}
 			}
+		}
+
+		foreach (array_keys($builder->findByTag(self::MACRO_SET_TAG)) as $serviceName) {
+			$templateFactory->addSetup('addMacroSet', ['@' . $serviceName]);
 		}
 	}
 

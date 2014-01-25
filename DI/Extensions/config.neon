@@ -12,10 +12,13 @@ services:
 	- Schmutzka\Components\IFlashMessageControl
 	- Schmutzka\Components\IGaControl
 	- Schmutzka\Components\ITitleControl
-	- Schmutzka\Diagnostics\Panels\CleanerPanel
 	- Schmutzka\Mail\IMessage
 	- Schmutzka\ParamService(@container::getParameters())
 
 	schmutzka.helpers:
 		class: Schmutzka\Templating\Helpers
 		tags: ['template.helperLoader']
+
+	schmutzka.macroSet:
+		class: Schmutzka\Latte\Macros\MacroSet
+		tags: ['template.macroSet']

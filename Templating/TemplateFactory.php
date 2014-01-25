@@ -10,7 +10,7 @@ use Nette\Templating\FileTemplate;
 /**
  * @method addFilter(object)
  * @method addHelperLoader(object)
- * @method addMacroSet(string)
+ * @method addMacroSet(mixed)
  */
 class TemplateFactory extends Nette\Object implements ITemplateFactory
 {
@@ -26,7 +26,7 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	/** @var object[] */
 	private $helperLoaders = [];
 
-	/** @var string[] */
+	/** @var mixed[] */
 	private $macroSets = [];
 
 
@@ -58,11 +58,7 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 		}
 
 		foreach ($this->macroSets as $macroSet) {
-			if (strpos($macroSet, '::') === FALSE && class_exists($macroSet)) {
-				$macroSet .= '::install';
-			}
-
-			call_user_func($macroSet, $this->latte->compiler);
+			$macroSet->install($this->latte->compiler);
 		}
 
 		// default parameters

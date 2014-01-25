@@ -26,16 +26,12 @@ class SchmutzkaExtension extends CompilerExtension
 			->setClass('Schmutzka\Security\User')
 			->setInject(TRUE);
 		$this->parseFromFile(__DIR__ . '/config.neon');
-
-		$templateFactory = $builder->getDefinition('template.templateFactory')
-			->addSetup('addMacroSet', ['Schmutzka\Templating\Macros']);
 	}
 
 
 	public function beforeCompile()
 	{
-		$builder = $this->getContainerBuilder();
-		$router = $builder->getDefinition('router');
+		$router = $this->getContainerBuilder()->getDefinition('router');
 		foreach ($this->getSortedServicesByTag('routes') as $service) {
 			$router->addSetup('offsetSet', array(NULL, '@' . $service));
 		}
@@ -45,7 +41,6 @@ class SchmutzkaExtension extends CompilerExtension
 	public function afterCompile(ClassType $class)
 	{
 		parent::afterCompile($class);
-
 		$init = $class->methods['initialize'];
 		$init->addBody('Schmutzka\DI\Extensions\FormExtension::register();');
 	}
