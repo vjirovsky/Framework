@@ -12,22 +12,17 @@
 namespace Schmutzka\DI\Extensions;
 
 use Nette;
-use Nette\DI\CompilerExtension;
+use Nette\Utils\Strings;
+use Schmutzka\DI\CompilerExtension;
 
 
 class TemplateExtension extends CompilerExtension
 {
 	/** @var string[] */
 	private $defaults = [
-		'filters' => [
-			'haml' => 'Nette\Templating\Filters\Haml'
-		],
-		'helpers' => [
-			'base' => 'Schmutzka\Templating\Helpers'
-		],
-		'macros' => [
-			'Schmutzka\Templating\Macros'
-		]
+		'filters' => [],
+		'helpers' => [],
+		'macros' => []
 	];
 
 
@@ -39,32 +34,31 @@ class TemplateExtension extends CompilerExtension
 		$templateFactory = $builder->addDefinition($this->prefix('templateFactory'))
 			->setClass('Schmutzka\Templating\TemplateFactory');
 
-		foreach ($config['filters'] as $class) {
-			$builder->addDefinition($prefixedName = $this->generateName($class))
-				->setClass($class);
-			$templateFactory->addSetup('$service->addFilter(?)', ['@' . $prefixedName]);
+		foreach ($config['filters'] as $service) {
+			$templateFactory->addSetup('$service->addFilter(?)', [$service]);
 		}
 
-		foreach ($config['helpers'] as $class) {
-			$builder->addDefinition($prefixedName = $this->generateName($class))
-				->setClass($class);
-
-			$templateFactory->addSetup('$service->addHelperLoader(?)', ['@' . $prefixedName]);
+		foreach ($config['helpers'] as $service) {
+			$templateFactory->addSetup('$service->addHelperLoader(?)', [$service]);
 		}
 
-		foreach ($config['macros'] as $class) {
-			$templateFactory->addSetup('$service->addMacroLoader(?)', [$class]);
+		foreach ($config['macros'] as $name) {
+			$templateFactory->addSetup('$service->addMacroLoader(?)', [$name]);
 		}
 	}
 
 
-	/**
-	 * @param  string
-	 * @return string
-	 */
-	private function generateName($class)
+	public function beforeCompile()
 	{
-		return $this->prefix(sha1($class));
+		$templateFactory = $this->getContainerBuilder()->getDefinition($this->prefix('templateFactory'));
+
+		foreach ($this->getSortedServicesByTag('template.filter') as $name) {
+			$templateFactory->addSetup('$service->addFilter(?)', ['@' . $name]);
+		}
+
+		foreach ($this->getSortedServicesByTag('template.helperLoader') as $name) {
+			$templateFactory->addSetup('$service->addHelperLoader(?)', ['@' . $name]);
+		}
 	}
 
 }

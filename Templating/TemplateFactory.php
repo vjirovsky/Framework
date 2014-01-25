@@ -6,16 +6,21 @@ use Nette;
 use Nette\Application\UI\Presenter;
 
 
+/**
+ * @method addFilter(object)
+ * @method addHelperLoader(object)
+ * @method addMacroLoader(string)
+ */
 class TemplateFactory extends Nette\Object implements ITemplateFactory
 {
 	/** @var Nette\DI\Container */
 	private $container;
 
-	/** @var callback[] */
-	private $helperLoaders = [];
-
-	/** @var string[] */
+	/** @var object[] */
 	private $filters = [];
+
+	/** @var object[] */
+	private $helperLoaders = [];
 
 	/** @var string[] */
 	private $macroLoaders = [];
@@ -24,33 +29,6 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	public function __construct(Nette\DI\Container $container)
 	{
 		$this->container = $container;
-	}
-
-
-	/**
-	 * @param callback
-	 */
-	public function addHelperLoader($callback)
-	{
-		$this->helperLoaders[] = $callback;
-	}
-
-
-	/**
-	 * @param string
-	 */
-	public function addFilter($service)
-	{
-		$this->filters[] = $service;
-	}
-
-
-	/**
-	 * @param string
-	 */
-	public function addMacroLoader($service)
-	{
-		$this->macroLoaders[] = $service;
 	}
 
 
@@ -66,8 +44,8 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 		$template->registerFilter($latte = new Nette\Latte\Engine);
 
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-		foreach ($this->helperLoaders as $callback) {
-			$template->registerHelperLoader([$callback, 'loader']);
+		foreach ($this->helperLoaders as $helperLoader) {
+			$template->registerHelperLoader([$helperLoader, 'loader']);
 		}
 
 		foreach ($this->macroLoaders as $macroLoader) {

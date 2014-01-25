@@ -27,6 +27,9 @@ class SchmutzkaExtension extends CompilerExtension
 			->setInject(TRUE);
 
 		$this->parseFromFile(__DIR__ . '/config.neon');
+
+		$builder->getDefinition('template.templateFactory')
+			->addSetup('$service->addMacroLoader(?)', ['Schmutzka\Templating\Macros']);
 	}
 
 
