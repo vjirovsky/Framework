@@ -1,0 +1,23 @@
+<style>
+	#nette-debug-notorm table tr td:first-child { width:800px }
+</style>
+
+<h1>Queries: <?php echo count($queries); ?></h1>
+
+<div class="nette-inner" id="nette-debug-notorm">
+	<table>
+		<tr>
+			<th>SQL Statement</th>
+		</tr>
+		<?php if (count($queries) > 0): ?>
+			<?php foreach ($queries as $query): ?>
+				<tr>
+					<td><?php echo self::dump($query['sql']) ?></td>
+				</tr>
+			<?php endforeach; ?>
+
+		<?php else: ?>
+			<tr><td>No SQL logs found</td></tr>
+		<?php endif ?>
+	</table>
+</div>
