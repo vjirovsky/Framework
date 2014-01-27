@@ -11,13 +11,10 @@
 
 namespace Schmutzka\Application\UI;
 
+use Nette;
 use Schmutzka;
 
 
-/**
- * @secured
- * @role(admin)
- */
 trait TModulePresenter
 {
 	use Schmutzka\Security\TCheckRequirements;
@@ -44,6 +41,17 @@ trait TModulePresenter
 		$this->template->module = $this->module;
 		$this->template->modules = $this->paramService->getModules();
 		$this->template->useCkeditor = $this->paramService->isCkeditorUsed();
+	}
+
+
+	public function checkRequirements($element)
+	{
+		parent::checkRequirements($element);
+		if ($element instanceof Nette\Application\UI\PresenterComponentReflection) {
+			$annotations = $element->getAnnotations();
+			$annotations += ['secured' => TRUE, 'role' => ['admin']];
+			$this->processAnnotations($annotations);
+		}
 	}
 
 

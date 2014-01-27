@@ -18,16 +18,26 @@ class Name extends Nette\Object
 {
 
 	/**
-	 * Get table name by class name
+	 * @param  Reflection
+	 * @return string
+	 */
+	public static function modelFromControlReflection($reflection)
+	{
+		$fullClassName = $reflection->getName();
+		$model = substr($fullClassName, strrpos($fullClassName, '\\') + 1);
+		return lcfirst(substr($model, 0, -7)) . 'Model';
+	}
+
+
+	/**
 	 * @param string
 	 * @return string
 	 * @example Models\Pages => pages, Models\ArticleTag => article_tag
 	 */
 	public static function tableFromClass($class)
 	{
-		$table = explode('\\', $class);
-		$table = lcfirst(array_pop($table));
-
+		$table = substr($class, strrpos($class, '\\') + 1);
+		$table = lcfirst($table);
 		return self::upperToUnderscoreLower($table);
 	}
 
@@ -55,7 +65,6 @@ class Name extends Nette\Object
 
 
 	/**
-	 * Get component template name from class + check if exists
 	 * @param Nette\Application\UI\PresenterComponentReflection
 	 * @param string
 	 * @return string|NULL
@@ -108,7 +117,7 @@ class Name extends Nette\Object
 	 */
 	public static function module($path)
 	{
-		self::mpv($path, 'module');
+		return self::mpv($path, 'module');
 	}
 
 
@@ -118,7 +127,7 @@ class Name extends Nette\Object
 	 */
 	public static function presenter($path)
 	{
-		self::mpv($path, 'presenter');
+		return self::mpv($path, 'presenter');
 	}
 
 
@@ -128,7 +137,7 @@ class Name extends Nette\Object
 	 */
 	public static function view($path)
 	{
-		self::mpv($path, 'view');
+		return self::mpv($path, 'view');
 	}
 
 
@@ -147,9 +156,6 @@ class Name extends Nette\Object
 	}
 
 
-	/********************** helpers **********************/
-
-
 	/**
 	 * @param  string
 	 * @return array
@@ -163,6 +169,5 @@ class Name extends Nette\Object
 
 		return $replace;
 	}
-
 
 }

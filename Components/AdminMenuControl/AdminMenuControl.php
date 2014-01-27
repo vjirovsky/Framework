@@ -11,9 +11,7 @@
 
 namespace Schmutzka\Components;
 
-use Nette;
 use Nette\Utils\Strings;
-use Schmutzka;
 use Schmutzka\Application\UI\Control;
 use Schmutzka\Utils\Name;
 
@@ -22,9 +20,6 @@ class AdminMenuControl extends Control
 {
 	/** @inject @var Schmutzka\ParamService */
 	public $paramService;
-
-	/** @inject @var Schmutzka\Security\User */
-	public $user;
 
 
 	/**
@@ -35,21 +30,18 @@ class AdminMenuControl extends Control
 		$moduleParameters = $this->paramService->getModuleParameters($module);
 
 		$items = [];
-		if (isset($moduleParameters->menu) && isset($moduleParameters->menu->items)) {
-			foreach ($moduleParameters->menu->items as $item) {
-				if ( ! isset($item->cond)) {
-					$items[] = $item;
+		foreach ($moduleParameters->menu->items as $item) {
+			if ( ! isset($item->cond)) {
+				$items[] = $item;
 
-				} elseif ($moduleParameters->{$item->cond}) {
-					$items[] = $item;
-				}
+			} elseif ($moduleParameters->{$item->cond}) {
+				$items[] = $item;
 			}
-
-			$this->template->icon = $moduleParameters->menu->icon;
-			$this->template->items = $items;
 		}
 
+		$this->template->items = $items;
 		$this->template->module = $module;
+		$this->template->icon = $moduleParameters->menu->icon;
 		$this->template->title = $moduleParameters->title;
 	}
 
@@ -59,16 +51,12 @@ class AdminMenuControl extends Control
 		$module = $this->presenter->module;
 		$moduleParameters = $this->paramService->getModuleParameters($module);
 
-		if (isset($moduleParameters->menu->items)) {
-			foreach ($moduleParameters->menu->items as $item) {
-				if (Strings::contains(ucfirst($module) . ':' . $item->link, $this->presenter->name)) {
-					$this->template->title = $item->label;
-					$this->template->subtitle = (isset($item->subtitle) ? $item->subtitle : NULL);
-				}
+		foreach ($moduleParameters->menu->items as $item) {
+			if (Strings::contains(ucfirst($module) . ':' . $item->link, $this->presenter->name)) {
+				$this->template->title = $item->label;
+				$this->template->subtitle = (isset($item->subtitle) ? $item->subtitle : NULL);
+				$this->template->add = (isset($item->add) ? TRUE : NULL);
 			}
-
-		} else {
-			$this->template->title = $moduleParameters->title;
 		}
 	}
 

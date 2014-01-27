@@ -19,6 +19,7 @@ use Schmutzka\Application\UI\Form;
 
 class LoginControl extends Control
 {
+	use Schmutzka\Forms\Rendering\TModuleRenderer;
 	use Schmutzka\Localization\TComponentSimpleTranslator;
 
 	/** @inject @var Nette\Security\User */
@@ -64,6 +65,12 @@ class LoginControl extends Control
 	{
 		$this->presenter->restoreRequest($this->presenter->backlink); // @todo: fix
 		$this->presenter->redirect('Homepage:default');
+	}
+
+
+	protected function renderAdmin()
+	{
+		$this->setupModuleRenderer($this['form']);
 	}
 
 }

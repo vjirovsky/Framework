@@ -18,14 +18,28 @@ use Schmutzka\DI\CompilerExtension;
 
 class SchmutzkaExtension extends CompilerExtension
 {
+	/** @var [] */
+	private $defaults = [
+		'session' => []
+	];
+
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
+		$config = $this->getConfig($this->defaults);
+
 		$builder->getDefinition('user')
 			->setClass('Schmutzka\Security\User')
 			->setInject(TRUE);
 		$this->parseFromFile(__DIR__ . '/config.neon');
+
+		/* @todo
+		$session = $builder->getDefinition('session');
+		foreach ($config['session'] as $key => $value) {
+			$session->addSetup('set' . ucfirst($key), $value);
+		}
+		*/
 	}
 
 

@@ -14,8 +14,6 @@ jQuery(document).ready(function() {
 
 });
 
-jQuery(window).load(function () {
-	jQuery.nette.ext('init').linkSelector = 'a.ajax';
-	jQuery.nette.ext('init').formSelector = 'form.ajax';
+jQuery(function () {
 	jQuery.nette.init();
 });

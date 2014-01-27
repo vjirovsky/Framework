@@ -22,7 +22,7 @@ abstract class Base extends Nette\Object
 	public $db;
 
 	/** @inject @var Nette\DI\Container */
-  	public $container;
+	public $container;
 
 	/** @var string */
 	private $tableName;
@@ -30,7 +30,7 @@ abstract class Base extends Nette\Object
 
 
 	public function table()
- 	{
+	{
 		$args = func_get_args();
 		if (count($args) == 1 && is_numeric($args[0])) {
 			array_unshift($args, 'id');
@@ -57,6 +57,7 @@ abstract class Base extends Nette\Object
 		}
 
 		// experimental
+		// $resultSet = new ResultSet($result);
 		foreach ($result as $key => $row) {
 			$result[$key] = $this->createEntity($row);
 		}

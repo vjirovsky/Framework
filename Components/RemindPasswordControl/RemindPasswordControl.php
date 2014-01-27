@@ -19,6 +19,7 @@ use Nette\Utils\Strings;
 
 class RemindPasswordControl extends Control
 {
+	use Schmutzka\Forms\Rendering\TModuleRenderer;
 	use Schmutzka\Localization\TComponentSimpleTranslator;
 
 	/** @inject @var Models\User */
@@ -82,6 +83,12 @@ class RemindPasswordControl extends Control
 	private function getMessageUid()
 	{
 		return 'remindPassword' . ($this->translator ? '_' . $this->translator->getLocale() : NULL);
+	}
+
+
+	protected function renderAdmin()
+	{
+		$this->setupModuleRenderer($this['form']);
 	}
 
 }

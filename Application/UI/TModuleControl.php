@@ -12,6 +12,7 @@
 namespace Schmutzka\Application\UI;
 
 use Schmutzka;
+use Schmutzka\Utils\Name;
 
 
 trait TModuleControl
@@ -52,14 +53,11 @@ trait TModuleControl
 
 	public function processForm($values, $form)
 	{
-		if ($this->id && $form['cancel']->isSubmittedBy()) {
+		if ($form->submitName == 'cancel') {
 			$this->presenter->redirect('default', ['id' => NULL]);
 		}
 
-		if ($this->method_exists($this, 'preProcessValues')) {
-			$values = $this->preProcessValues($values);
-		}
-
+		$values = $this->preProcessValues($values);
 		if ($this->id) {
 			$this->model->update($values, $this->id);
 
@@ -67,9 +65,7 @@ trait TModuleControl
 			$this->id = $this->model->insert($values);
 		}
 
-		if ($this->method_exists($this, 'postProcessValues')) {
-			$this->postProcessValues($values, $this->id);
-		}
+		$this->postProcessValues($values, $this->id);
 
 		$this->presenter->flashMessage('Uloženo.', 'success');
 		$this->presenter->redirect('edit', ['id' => $this->id]);
@@ -90,12 +86,28 @@ trait TModuleControl
 	 */
 	public function getModel()
 	{
-		dd(__CLASS__ . '@move to Name...');
-		$className = $this->getReflection()->getName();
-		$classNameParts = explode('\\', $className);
-		$modelName = lcfirst(substr(array_pop($classNameParts), 0, -7)) . 'Model';
-
+		$modelName = Name::modelFromControlReflection($this->getReflection());
 		return $this->{$modelName};
+	}
+
+
+	/**
+	 * @param  []
+	 * @return []
+	 */
+	protected function preProcessValues($values)
+	{
+		return $values;
+	}
+
+
+	/**
+	 * @param  []
+	 * @param  int
+	 */
+	protected function postProcessValues($values, $id)
+	{
+
 	}
 
 }

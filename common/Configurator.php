@@ -62,7 +62,7 @@ class Configurator extends Nette\Configurator
 			->addExtension('template', new Schmutzka\DI\Extensions\TemplateExtension)
 			->addExtension('schmutzka', new Schmutzka\DI\Extensions\SchmutzkaExtension);
 
-		if (class_exists('NotORMExtension\DI\Extension')) {
+		if (class_exists('Models\User')) {
 			$compiler->addExtension('database', new Schmutzka\DI\Extensions\DatabaseExtension);
 		}
 		return $compiler;

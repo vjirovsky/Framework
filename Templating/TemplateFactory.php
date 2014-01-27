@@ -10,7 +10,7 @@ use Nette\Templating\FileTemplate;
 /**
  * @method addFilter(object)
  * @method addHelperLoader(object)
- * @method addMacroSet(mixed)
+ * @method addMacroSet(object)
  */
 class TemplateFactory extends Nette\Object implements ITemplateFactory
 {
@@ -20,13 +20,13 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	/** @var object[] */
 	private $filters = [];
 
+	/** @var object[] */
+	private $helperLoaders = [];
+
 	/** @var callback[] */
 	private $helpers = [];
 
 	/** @var object[] */
-	private $helperLoaders = [];
-
-	/** @var mixed[] */
 	private $macroSets = [];
 
 
@@ -47,7 +47,11 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $control->getPresenter(FALSE);
 
-		$template->onPrepareFilters[] = $this->templatePrepareFilters;
+		if ($translator = $this->container->getByType('Nette\Localization\ITranslator', FALSE)) {
+			$template->setTranslator($translator);
+		}
+
+		$template->onPrepareFilters[] = $this->prepareFilters;
 
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 		foreach ($this->helperLoaders as $helperLoader) {
@@ -87,7 +91,7 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	}
 
 
-	public function templatePrepareFilters(FileTemplate $template)
+	public function prepareFilters(FileTemplate $template)
 	{
 		foreach ($this->filters as $filter) {
 			$template->registerFilter($filter);

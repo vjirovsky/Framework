@@ -12,7 +12,7 @@
 namespace Schmutzka\Diagnostics\Panels;
 
 use Nette;
-use Schmutzka\Utils\Filer;
+use Nette\Utils\Finder;
 
 
 trait TCleanerPanel
@@ -33,8 +33,9 @@ trait TCleanerPanel
 				));
 
 			} elseif ($type == 'webtemp') {
-				dd('fix');
-				Filer::emptyFolder($this->paramService->wwwDir . '/webtemp/');
+				foreach (Finder::find('*')->in($this->paramService->wwwDir . '/webtemp/') as $path => $file) {
+					unlink($file);
+				}
 
 			} elseif ($type == 'session') {
 				$this->session->destroy();

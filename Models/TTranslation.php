@@ -25,7 +25,7 @@ trait TTranslation
 	 * @param  int|array
 	 * @return NotORM_Row
 	 */
-	public function fetch($key)
+	public function fetch($key = [])
 	{
 		$row = parent::fetch($key);
 

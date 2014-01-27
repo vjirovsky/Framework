@@ -44,7 +44,6 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		parent::startup();
 		$this->module = Name::module($this->presenter);
 		$this->checkTitleAnnotation();
-
 	}
 
 

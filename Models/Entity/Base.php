@@ -1,5 +1,7 @@
 <?php
 
+// inspire https://github.com/Kdyby/Doctrine/blob/master/src/Kdyby/Doctrine/Entities/BaseEntity.php
+
 namespace Schmutzka\Models\Entity;
 
 use ArrayAccess;
@@ -7,16 +9,33 @@ use NotORM_Row;
 use Nette;
 
 
-// abstract class Base extends NotORM_Row
-abstract class Base extends Nette\Object implements ArrayAccess
+abstract class Base extends Nette\Object implements \ArrayAccess, \Serializable
 {
 	/** @var NotORM_Row */
 	public $row;
+
+	/** @inject @var Nette\DI\Container */
+	public $container;
 
 
 	public function __construct($row)
 	{
 		$this->row = $row;
+	}
+
+
+	public function &__get($name)
+	{
+		if (isset($this->row[$name . '_id'])) {
+			if ($data = $this->row->$name) {
+				if ($data instanceof \NotORM_Row) {
+					$entity = $this->createEntity($data, $name);
+					return $entity;
+				}
+			}
+		}
+
+		return $this->row[$name];
 	}
 
 
@@ -49,7 +68,6 @@ abstract class Base extends Nette\Object implements ArrayAccess
 	 */
 	private function getFunctionName($key)
 	{
-		dd(__CLASS__ . ' - move to Name');
 		$key[0] = strtoupper($key[0]);
 		$func = create_function('$c', 'return strtoupper($c[1]);');
 		return preg_replace_callback('/_([a-z])/', $func, $key);
@@ -62,6 +80,36 @@ abstract class Base extends Nette\Object implements ArrayAccess
 	public function toArray()
 	{
 		return $this->row->toArray();
+	}
+
+
+	public function serialize()
+	{
+		return serialize($this->row);
+	}
+
+
+	public function unserialize($row)
+	{
+		$this->row = unserialize($row);
+	}
+
+
+	/**
+	 * @param  NotORM_Row
+	 * @param  string
+	 * @return Entity|NotORM_Row
+	 */
+	public function createEntity($row, $name)
+	{
+		$class = 'Entity\\' . ucfirst($name);
+		if (class_exists($class)) {
+			$entity = new $class($row);
+			$this->container->callInjects($entity);
+			return $entity;
+		}
+
+		return $row;
 	}
 
 }

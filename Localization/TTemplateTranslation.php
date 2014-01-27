@@ -11,7 +11,6 @@
 
 namespace Schmutzka\Localization;
 
-use Kdyby;
 use Nette;
 
 
@@ -34,7 +33,7 @@ trait TTemplateTranslation
 	}
 
 
-	public function setupTranslator(&$template)
+	public function checkLocale()
 	{
 		if ($this->translator->getLocale() == NULL) {
 			foreach ($this->translator->getAvailableLocales() as $locale) {
@@ -44,11 +43,6 @@ trait TTemplateTranslation
 				}
 			}
 		}
-
-		$template->setTranslator($this->translator);
-		$template->locale = $this->translator->getLocale();
-
-		$template->registerHelperLoader([$this->translator->createTemplateHelpers(), 'loader']);
 	}
 
 }

@@ -7,7 +7,6 @@
  */
 
 
-// datepicker nette.ajax.js extension
 $.nette.ext('datepicker', {
 	load: function () {
 		jQuery('.date, .datetime-local').each(function(i, el) {
@@ -30,4 +29,3 @@ $.nette.ext('datepicker', {
 		}
 	}
 });
-

@@ -11,6 +11,8 @@
 
 namespace Schmutzka\Security;
 
+use Nette;
+
 
 trait TCheckRequirements
 {
@@ -103,12 +105,14 @@ trait TCheckRequirements
 
 	private function requireLogin()
 	{
-		if ( ! $this->user->isLoggedIn()) {
+		if ( ! $this->user->loggedIn) {
 			$storedRequest = $this->presenter->storeRequest();
 			$this->flashMessage('Pro přístup do této sekce se musíte přihlásit.', 'info');
 
 			if ($this->module != 'front') {
-				$this->redirect(':Admin:Homepage:default', ['backlink' => $storedRequest]);
+				if ($this->presenter->isLinkCurrent(':Admin:Homepage:default') == FALSE) {
+					$this->redirect(':Admin:Homepage:default', ['backlink' => $storedRequest]);
+				}
 
 			} else {
 				$this->redirect(':Front:Auth:signIn', ['backlink' => $storedRequest]);

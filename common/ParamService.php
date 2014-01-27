@@ -95,8 +95,10 @@ class ParamService extends Nette\Object
 	 */
 	public function isCkeditorUsed()
 	{
-		if (isset($this->parameters->useCkeditor)) {
-			return TRUE;
+		foreach ($this->parameters as $parameter) {
+			if (isset($parameter->useCkeditor)) {
+				return TRUE;
+			}
 		}
 
 		return FALSE;

@@ -17,8 +17,8 @@ services:
 
 	schmutzka.helpers:
 		class: Schmutzka\Templating\Helpers
-		tags: ['template.helperLoader']
+		tags: [template.helperLoader]
 
 	schmutzka.macroSet:
 		class: Schmutzka\Latte\Macros\MacroSet
-		tags: ['template.macroSet']
+		tags: [template.macroSet]
