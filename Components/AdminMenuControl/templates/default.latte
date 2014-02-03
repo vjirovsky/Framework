@@ -1,0 +1,27 @@
+{if isset($items) && count($items) >= 2}
+	%li.nav-header {$title}
+	{foreach $items as $item}
+		{var $link = ":" . ucfirst($module) . ":" . $item->link}
+		{if Nette\Utils\Strings::endsWith($link, ':default')}
+			{var $linkForCurrentCheck = strtr($link, [':default' => ':*'])}
+
+		{else}
+			{var $linkForCurrentCheck = $link}
+		{/}
+
+		<li n:class="$presenter->isLinkCurrent($linkForCurrentCheck) ? active">
+			<a n:phref=":$module:$item->link, id => NULL">
+				<i n:if="isset($item->icon)" n:class="fa, fa-fw, $item->icon"></i>
+				{$item->label}
+			</a>
+		</li>
+	{/}
+
+{else}
+	<li  n:class="nav-header, $presenter->module == $module ? active">
+		<a n:phref=":$module:Homepage:default, id => NULL">
+			<i n:if="isset($icon)" n:class="fa, fa-fw, $icon"></i>
+			{$title}
+		</a>
+	</li>
+{/}
