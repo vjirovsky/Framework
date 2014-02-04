@@ -57,7 +57,7 @@ class Configurator extends Nette\Configurator
 	protected function createCompiler()
 	{
 		$compiler = parent::createCompiler()
-			->addExtension('webloader', new Webloader\Nette\Extension)
+			->addExtension('webloader', new WebLoader\Nette\Extension)
 			->addExtension('haml', new Haml\DI\Extension)
 			->addExtension('template', new Zenify\DI\Extensions\TemplateExtension)
 			->addExtension('Zenify', new Zenify\DI\Extensions\ZenifyExtension);
@@ -76,7 +76,7 @@ class Configurator extends Nette\Configurator
 	{
 		$parameters = parent::getDefaultParameters();
 
-		$rootDir = realpath(__DIR__ . '/../../..');
+		$rootDir = realpath(__DIR__ . '/../../../../../..');
 		$parameters['appDir'] = $rootDir . '/app';
 		$parameters['wwwDir'] =  $rootDir . '/www';
 		$parameters['assetsDir'] =  $rootDir . '/libs/Zenify/assets';
