@@ -1,0 +1,12 @@
+%h2 {$title}
+
+{ifset $subtitle}
+	%p.muted {$subtitle}
+{/}
+
+{ifset $add}
+	<a n:phref="add, id => NULL" class="btn btn-success">
+		%i.fa.fa-plus.fa-fw.fa-lg
+		Přidat
+	</a>
+{/}
