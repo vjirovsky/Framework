@@ -12,7 +12,9 @@
 	],
 	"require": {
 		"nette/nette": "~2.1@dev",
-		"php": ">=5.4"
+		"php": ">=5.4",
+		"zenify/template-factory": "@dev",
+		"zenify/haml": "@dev"
 	},
 	"autoload": {
 		"classmap": ["src/Zenify/"],
