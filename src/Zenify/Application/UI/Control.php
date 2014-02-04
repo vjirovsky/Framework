@@ -15,7 +15,6 @@ use Nette;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Zenify;
-use Zenify;
 
 
 abstract class Control extends Nette\Application\UI\Control

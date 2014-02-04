@@ -14,7 +14,6 @@ namespace Zenify\Application\UI;
 use Nette;
 use Zenify;
 use Zenify\Utils\Name;
-use Zenify;
 
 
 abstract class Presenter extends Nette\Application\UI\Presenter

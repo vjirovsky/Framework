@@ -3,12 +3,11 @@ services:
 	pathFilter: Zenify\Components\WebLoader\Filter\PathFilter
 	lessFilter: WebLoader\Filter\LessFilter
 
-	- RouterFactory
-	router: @\RouterFactory::create
+	- App\RouterFactory
+	router: @App\RouterFactory::create
 	- Zenify\Components\IFlashMessageControl
 	- Zenify\Components\IGaControl
 	- Zenify\Components\ITitleControl
-	- Zenify\Mail\IMessage
 	- Zenify\ParamService(@container::getParameters())
 
 	Zenify.helpers:

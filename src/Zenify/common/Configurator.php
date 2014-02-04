@@ -15,7 +15,7 @@ use Haml;
 use Nette;
 use Nette\Utils\Strings;
 use Zenify;
-use Webloader;
+use WebLoader;
 
 
 class Configurator extends Nette\Configurator
@@ -38,7 +38,6 @@ class Configurator extends Nette\Configurator
 		$this->setTempDirectory($this->parameters['appDir'] . '/../temp');
 		$this->createRobotLoader()
 			->addDirectory($this->parameters['appDir'])
-			->addDirectory($this->parameters['appDir'] . '/../libs')
 			->register();
 
 		$this->addConfig($this->parameters['appDir'] . '/config/config.neon');
@@ -58,8 +57,8 @@ class Configurator extends Nette\Configurator
 	{
 		$compiler = parent::createCompiler()
 			->addExtension('webloader', new WebLoader\Nette\Extension)
-			->addExtension('haml', new Haml\DI\Extension)
-			->addExtension('template', new Zenify\DI\Extensions\TemplateExtension)
+			->addExtension('haml', new Zenify\Haml\DI\Extension)
+			->addExtension('template', new Zenify\TemplateFactory\DI\Extension)
 			->addExtension('Zenify', new Zenify\DI\Extensions\ZenifyExtension);
 
 		if (class_exists('Models\User')) {

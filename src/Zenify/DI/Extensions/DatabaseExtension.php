@@ -25,7 +25,6 @@ class DatabaseExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('securityManager'))
 			->setClass('Zenify\Security\UserManager');
-		$this->compiler->addExtension('notorm', new Zenify\NotORM\DI\Extension);
 
 		$builder->addDefinition($this->prefix('users'))
 			->setClass('Models\User');
