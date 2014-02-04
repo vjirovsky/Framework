@@ -1,0 +1,26 @@
+webloader:
+	css:
+		admin:
+			remoteFiles:
+				- //bootstrapstyler.com/preview/_/libero/bootstrap/css/bootstrap.min.css
+				- //netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css
+				- "//fonts.googleapis.com/css?family=Leckerli+One|Roboto:400,400italic,700,700italic,500italic,500,300italic,300&subset=latin,latin-ext"
+				- //lipis.github.io/flag-icon-css/css/flag-icon.css
+			files:
+				- %assetsDir%/css/admin.less
+				- %assetsDir%/css/datetimepicker.css
+				- modules/zen/theme.css
+			fileFilters:
+				- @lessFilter
+
+	js:
+		admin:
+			files:
+				- %assetsDir%/js/jquery/jquery-1.10.2.min.js
+				- modules/bootstrap/bootstrap.js
+				- %assetsDir%/js/nette/netteForms.js
+				- %assetsDir%/js/nette/nette.ajax.js
+				- %assetsDir%/js/base.js
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.js
+				- %assetsDir%/js/bootstrap/bootstrap-datetimepicker.cs.js
+				- %assetsDir%/js/bootstrap/nextras.datetimepicker.init.js

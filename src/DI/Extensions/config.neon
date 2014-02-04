@@ -1,0 +1,20 @@
+services:
+	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
+	pathFilter: Zenify\Components\WebLoader\Filter\PathFilter
+	lessFilter: WebLoader\Filter\LessFilter
+
+	- RouterFactory
+	router: @\RouterFactory::create
+	- Zenify\Components\IFlashMessageControl
+	- Zenify\Components\IGaControl
+	- Zenify\Components\ITitleControl
+	- Zenify\Mail\IMessage
+	- Zenify\ParamService(@container::getParameters())
+
+	Zenify.helpers:
+		class: Zenify\Templating\Helpers
+		tags: [template.helperLoader]
+
+	Zenify.macroSet:
+		class: Zenify\Latte\Macros\MacroSet
+		tags: [template.macroSet]
