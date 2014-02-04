@@ -15,7 +15,7 @@
 		"php": ">=5.4"
 	},
 	"autoload": {
-		"classmap": ["Zenify/"],
-		"files": ["common/shortcuts.php"]
+		"classmap": ["src/Zenify/"],
+		"files": ["src/Zenify/common/shortcuts.php"]
 	}
 }
