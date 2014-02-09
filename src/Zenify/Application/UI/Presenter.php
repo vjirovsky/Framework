@@ -85,7 +85,7 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 		$methods[] = $this->formatRenderMethod($this->view);
 
 		foreach ($methods as $method) {
-			if ($reflection->hasMethod($method) {
+			if ($reflection->hasMethod($method)) {
 				$reflectionMethod = $reflection->getMethod($method);
 				if ($reflectionMethod->hasAnnotation('title')) {
 					$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));

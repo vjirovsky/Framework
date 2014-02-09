@@ -66,7 +66,7 @@ class RemindPasswordControl extends Control
 
 			$message = $this->message->create()
 				->setFrom($this->paramService->email->from)
-				->addTo($values['email']);
+				->addTo($values['email'])
 				->addCustomTemplate('remindPassword', $values);
 
 			$this->mailer->send($message);
