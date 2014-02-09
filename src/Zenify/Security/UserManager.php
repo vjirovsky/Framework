@@ -11,6 +11,7 @@
 
 namespace Zenify\Security;
 
+use App;
 use Nette;
 use Nette\Security\AuthenticationException as AE;
 use Nette\Utils\Strings;
@@ -23,16 +24,16 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	/** @var Zenify\ParamService */
 	private $paramService;
 
-	/** @var Models\User */
-	private $userModel;
+	/** @var App\Users */
+	private $users;
 
 	/** @var Nette\Localization\ITranslator */
 	private $translator;
 
 
-	public function __construct(Models\User $userModel, Zenify\ParamService $paramService)
+	public function __construct(App\Users $users, Zenify\ParamService $paramService)
 	{
-		$this->userModel = $userModel;
+		$this->users = $users;
 		$this->paramService = $paramService;
 	}
 
@@ -44,24 +45,23 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	{
 		list($email, $password) = $credentials;
 
-		$row = $this->userModel->fetch(['email' => $email]);
+		$user = $this->users->findOneBy(['email' => $email]);
 
-		if ( ! $row) {
+		if ( ! $user) {
 			throw new AE('nonExistingAccount', self::IDENTITY_NOT_FOUND);
 		}
 
-		if (self::verifyPassword($password, $row['salt'], $row['password']) == FALSE) {
+		if (self::verifyPassword($password, $user->salt, $user->password) == FALSE) {
 			throw new AE('wrongPassword', self::INVALID_CREDENTIAL);
 		}
 
-		unset($row['password'], $row['salt']);
-		return new Nette\Security\Identity($row['id'], $row['role'], $row->toArray());
+		return new Nette\Security\Identity($user->id, $user->role, $user->identityData);
 	}
 
 
 	/**
 	 * @param array
-	 * @return NotORM_Row
+	 * @return App\User
 	 */
 	public function add($values)
 	{
@@ -70,11 +70,16 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 		}
 		$values['password'] = self::hashPassword($values['password'], $values['salt']);
 
-		if ($this->userModel->count(['email' => $values['email']])) {
+		if ($this->users->findOneBy(['email' => $values['email']])) {
 			throw new \Exception('Tento email je již zaregistrován. Použijte prosím jiný.');
 		}
 
-		return $this->userModel->insert($values);
+		$user = new App\User;
+		foreach ($values as $key => $value) {
+			$user->$key = $value;
+		}
+
+		return $this->users->save($values);
 	}
 
 
@@ -117,11 +122,10 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator
 	 */
 	public function updatePassword($cond, $password)
 	{
-		$salt = self::makeSalt();
-		$this->userModel->update([
-			'salt' => $salt,
-			'password' => self::hashPassword($password, $salt)
-		], $cond);
+		$user = $this->users->findOneBy($cond);
+		$user->salt = $salt = self::makeSalt();
+		$user->password = self::hashPassword($password, $salt);
+		$this->users->save($user);
 	}
 
 }

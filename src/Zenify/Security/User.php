@@ -16,8 +16,8 @@ use Nette;
 
 class User extends Nette\Security\User
 {
-	/** @inject @var Models\User */
-	public $userModel;
+	/** @inject @var App\Users */
+	public $users;
 
 
 	/**
@@ -45,21 +45,6 @@ class User extends Nette\Security\User
 
 
 	/**
-	 * @param []
-	 */
-	public function updateIdentity($values)
-	{
-		foreach ($this->identity->data as $key => $value) {
-			if (array_key_exists($key, $values)) {
-				$this->identity->{$key} = $values[$key];
-			}
-		}
-
-		$this->userModel->update($values, $this->id);
-	}
-
-
-	/**
 	 * @return  string
 	 */
 	public function getRole()
@@ -74,10 +59,10 @@ class User extends Nette\Security\User
 	 */
 	public function autologin($cond)
 	{
-		$row = $this->userModel->fetch($cond);
-		if ($row) {
-			unset($row['password'], $row['salt']);
-			$identity = new Nette\Security\Identity($row['id'], (isset($row['role']) ? $row['role'] : 'user'), $row);
+		$user = $this->users->findOneBy($cond);
+
+		if ($user) {
+			$identity = new Nette\Security\Identity($user->id, (isset($user->role) ? $user->role : 'user'), $user->identityData);
 			$this->login($identity);
 		}
 	}
