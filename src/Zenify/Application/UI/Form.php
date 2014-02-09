@@ -219,18 +219,6 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @return  Zenify\Forms\Controls\AntispamControl
-	 */
-	public function addAntispam($name = 'antispam', $label = 'Toto pole vymažte.', $msg = 'Byl detekován pokus o spam')
-	{
-		return $this[$name] = new Zenify\Forms\Controls\AntispamControl($label, NULL, NULL, $msg);
-	}
-
-
-	/**
 	 * @param string
 	 * @param string|NULL
 	 * @param array
