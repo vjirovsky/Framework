@@ -80,16 +80,16 @@ abstract class Presenter extends Nette\Application\UI\Presenter
 	{
 		$reflection = $this->getReflection();
 
-		if ($reflection->hasMethod($method = $this->formatActionMethod($this->view))) {
-			$reflectionMethod = $reflection->getMethod($method);
-			if ($reflectionMethod->hasAnnotation('title')) {
-				$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));
-			}
+		$methods = [];
+		$methods[] = $this->formatActionMethod($this->view);
+		$methods[] = $this->formatRenderMethod($this->view);
 
-		} elseif ($reflection->hasMethod($method = $this->formatRenderMethod($this->view))) {
-			$reflectionMethod = $reflection->getMethod($method);
-			if ($reflectionMethod->hasAnnotation('title')) {
-				$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));
+		foreach ($methods as $method) {
+			if ($reflection->hasMethod($method) {
+				$reflectionMethod = $reflection->getMethod($method);
+				if ($reflectionMethod->hasAnnotation('title')) {
+					$this['titleControl']->addTitle($reflectionMethod->getAnnotation('title'));
+				}
 			}
 		}
 	}
