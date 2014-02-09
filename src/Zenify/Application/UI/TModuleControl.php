@@ -39,12 +39,13 @@ trait TModuleControl
 				->setAttribute('class', 'btn btn-default')
 				->setValidationScope(FALSE);
 
-			$defaults = $this->model->fetch($this->id);
-			if ($this->method_exists($this, 'preProcessDefaults')) {
-				$defaults = $this->preProcessDefaults($defaults);
-			}
+			if ($defaults = $this->dao->find($this->id)) {
+				if ($this->method_exists($this, 'preProcessDefaults')) {
+					$defaults = $this->preProcessDefaults($defaults);
+				}
 
-			$this['form']->setDefaults($defaults);
+				$this['form']->setDefaults($defaults);
+			}
 		}
 
 		$this->setupModuleRenderer($this['form']);
@@ -58,18 +59,26 @@ trait TModuleControl
 		}
 
 		$values = $this->preProcessValues($values);
+
 		if ($this->id) {
-			$this->model->update($values, $this->id);
+			$entity = $this->dao->find($this->id);
 
 		} else {
-			$row = $this->model->insert($values);
-			$this->id = $row['id'];
+			$entityName = $this->dao->getClassName();
+			$entity = new $entityName;
 		}
 
-		$this->postProcessValues($values, $this->id);
+		foreach ($values as $key => $value) {
+			$entity->$key = $value;
+		}
+
+		$this->dao->save($entity); // converts location id to relation
+		$this->dao->persist($entity);
+
+		$this->postProcessValues($values, $entity->id);
 
 		$this->presenter->flashMessage('Uloženo.', 'success');
-		$this->presenter->redirect('edit', ['id' => $this->id]);
+		$this->presenter->redirect('edit', ['id' => $entity->id]);
 	}
 
 
@@ -83,12 +92,12 @@ trait TModuleControl
 
 
 	/**
-	 * @return  Models\Base
+	 * @return  App\*s
 	 */
-	public function getModel()
+	public function getDao()
 	{
-		$modelName = Name::modelFromControlReflection($this->getReflection());
-		return $this->{$modelName};
+		$name = Name::daoFromControl($this);
+		return $this->$name;
 	}
 
 
@@ -108,7 +117,6 @@ trait TModuleControl
 	 */
 	protected function postProcessValues($values, $id)
 	{
-
 	}
 
 }

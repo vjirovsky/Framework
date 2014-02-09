@@ -13,6 +13,7 @@ namespace Zenify\Application\UI;
 
 use Nette;
 use Zenify;
+use Zenify\Utils\Name;
 
 
 trait TModulePresenter
@@ -22,11 +23,11 @@ trait TModulePresenter
 	/** @persistent @var int */
 	public $id;
 
-	/** @var array */
+	/** @var string[] */
 	public $moduleParams;
 
-	/** @inject @var Models\User */
-	public $userModel;
+	/** @inject @var App\Users */
+	public $users;
 
 	/** @inject @var Zenify\Components\IAdminMenuControl */
 	public $adminMenuControl;
@@ -55,9 +56,20 @@ trait TModulePresenter
 	/**
 	 * @param  int
 	 */
+	public function handleDelete($id)
+	{
+		$entity = $this->dao->find($id);
+		$this->dao->delete($entity);
+		$this->redirect('this', ['id' => NULL]);
+	}
+
+
+	/**
+	 * @param  int
+	 */
 	public function renderEdit($id)
 	{
-		$this->template->item = $item = $this->getModel()->fetch($id);
+		$this->template->item = $item = $this->dao->find($id);
 	}
 
 
@@ -71,29 +83,12 @@ trait TModulePresenter
 
 
 	/**
-	 * @return  *\Models\*
+	 * @return  App\*s
 	 */
-	public function getModel()
+	public function getDao()
 	{
-		$className = $this->getReflection()->getName();
-		$classNameParts = explode('\\', $className);
-
-		$name = lcfirst(substr(array_pop($classNameParts), 0, -9));
-		if ($name == 'homepage') {
-			$name = lcfirst(substr(array_shift($classNameParts), 0, -6));
-		}
-
-		$modelName = $name . 'Model';
-
-		if ( ! property_exists($this, $modelName)) {
-			$modelName = lcfirst($this->module) . ucfirst($modelName);
-		}
-
-		if ( ! property_exists($this, $modelName)) {
-			$modelName = lcfirst($this->module) . 'Model';
-		}
-
-		return $this->{$modelName};
+		$name = Name::daoFromPresenter($this);
+		return $this->$name;
 	}
 
 }
