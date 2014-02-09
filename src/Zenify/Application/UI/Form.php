@@ -15,6 +15,7 @@ use Nette;
 use Nette\Utils\Html;
 use Nette\Utils\Validators;
 use Zenify;
+use Zenify\Doctrine\Utils;
 use Zenify\Forms\Controls;
 
 
@@ -38,9 +39,6 @@ class Form extends Nette\Application\UI\Form
 	/** @inject @var Zenify\ParamService */
 	public $paramService;
 
-	/** @inject @var Models\File */
-	public $fileModel;
-
 	/** @var callable */
 	protected $processor;
 
@@ -61,7 +59,7 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * BeforeRender build function
+	 * beforeRender build function
 	 */
 	public function build()
 	{
@@ -74,7 +72,6 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * Changes position of control
 	 * @param string
 	 * @param string
 	 */
@@ -93,17 +90,15 @@ class Form extends Nette\Application\UI\Form
 	/**
 	 * @param array|object
 	 * @param bool
-	 * @return  this
+	 * @return self
 	 */
 	public function setDefaults($defaults, $erase = FALSE)
 	{
 		if (is_object($defaults)) {
-			$defaults = $defaults->toArray();
+			$defaults = Utils::toArray($defaults);
 		}
 
-		parent::setDefaults($defaults, $erase);
-
-		return $this;
+		return parent::setDefaults($defaults, $erase);
 	}
 
 
@@ -128,6 +123,7 @@ class Form extends Nette\Application\UI\Form
 	protected function attached($presenter)
 	{
 		parent::attached($presenter);
+		$this->attachHandlers($presenter);
 
 		if (property_exists($presenter, 'translator')) {
 			$this->setTranslator($presenter->translator);
@@ -137,17 +133,7 @@ class Form extends Nette\Application\UI\Form
 			$this->build();
 		}
 
-		if ($presenter instanceof Nette\Application\IPresenter) {
-			$this->attachHandlers($presenter);
-			$this->paramService = $presenter->paramService;
-
-			if ($component = $this->lookup('Zenify\Application\UI\Control', FALSE)) {
-				if (property_exists($component, 'fileModel')) {
-					$this->fileModel = $component->fileModel;
-				}
-			}
-		}
-
+		// @todo annotation refactoring
 		if (($presenter->module == 'front' && isset($presenter->paramService->useBootstrapFront)) || isset($this->presenter->paramService->useBootstrap)) {
 			$form = $this;
 			$this->setupBootstrapRenderer($form);
@@ -163,7 +149,7 @@ class Form extends Nette\Application\UI\Form
 		$processMethodName = 'process' . lcfirst($this->getName());
 
 		if (method_exists($this->parent, $processMethodName)) {
-			$this->onSuccess[] = callback($this->parent, $processMethodName);
+			$this->onSuccess[] = [$this->parent, $processMethodName];
 		}
 	}
 
@@ -219,18 +205,6 @@ class Form extends Nette\Application\UI\Form
 
 
 	/**
-	 * @param string
-	 * @param string|NULL
-	 * @param array
-	 * @return  Controls\SuggestControl
-	 */
-	public function addSuggest($name, $label = NULL, $suggestList)
-	{
-		return $this[$name] = new Controls\SuggestControl($label, $suggestList);
-	}
-
-
-	/**
 	 * @param  string
 	 * @param  string|NULL
 	 * @return  Nette\Forms\Controls\TextInput
@@ -241,7 +215,7 @@ class Form extends Nette\Application\UI\Form
 		$control->addFilter(function ($value) {
 			return (Validators::isUrl($value) || $value == NULL) ? $value : 'http://' . $value;
 		})->addCondition(Form::FILLED)
-			->addRule(Form::URL, 'Opravte adresu odkazu');
+			->addRule(Form::URL, 'Opravte adresu odkazu, aby začínal na http://');
 
 		return $control;
 	}

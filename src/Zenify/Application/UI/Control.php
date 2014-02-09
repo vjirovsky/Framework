@@ -31,7 +31,6 @@ abstract class Control extends Nette\Application\UI\Control
 
 	public function __construct(Nette\Localization\ITranslator $translator = NULL)
 	{
-		parent::__construct();
 		$this->translator = $translator;
 	}
 
