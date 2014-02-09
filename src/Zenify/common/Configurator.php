@@ -38,6 +38,7 @@ class Configurator extends Nette\Configurator
 		$this->setTempDirectory($this->parameters['appDir'] . '/../temp');
 		$this->createRobotLoader()
 			->addDirectory($this->parameters['appDir'])
+			->addDirectory($this->parameters['appDir'] . '/../vendor/others')
 			->register();
 
 		$this->addConfig($this->parameters['appDir'] . '/config/config.neon');
