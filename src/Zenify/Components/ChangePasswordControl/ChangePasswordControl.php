@@ -23,11 +23,8 @@ class ChangePasswordControl extends Control
 	use Zenify\Forms\Rendering\TModuleRenderer;
 	use Zenify\Localization\TComponentSimpleTranslator;
 
-	/** @inject @var Models\User */
-	public $userModel;
-
-	/** @inject @var Zenify\Security\User */
-	public $user;
+	/** @inject @var App\Users */
+	public $users;
 
 
 	protected function createComponentForm()
@@ -47,15 +44,16 @@ class ChangePasswordControl extends Control
 
 	public function processForm($values, $form)
 	{
-		$userData = $this->userModel->fetch($this->user->id);
-		$oldPass = UserManager::calculateHash($values['oldPassword'], $userData['salt']);
+		$user = $this->users->find($this->user->id);
+		$oldPass = UserManager::calculateHash($values['oldPassword'], $user->salt);
 
-		if ($oldPass != $userData['password']) {
+		if ($oldPass != $user->password) {
 			$this->presenter->flashMessage('components.changePassword.wrongPassword', 'danger');
 
 		} else {
-			$data['password'] = UserManager::calculateHash($values['password'], $userData['salt']);
-			$this->userModel->update($data, $this->user->id);
+			$user->password = UserManager::calculateHash($values['password'], $user->salt);
+			$this->users->save($user);
+
 			$this->presenter->flashMessage('components.changePassword.passwordChanged', 'success');
 		}
 

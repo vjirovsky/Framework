@@ -12,9 +12,12 @@
 namespace Zenify\Components;
 
 use Kdyby;
+use Kdyby\Translation\LocaleResolver\SessionResolver;
 use Nette\Utils\Strings;
+use Nette\Localization\ITranslator;
 use Zenify\Application\UI\Control;
 use Zenify\Utils\Name;
+
 
 
 class AdminMenuControl extends Control
@@ -22,8 +25,15 @@ class AdminMenuControl extends Control
 	/** @inject @var Zenify\ParamService */
 	public $paramService;
 
-	/** @inject @var Kdyby\Translation\LocaleResolver\SessionResolver */
-	public $sessionResolver;
+	/** @var Kdyby\Translation\LocaleResolver\SessionResolver */
+	private $sessionResolver;
+
+
+	public function __construct(ITranslator $translator = NULL, SessionResolver $sessionResolver = NULL)
+	{
+		parent::__construct($translator);
+		$this->sessionResolver = $sessionResolver;
+	}
 
 
 	/**

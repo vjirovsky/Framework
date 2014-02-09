@@ -23,8 +23,8 @@ class RemindPasswordControl extends Control
 	use Zenify\Forms\Rendering\TModuleRenderer;
 	use Zenify\Localization\TComponentSimpleTranslator;
 
-	/** @inject @var Models\User */
-	public $userModel;
+	/** @inject @var App\Users */
+	public $users;
 
 	/** @inject @var Nette\Mail\IMailer */
 	public $mailer;
@@ -57,23 +57,18 @@ class RemindPasswordControl extends Control
 
 	public function processForm($values, $form)
 	{
-		if ($this->userModel->fetch(['email' => $values['email']])) {
-			$message = $this->message->create();
-			$message->setFrom($this->paramService->email->from)
-				->addTo($values['email']);
-
+		if ($user = $this->users->findOneBy(['email' => $values['email']])) {
 			$values['password'] = $password = Strings::random(10);
-			$salt = UserManager::makeSalt();
-			$newValues = [
-				'salt' => $salt,
-				'password' => UserManager::hashPassword($password, $salt)
-			];
-			$this->userModel->update($newValues, ['email' => $values['email']]);
 
+			$user->salt = $salt = UserManager::makeSalt();
+			$user->password = UserManager::hashPassword($password, $salt);
+			$this->users->save($user);
 
-			// dd($password, $newValues);
+			$message = $this->message->create()
+				->setFrom($this->paramService->email->from)
+				->addTo($values['email']);
+				->addCustomTemplate('remindPassword', $values);
 
-			$message->addCustomTemplate($this->getMessageUid(), $values);
 			$this->mailer->send($message);
 
 			$this->presenter->flashMessage('components.remindPassword.newPasswordSetUp', 'success');
@@ -83,15 +78,6 @@ class RemindPasswordControl extends Control
 		}
 
 		$this->redirect('this');
-	}
-
-
-	/**
-	 * @return  string
-	 */
-	private function getMessageUid()
-	{
-		return 'remindPassword' . ($this->translator ? '_' . $this->translator->getLocale() : NULL);
 	}
 
 
