@@ -1,10 +1,6 @@
 services:
 	cache: Nette\Caching\Cache(@cacheStorage, 'dataCache')
 	pathFilter: Zenify\Components\WebLoader\Filter\PathFilter
-	lessFilter: WebLoader\Filter\LessFilter
-
-	- App\RouterFactory
-	router: @App\RouterFactory::create
 	- Zenify\Components\IFlashMessageControl
 	- Zenify\Components\IGaControl
 	- Zenify\Components\ITitleControl

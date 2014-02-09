@@ -54,7 +54,7 @@ class CompilerExtension extends Nette\DI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('routerFactory'))
-			->setFactory(ucfirst($this->name) . '\RouterFactory');
+			->setFactory('App\\' . ucfirst($this->name) . '\RouterFactory');
 
 		$builder->addDefinition($this->prefix('router'))
 			->setFactory('@' . $this->name . '.routerFactory::create')

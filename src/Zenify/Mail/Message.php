@@ -31,17 +31,18 @@ class Message extends Nette\Mail\Message
 
 	/**
 	 * @param string
-	 * @param array
+	 * @param []
 	 * @return  self
 	 */
 	public function addCustomTemplate($uid, $values = [])
 	{
-		$email = $this->emails->findBy(['uid' => $uid]);
+		$email = $this->emails->findOneBy(['uid' => $uid]);
 		if ( ! $email) {
-			throw new \Exception("Record with uid $uid doesn't exist.");
+			throw new \Exception("Record with uid '$uid' doesn't exist.");
 		}
 
-		$email = $email->toArray();
+		$this->setSubject($email->subject);
+
 
 		$template = new Nette\Templating\FileTemplate();
 		$template->registerFilter(new Nette\Latte\Engine());
@@ -53,9 +54,7 @@ class Message extends Nette\Mail\Message
 			$replace[$key] = $value;
 		}
 
-		$body = strtr($email['body'], $replace);
-
-		$this->setSubject($email['subject']);
+		$body = strtr($email->body, $replace);
 		$this->setHtmlBody($body);
 
 		return $this;
