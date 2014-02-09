@@ -18,65 +18,31 @@ class Name extends Nette\Object
 {
 
 	/**
-	 * @param  Reflection
+	 * @param  Control
 	 * @return string
 	 */
-	public static function modelFromControlReflection($reflection)
+	public static function daoFromControl($control)
 	{
-		$fullClassName = $reflection->getName();
-		$model = substr($fullClassName, strrpos($fullClassName, '\\') + 1);
-		return lcfirst(substr($model, 0, -7)) . 'Model';
+		$class = $control->reflection->name;
+		$name = self::getAfterLastSlash($class);
+		$name = lcfirst(substr($name, 0, -7)) . 's';
+
+		return $name;
 	}
 
 
 	/**
-	 * @param string
+	 * @param  Presenter
 	 * @return string
-	 * @example Models\Pages => pages, Models\ArticleTag => article_tag
 	 */
-	public static function tableFromClass($class)
+	public static function daoFromPresenter($presenter)
 	{
-		$table = substr($class, strrpos($class, '\\') + 1);
-		$table = lcfirst($table);
-		return self::upperToUnderscoreLower($table);
-	}
+		$class = $presenter->reflection->name;
+		$name = self::getAfterLastSlash($class);
 
+		$name = lcfirst(substr($name, 0, -9));
 
-	/**
-	 * @param string
-	 * @return string
-	 * @example CustomModule => custom-module
-	 */
-	public static function upperToDashedLower($string)
-	{
-		return strtr($string, self::getReplaceAlphabetBy('-'));
-	}
-
-
-	/**
-	 * @param string
-	 * @return string
-	 * @example customTable => custom_table
-	 */
-	public static function upperToUnderscoreLower($string)
-	{
-		return strtr($string, self::getReplaceAlphabetBy('_'));
-	}
-
-
-	/**
-	 * @param Nette\Application\UI\PresenterComponentReflection
-	 * @param string
-	 * @return string|NULL
-	 */
-	public static function templateFromReflection(Nette\Application\UI\PresenterComponentReflection $reflection, $name = NULL)
-	{
-		$file = dirname($reflection->getFileName()) . '/' . $reflection->getShortName() . ucfirst($name) . '.latte';
-		if (file_exists($file)) {
-			return $file;
-		}
-
-		return NULL;
+		return $name .'s';
 	}
 
 
@@ -142,7 +108,6 @@ class Name extends Nette\Object
 
 
 	/**
-	 * Modul from namespace
 	 * @param string
 	 * @return string
 	 */
@@ -158,16 +123,15 @@ class Name extends Nette\Object
 
 	/**
 	 * @param  string
-	 * @return array
+	 * @return string
 	 */
-	private static function getReplaceAlphabetBy($char)
+	private static function getAfterLastSlash($string)
 	{
-		$replace = array();
-		foreach (range('A', 'Z') as $letter) {
-			$replace[$letter] = $char . strtolower($letter);
+		if ($slahPos = strrpos($string, '\\')) {
+			return substr($string, $slahPos + 1);
 		}
 
-		return $replace;
+		return $string;
 	}
 
 }
