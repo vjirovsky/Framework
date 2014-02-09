@@ -11,7 +11,6 @@
 
 namespace Zenify\Components;
 
-use Nette;
 use Zenify;
 use Zenify\Application\UI\Form;
 use Zenify\Application\UI\Control;
