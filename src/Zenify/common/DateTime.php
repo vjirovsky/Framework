@@ -25,11 +25,7 @@ class DateTime extends Nette\DateTime
 	 */
 	public function isToday()
 	{
-		if ($this->format('Y-m-d') == self::from(NULL)->format('Y-m-d')) {
-			return TRUE;
-		}
-
-		return FALSE;
+		return ($this->format('Y-m-d') == self::from(NULL)->format('Y-m-d'));
 	}
 
 
