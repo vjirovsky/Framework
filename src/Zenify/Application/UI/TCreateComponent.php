@@ -31,17 +31,16 @@ trait TCreateComponent
 	protected function createComponent($name)
 	{
 		$component = parent::createComponent($name);
-
 		if ($component == NULL) {
 			if (property_exists($this, $name)) {
 				$component = $this->{$name}->create();
-				$this->container->callInjects($component);
 
 			} elseif ($this->isWebloaderControl($name)) {
 				$component = $this->createWebloaderControl($name);
 			}
 		}
 
+		$this->container->callInjects($component);
 		$this->checkRequirements($component);
 
 		return $component;
