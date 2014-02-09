@@ -16,14 +16,17 @@ use Nette;
 
 class Message extends Nette\Mail\Message
 {
-	/** @var int */
-	public $emailId;
-
-	/** @inject @var Models\Email */
-	public $emailModel;
-
 	/** @inject @var Zenify\ParamService */
 	public $paramService;
+
+	/** @var App\Emails */
+	private $emails;
+
+
+	public function __constructor(App\Emails $emails = NULL)
+	{
+		$this->emails = $emails;
+	}
 
 
 	/**
@@ -33,26 +36,24 @@ class Message extends Nette\Mail\Message
 	 */
 	public function addCustomTemplate($uid, $values = [])
 	{
-		$email = $this->emailModel->fetchByUid($uid);
+		$email = $this->emails->findBy(['uid' => $uid]);
 		if ( ! $email) {
 			throw new \Exception("Record with uid $uid doesn't exist.");
 		}
 
 		$email = $email->toArray();
 
-		$this->emailId = $email['id'];
-
 		$template = new Nette\Templating\FileTemplate();
 		$template->registerFilter(new Nette\Latte\Engine());
 		$template->setFile($this->paramService->appDir . '/EmailModule/templates/@blankEmail.latte');
 
-		$replaceArray = [];
+		$replace = [];
 		foreach ($values as $key => $value) {
 			$key = '%' . strtoupper($key) . '%';
-			$replaceArray[$key] = $value;
+			$replace[$key] = $value;
 		}
 
-		$body = strtr($email['body'], $replaceArray);
+		$body = strtr($email['body'], $replace);
 
 		$this->setSubject($email['subject']);
 		$this->setHtmlBody($body);
