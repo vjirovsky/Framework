@@ -19,7 +19,7 @@ use Nette;
  */
 class UploadControl extends Nette\Forms\Controls\UploadControl
 {
-	/** @var array */
+	/** @var [][] */
 	private $resize;
 
 

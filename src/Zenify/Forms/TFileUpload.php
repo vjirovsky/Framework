@@ -11,6 +11,7 @@
 
 namespace Zenify\Forms;
 
+use App;
 use Nette;
 use Nette\Http\FileUpload;
 use Nette\Image;
@@ -23,34 +24,35 @@ use Zenify\Utils\Filer;
 
 trait TFileUpload
 {
-	/** @var [] */
+	/** @inject @var App\Files */
 	public $files;
 
 	/** @var string */
-	private $imagesDir = '/images/data/';
+	private $imagesDir = '/images/uploaded/';
 
 	/** @var string */
-	private $storageDir = '/storage/files/';
+	private $storageDir = '/files/uploaded/';
 
 
 	/**
-	 * @param  array
+	 * @param  string[]
 	 * @param  Form
 	 */
 	public function processFileUploads(&$values, Form $form)
 	{
 		foreach ($values as $key => $value) {
 			if ($form[$key] instanceof UploadControl) {
+				$files = [];
 				if (is_array($value)) {
 					foreach ($value as $file) {
-						$this->processFileUpload($file, $form[$key], $key, TRUE);
+						$files[] = $this->saveFile($file, $form[$key], $key, TRUE);
 					}
 
 				} else {
-					$this->processFileUpload($value, $form[$key], $key);
+					$files = $this->saveFile($value, $form[$key], $key);
 				}
 
-				unset($values[$key]);
+				$values[$key] = $files;
 			}
 		}
 	}
@@ -62,27 +64,20 @@ trait TFileUpload
 	 * @param  string
 	 * @param  bool
 	 */
-	private function processFileUpload(FileUpload $fileUpload, UploadControl $uploadControl, $key, $multiple = FALSE)
+	private function saveFile(FileUpload $fileUpload, UploadControl $uploadControl, $key, $multiple = FALSE)
 	{
 		if ($fileUpload->isOk()) {
-			$data = [
-				'name_origin' => $fileUpload->getName(),
-				'created' => new Nette\DateTime,
-				'extension' => Filer::extension($fileUpload->getName()),
-				'type' => $fileUpload->getContentType(),
-				'size' => $fileUpload->getSize(),
-			];
+			$file = new App\File;
 
+			$file->nameOrigin = $fileUpload->name;
+			$file->name = $this->getUniqueName($fileUpload->name);
 
 			if ($fileUpload->isImage()) {
-				$resize = $uploadControl->getResize();
-
-				$data['name'] = $this->getImageUniqueName($fileUpload->getName());
-				$data['path'] = $this->imagesDir;
-
+				$file->path = $this->imagesDir;
 				$image = $fileUpload->toImage();
 
 				// default resize
+				$resize = $uploadControl->getResize();
 				if ($resize == NULL) {
 					$resize[] = [
 						'width' => 1024,
@@ -103,10 +98,10 @@ trait TFileUpload
 						$image->resize($dimensions['width'], $dimensions['height'], $options);
 
 						try {
-							$image->save($this->buildSavePath($data));
+							$image->save($this->getSavePath($file));
 
 						} catch (\Exception $e) {
-							$fileUpload->move($this->buildSavePath($data));
+							$fileUpload->move($this->getSavePath($file));
 						}
 
 						/*
@@ -120,38 +115,13 @@ trait TFileUpload
 				}
 
 			} else {
-				$data['name'] = $this->getRandomName();
-				$data['path'] = $this->storageDir;
-				$fileUpload->move($this->buildSavePath($data));
+				$file->path = $this->storageDir;
+				$fileUpload->move($this->getSavePath($file));
 			}
 
-			$fileId = $this->fileModel->insert($data);
-
-			if ($multiple) {
-				$this->files[$key][] = $fileId;
-
-			} else {
-				$this->files[$key] = $fileId;
-			}
+			$this->files->save($file);
+			return $file;
 		}
-	}
-
-
-	/**
-	 * @return string
-	 */
-	private function getRandomName()
-	{
-		$rand = function() {
-			return Strings::random(40, 'A-Za-z0-9_-');
-		};
-
-		$name = $rand();
-		while ($this->fileModel->fetch(['name' => $name])) {
-			$name = $rand();
-		}
-
-		return $name;
 	}
 
 
@@ -159,7 +129,7 @@ trait TFileUpload
 	 * @param  string
 	 * @return  string
 	 */
-	private function getImageUniqueName($name)
+	private function getUniqueName($name)
 	{
 		$extensions = Filer::extension($name);
 		$filename = Strings::webalize(Filer::filename($name));
@@ -176,15 +146,15 @@ trait TFileUpload
 
 
 	/**
-	 * @param  []
+	 * @param  App\File
 	 * @return string
 	 */
-	private function buildSavePath($data)
+	private function getSavePath(App\File $file)
 	{
-		$path = $this->paramService->wwwDir . $data['path']. $data['name'];
+		$path = $this->paramService->wwwDir . $file->path. $file->name;
 		$dir = dirname($path);
 		if (file_exists($dir) == FALSE) {
-			mkdir($dir);
+			throw new \Exception("Dir '$dir' doesn't exists.");
 		}
 
 		return $path;
