@@ -48,24 +48,13 @@ class Configurator extends Nette\Configurator
 		} elseif ($this->parameters['environment'] == 'development') {
 			$this->loadConfigByName('local');
 		}
-	}
 
-
-	/**
-	 * @return Compiler
-	 */
-	protected function createCompiler()
-	{
-		$compiler = parent::createCompiler()
-			->addExtension('webloader', new WebLoader\Nette\Extension)
-			->addExtension('haml', new Zenify\Haml\DI\Extension)
-			->addExtension('template', new Zenify\TemplateFactory\DI\Extension)
-			->addExtension('Zenify', new Zenify\DI\Extensions\ZenifyExtension);
-
-		if (class_exists('Models\User')) {
-			$compiler->addExtension('database', new Zenify\DI\Extensions\DatabaseExtension);
-		}
-		return $compiler;
+		$this->defaultExtensions += [
+			'webloader' => 'WebLoader\Nette\Extension',
+			'haml' => 'Zenify\Haml\DI\Extension',
+			'template' => 'Zenify\TemplateFactory\DI\Extension',
+			'Zenify' => 'Zenify\DI\Extensions\ZenifyExtension'
+		];
 	}
 
 
