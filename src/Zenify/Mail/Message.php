@@ -12,10 +12,13 @@
 namespace Zenify\Mail;
 
 use Nette;
+use Zenify;
 
 
 class Message extends Nette\Mail\Message
 {
+	use Zenify\TemplateFactory\Templating\TTemplateFactory;
+
 	/** @inject @var Zenify\ParamService */
 	public $paramService;
 
@@ -43,9 +46,7 @@ class Message extends Nette\Mail\Message
 
 		$this->setSubject($email->subject);
 
-
-		$template = new Nette\Templating\FileTemplate();
-		$template->registerFilter(new Nette\Latte\Engine());
+		$template = $this->createTemplate();
 		$template->setFile($this->paramService->appDir . '/EmailModule/templates/@blankEmail.latte');
 
 		$replace = [];
