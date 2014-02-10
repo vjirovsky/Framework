@@ -25,9 +25,6 @@ class DatabaseExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('securityManager'))
 			->setClass('Zenify\Security\UserManager');
-
-		$builder->addDefinition($this->prefix('users'))
-			->setClass('Models\User');
 	}
 
 }

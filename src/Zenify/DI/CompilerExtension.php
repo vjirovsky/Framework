@@ -19,6 +19,7 @@ class CompilerExtension extends Nette\DI\CompilerExtension
 
 	/**
 	 * @param  string
+	 * @deprecated
 	 */
 	public function parseFromFile($file)
 	{
