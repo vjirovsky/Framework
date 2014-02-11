@@ -22,20 +22,39 @@ class ZenifyExtension extends CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-
 		$builder->getDefinition('user')
 			->setClass('Zenify\Security\User')
 			->setInject(TRUE);
 
-		$this->parseFromFile(__DIR__ . '/config.neon');
+		$config = $this->loadFromFile(__DIR__ . '/config.neon');
+		$this->compiler->parseServices($builder, $config);
 	}
 
 
 	public function beforeCompile()
 	{
-		$router = $this->getContainerBuilder()->getDefinition('router');
-		foreach ($this->getSortedServicesByTag('routes') as $service) {
-			$router->addSetup('offsetSet', array(NULL, '@' . $service));
+		$builder = $this->containerBuilder;
+		$router = $builder->getDefinition('router');
+
+		$builder->addDefinition($this->prefix('router'))
+			->setClass('App\RouterFactory');
+
+		$builder->addDefinition($this->prefix('routerFactory'))
+			->setFactory('@\App\RouterFactory::create')
+			->setAutowired(FALSE);
+
+		foreach ($this->compiler->getExtensions('Zenify\DI\Providers\IRouterProvider') as $name => $extension) {
+			$service = $this->prefix($name);
+			$builder->addDefinition($service)
+				->setClass($extension->reflection->name)
+				->setAutowired(FALSE);
+
+			$factory = $this->prefix('factory.' . $name);
+			$builder->addDefinition($factory)
+				->setFactory('@' . $service . '::getRoutes')
+				->setAutowired(FALSE);
+
+			$router->addSetup('offsetSet', array(NULL, '@' . $factory));
 		}
 	}
 

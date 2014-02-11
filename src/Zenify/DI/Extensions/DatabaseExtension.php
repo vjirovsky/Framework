@@ -25,6 +25,18 @@ class DatabaseExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('securityManager'))
 			->setClass('Zenify\Security\UserManager');
+
+		$builder->getDefinition('doctrine.dao')
+			->setClass('Zenify\Doctrine\EntityDao');
+
+		$user = $builder->addDefinition($this->prefix('user'))
+			->setFactory('@doctrine.dao')
+			->setArguments(['App\User'])
+			->setAutowired(FALSE);
+
+		$builder->addDefinition($this->prefix('users'))
+			->setClass('App\Users')
+			->setArguments([$user->factory]);
 	}
 
 }
